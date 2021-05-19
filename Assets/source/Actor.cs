@@ -11,6 +11,8 @@ namespace UnitMan.Source {
         protected virtual void Awake() {
             boxCollider = GetComponent<BoxCollider2D>();
             rigidBody = GetComponent<Rigidbody2D>();
+            thisTransform = transform;
+            thisGameObject = gameObject;
         }
         
     }
