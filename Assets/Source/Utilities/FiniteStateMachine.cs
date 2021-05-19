@@ -5,25 +5,26 @@ using System.Linq;
 namespace UnitMan.Source.Utilities {
     public sealed class FiniteStateMachine
     {
-        public delegate int TransitionPoll(int currentState);
+        public delegate int TransitionGetter(int currentState);
         public delegate void StateUpdate(int newState, int oldState);
         public List<int> states;
         public int currentState;
         public int previousState;
 
-        public TransitionPoll getTransition;
+        private ITransitionProvider _transitionProvider;
 
-        public FiniteStateMachine (TransitionPoll transitionPollMethod, int[] states)
+        public FiniteStateMachine (ITransitionProvider transitionProvider, int[] states)
         {
             this.states = states.ToList();
-            this.
+            _transitionProvider = transitionProvider;
         }
-        void PollState()
+        public void PollState()
         {
-            if (currentState == 0) return;
+            if (this.currentState == 0) return;
             // StateLogic();
-            int transition = getTransition(currentState);
+            int transition = _transitionProvider.GetTransition(currentState);
             if (transition == -1 || transition == previousState) return;
+            Debug.Log(transition);
             SetState(transition);
         }
 
