@@ -28,6 +28,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
                 //Timer ended and reset
                 OnEnd?.Invoke();
                 currentTime = 0f;
+                paused = false;
             }
         }
             
