@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace UnitMan.source
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class Player : Actor
     {
         private PlayerInput _playerInput;
