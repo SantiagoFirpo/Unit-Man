@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace UnitMan.Source.Utilities {
-    public sealed class FiniteStateMachine
+    public sealed class StateMachine
     {
         public delegate int TransitionGetter(int currentState);
         public delegate void StateUpdate(int newState, int oldState);
@@ -11,9 +11,9 @@ namespace UnitMan.Source.Utilities {
         public int currentState;
         public int previousState;
 
-        private ITransitionProvider _transitionProvider;
+        private readonly ITransitionProvider _transitionProvider;
 
-        public FiniteStateMachine (ITransitionProvider transitionProvider, int[] states)
+        public StateMachine (ITransitionProvider transitionProvider, int[] states)
         {
             this.states = states.ToList();
             _transitionProvider = transitionProvider;
@@ -24,7 +24,7 @@ namespace UnitMan.Source.Utilities {
             // StateLogic();
             int transition = _transitionProvider.GetTransition(currentState);
             if (transition == -1 || transition == previousState) return;
-            Debug.Log(transition);
+            // Debug.Log(transition);
             SetState(transition);
         }
 
