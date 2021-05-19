@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace FirpyTime {
+namespace UnitMan.Source.Utilities.TimeTracking {
     public class Timer
 {
     //Responsibility: Abstract model for finite timers inside other classes
@@ -40,7 +40,7 @@ namespace FirpyTime {
         currentTime = 0f;
         paused = true;
     }
-    public void Start() {
+    public void Setup() {
         currentTime = 0f;
         paused = !autoStart;
     }
@@ -51,11 +51,11 @@ namespace FirpyTime {
         autoStart = targetAutoStart;
         oneShot = targetOneShot;
         TimerManager.OnFrameUpdate += Update;
-        TimerManager.Initialized += Start;
+        TimerManager.Initialized += Setup;
     }
      ~Timer() {
          TimerManager.OnFrameUpdate -= Update;
-         TimerManager.Initialized -= Start;
+         TimerManager.Initialized -= Setup;
     }
 }
 }

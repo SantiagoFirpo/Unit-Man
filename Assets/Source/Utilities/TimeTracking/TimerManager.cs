@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace FirpyTime {
+namespace UnitMan.Source.Utilities.TimeTracking {
     public class TimerManager : MonoBehaviour
     {
         public delegate void FrameUpdate(float deltaTime);
