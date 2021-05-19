@@ -8,11 +8,16 @@ namespace UnitMan.Source
     [RequireComponent(typeof(PlayerInput))]
     public class Player : Actor
     {
+        
+        private const float MOVE_SPEED = 3f;
+        public Vector2 motion;
+        
+        private FiniteStateMachine _finiteStateMachine;
+        private ITransitionProvider _transitionProvider;
+        
         private PlayerInput _playerInput;
         private Vector2 _inputVector;
-        private const float MOVE_SPEED = 3f;
-        private FiniteStateMachine _finiteStateMachine;
-        private Vector2 _motion;
+        
 
         public enum PlayerState
         {
@@ -24,44 +29,27 @@ namespace UnitMan.Source
         protected override void Awake()
         {
             base.Awake();
-            _finiteStateMachine = new FiniteStateMachine(PollTransition, new int[] {(int) PlayerState.Idle, (int) PlayerState.Move});
+            _finiteStateMachine = new FiniteStateMachine(
+                _transitionProvider,
+                new int[] {
+                    (int) PlayerState.Idle,
+                    (int) PlayerState.Move
+                });
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.onActionTriggered += OnInputChanged;
         }
 
         private void Update()
         {
-            PollTransition(_finiteStateMachine.currentState);
-            Debug.Log(_finiteStateMachine.currentState); // FOR STATE DEBUGGING
-            Debug.Log(_finiteStateMachine.previousState); // FOR STATE DEBUGGING
+            _finiteStateMachine.PollState();
+            // Debug.Log(_finiteStateMachine.currentState); // FOR STATE DEBUGGING
+            // Debug.Log(_finiteStateMachine.previousState); // FOR STATE DEBUGGING
         }
 
-        private int PollTransition(int currentState) {
-            const int nullTransition = -1;
-            switch (_finiteStateMachine.currentState) {
-                case (int) PlayerState.Idle: {
-                    if (_motion != Vector2.zero) {
-                        return (int) PlayerState.Move;
-                    }
-                    
-                    return nullTransition;
-
-                }
-                case (int) PlayerState.Move: {
-                    if (_motion == Vector2.zero) {
-                        return (int) PlayerState.Idle;
-                    }
-
-                    return nullTransition;
-                }
-                default: {
-                    return nullTransition;
-                }
-            };
-        }
+        
 
         private void FixedUpdate() {
-            _motion = GetMotion();
+            motion = GetMotion();
             base.rigidBody.velocity = GetMotion();
         }
 
@@ -79,6 +67,8 @@ namespace UnitMan.Source
             }
         }
     }
+
+    
 }
 
 
