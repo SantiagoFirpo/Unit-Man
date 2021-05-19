@@ -8,11 +8,14 @@ namespace UnitMan.Source
     [RequireComponent(typeof(PlayerInput))]
     public class Player : Actor
     {
-        
+        [SerializeField]
+        private int _currentState;
+        [SerializeField]
+        private int _previousState;        
         private const float MOVE_SPEED = 3f;
         public Vector2 motion;
         
-        private FiniteStateMachine _finiteStateMachine;
+        private StateMachine _stateMachine;
         private ITransitionProvider _transitionProvider;
         
         private PlayerInput _playerInput;
@@ -29,7 +32,8 @@ namespace UnitMan.Source
         protected override void Awake()
         {
             base.Awake();
-            _finiteStateMachine = new FiniteStateMachine(
+            _transitionProvider = new PlayerTransitionProvider(this);
+            _stateMachine = new StateMachine(
                 _transitionProvider,
                 new int[] {
                     (int) PlayerState.Idle,
@@ -41,9 +45,11 @@ namespace UnitMan.Source
 
         private void Update()
         {
-            _finiteStateMachine.PollState();
-            // Debug.Log(_finiteStateMachine.currentState); // FOR STATE DEBUGGING
-            // Debug.Log(_finiteStateMachine.previousState); // FOR STATE DEBUGGING
+            _stateMachine.PollState();
+            _currentState = _stateMachine.currentState;
+            _previousState = _stateMachine.previousState;
+            // Debug.Log(_stateMachine.currentState); // FOR STATE DEBUGGING
+            // Debug.Log(_stateMachine.previousState); // FOR STATE DEBUGGING
         }
 
         
