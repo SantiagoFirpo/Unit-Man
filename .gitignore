@@ -29,7 +29,8 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.log
-*.txt
+
+ApiUpdaterCheck.txt
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
