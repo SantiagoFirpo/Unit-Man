@@ -8,12 +8,16 @@ namespace UnitMan
 {
     public class PathGrid : MonoBehaviour
     {
+        public static PathGrid Instance {get; private set; }
+        
+        
         private Tilemap _tilemap;
         public Vector2Int[] grid;
 
         // Start is called before the first frame update
         private void Awake()
         {
+            Instance = this;
             _tilemap = GetComponent<Tilemap>();
             grid = GetAllTilePositions(_tilemap);
         }
