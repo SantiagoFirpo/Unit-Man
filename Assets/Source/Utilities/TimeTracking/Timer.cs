@@ -18,15 +18,15 @@ namespace UnitMan.Source.Utilities.TimeTracking {
             currentTime += Time.deltaTime;
         }
         else if (!paused && currentTime >= waitTime){
+            OnEnd?.Invoke();
             if (oneShot) {
                 //Timer ended but is oneShot
                 paused = true;
                 currentTime = Mathf.Round(currentTime);
-                OnEnd?.Invoke();
+                
             }
             else {
                 //Timer ended and reset
-                OnEnd?.Invoke();
                 currentTime = 0f;
                 paused = false;
             }
