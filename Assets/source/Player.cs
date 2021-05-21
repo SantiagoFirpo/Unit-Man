@@ -24,9 +24,14 @@ namespace UnitMan.Source
         
         private PlayerInput _playerInput;
         private Vector2 _inputVector;
+        private InputAction.CallbackContext inputContext;
+        private InputAction.CallbackContext inputBuffer;
+        private const float BUFFER_WINDOW_SECONDS = 0.1f;
+
         private Vector2Int _currentDirection;
         private LayerMask _wallLayer;
-        
+
+
         [FormerlySerializedAs("_wallChecks")] [SerializeField]
         private Vector2Int[] _possibleTurns;
 
@@ -71,11 +76,28 @@ namespace UnitMan.Source
             _currentDirection = GetMoveDirection();
             motion = (Vector2) _currentDirection * MOVE_SPEED;
             
-            if (((IList) _possibleTurns).Contains(_currentDirection))
+            if (CanTurn())
             {
                 rigidBody.velocity = motion;
             }
-            
+            else
+            {
+                PollBufferedInput();
+            }
+        }
+
+        private void PollBufferedInput()
+        {
+            bool isInBufferWindow = Time.realtimeSinceStartup - inputContext.startTime <= BUFFER_WINDOW_SECONDS;
+            if (isInBufferWindow && CanTurn())
+            {
+                rigidBody.velocity = motion;
+            }
+        }
+
+        private bool CanTurn()
+        {
+            return ((IList) _possibleTurns).Contains(_currentDirection);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -133,10 +155,12 @@ namespace UnitMan.Source
             return _inputVector - Vector2Int.RoundToInt(_inputVector) == Vector2.zero;
         }
 
-        private void OnInputChanged(InputAction.CallbackContext context) {
-            switch (context.action.name) {
+        private void OnInputChanged(InputAction.CallbackContext context)
+        {
+            inputContext = context;
+            switch (inputContext.action.name) {
                 case "Move": {
-                    _inputVector = context.ReadValue<Vector2>();
+                    _inputVector = inputContext.ReadValue<Vector2>();
                     break;
                 }
             }
@@ -144,7 +168,7 @@ namespace UnitMan.Source
 
         private void OnDrawGizmos()
         {
-            Debug.DrawRay(thisTransform.position, Vector3.up * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(transform.position, Vector3.up * WALL_CHECK_DISTANCE, Color.green);
         }
     }
 
