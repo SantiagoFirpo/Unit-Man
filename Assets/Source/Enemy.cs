@@ -1,7 +1,5 @@
-using System;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace UnitMan.Source {
     public class Enemy : Actor {
@@ -16,33 +14,30 @@ namespace UnitMan.Source {
        private void ChangeDirection()
        {
            Debug.Log(_directionTimer.paused);
-           base.rigidBody.velocity = GetRandomRoundedVector2();
+           motion = GetRandomCardinal();
+           while (motion == Vector2.zero)
+           {
+               motion = GetRandomCardinal();
+           }
        }
        
        private void Start() {
            _directionTimer.Begin();
        }
 
-       private void Update() {
-           if (base.rigidBody.velocity == Vector2.zero) {
-               base.rigidBody.velocity = Vector2Int.Vector2(GetRandomRoundedVector2());
+       private void FixedUpdate()
+       {
+           rigidBody.velocity = motion;
+           if (rigidBody.velocity == Vector2.zero) {
+               rigidBody.velocity =  (Vector2) (GetRandomCardinal());
            }
        }
        
-       private Vector2Int GetRandomRoundedVector2()
+       private static Vector2Int GetRandomCardinal()
        {
-           return MOVE_SPEED * new Vector2Int(
-               GetRandomInt(-1, 1),
-               GetRandomInt(-1, 1));
+           return MOVE_SPEED * new Vector2Int(UnityEngine.Random.Range(-1, 2), UnityEngine.Random.Range(-1, 2));
        }
-
-       private static int GetRandomInt(int smallestInclusive, int biggestInclusive)
-       {
-           return Mathf.RoundToInt(
-               UnityEngine.Random.Range(
-                   smallestInclusive,
-                   biggestInclusive));
-       }
+       
     }
 }
 
