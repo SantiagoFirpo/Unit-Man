@@ -68,22 +68,31 @@ namespace UnitMan.Source
             // Debug.Log(_stateMachine.previousState); // FOR STATE DEBUGGING
         }
 
-        
+
 
         private void FixedUpdate()
         {
             _possibleTurns = CheckPossibleTurns();
-            _currentDirection = GetMoveDirection();
+            if (_possibleTurns.Length > 1)
+            {
+                _currentDirection = GetMoveDirection();
+            }
+            else
+            {
+                _currentDirection = _possibleTurns[0];
+            }
+
             motion = (Vector2) _currentDirection * MOVE_SPEED;
-            
+
             if (CanTurn())
             {
                 rigidBody.velocity = motion;
             }
-            else
-            {
-                PollBufferedInput();
-            }
+            
+            // else
+            // {
+            //     PollBufferedInput();
+            // }
         }
 
         private void PollBufferedInput()
@@ -104,9 +113,9 @@ namespace UnitMan.Source
         {
             if (other.gameObject.layer == _wallLayer)
             {
-                if (_possibleTurns.Length == 1)
+                if (_possibleTurns.Length == 2)
                 {
-                    _currentDirection *= -1;
+                    _currentDirection = _possibleTurns[0];
                 }
             }
             
