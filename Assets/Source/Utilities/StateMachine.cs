@@ -5,7 +5,6 @@ using System.Linq;
 namespace UnitMan.Source.Utilities {
     public sealed class StateMachine
     {
-        public delegate int TransitionGetter(int currentState);
         public delegate void StateUpdate(int newState, int oldState);
         public List<int> states;
         public int currentState;
