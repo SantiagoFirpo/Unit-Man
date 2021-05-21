@@ -2,7 +2,7 @@
 
 namespace UnitMan.Source.Utilities.AI
 {
-    public class PathCell
+    public class PathNode
     {
         public int distanceToStart = 0;
         public int distanceToEnd = 0;
@@ -10,7 +10,7 @@ namespace UnitMan.Source.Utilities.AI
         public Vector2Int position;
 
 
-        public PathCell(Vector2Int position)
+        public PathNode(Vector2Int position)
         {
             this.position = position;
         }
