@@ -7,6 +7,7 @@ namespace UnitMan.Source {
         protected Rigidbody2D rigidBody;
         protected Transform thisTransform;
         protected GameObject thisGameObject;
+        public Vector2 motion = Vector2.zero;
         
         protected virtual void Awake() {
             boxCollider = GetComponent<BoxCollider2D>();
