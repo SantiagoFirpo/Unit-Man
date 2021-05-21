@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnitMan.Source.Utilities;
+using UnityEngine.Serialization;
 
 namespace UnitMan.Source
 {
@@ -23,11 +24,11 @@ namespace UnitMan.Source
         
         private PlayerInput _playerInput;
         private Vector2 _inputVector;
-        private Vector2 _currentDirection;
+        private Vector2Int _currentDirection;
         private LayerMask _wallLayer;
         
-        [SerializeField]
-        private Vector2[] _wallChecks;
+        [FormerlySerializedAs("_wallChecks")] [SerializeField]
+        private Vector2Int[] _possibleTurns;
 
 
         public enum PlayerState
@@ -66,18 +67,30 @@ namespace UnitMan.Source
 
         private void FixedUpdate()
         {
-            _wallChecks = CheckPossibleTurns();
+            _possibleTurns = CheckPossibleTurns();
             _currentDirection = GetMoveDirection();
             motion = (Vector2) _currentDirection * MOVE_SPEED;
             
-            if (((IList) _wallChecks).Contains(_currentDirection))
+            if (((IList) _possibleTurns).Contains(_currentDirection))
             {
                 rigidBody.velocity = motion;
             }
             
         }
 
-        private Vector2[] CheckPossibleTurns()
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.layer == _wallLayer)
+            {
+                if (_possibleTurns.Length == 1)
+                {
+                    _currentDirection *= -1;
+                }
+            }
+            
+        }
+
+        private Vector2Int[] CheckPossibleTurns()
         {
             Vector2 playerPosition = base.thisTransform.position;
             var upHit = Physics2D.Raycast(playerPosition, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
@@ -85,28 +98,28 @@ namespace UnitMan.Source
             var leftHit = Physics2D.Raycast(playerPosition, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
             var rightHit = Physics2D.Raycast(playerPosition, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
             
-            List<Vector2> results = new List<Vector2>();
+            List<Vector2Int> results = new List<Vector2Int>();
             if (!upHit)
             {
-                results.Add(Vector2.up);
+                results.Add(Vector2Int.up);
             }
             if (!downHit)
             {
-                results.Add(Vector2.down);
+                results.Add(Vector2Int.down);
             }
             if (!leftHit)
             {
-                results.Add(Vector2.left);
+                results.Add(Vector2Int.left);
             }
             if (!rightHit)
             {
-                results.Add(Vector2.right);
+                results.Add(Vector2Int.right);
             }
             
             return results.ToArray();
         }
 
-        private Vector2 GetMoveDirection() {
+        private Vector2Int GetMoveDirection() {
             bool isNewInput = _inputVector != Vector2.zero;
             if (IsCardinalDirection(_inputVector) && isNewInput) {
                 return Vector2Int.RoundToInt(_inputVector);
