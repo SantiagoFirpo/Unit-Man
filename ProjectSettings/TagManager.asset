@@ -14,7 +14,7 @@ TagManager:
   - Entities
   - Collectibles
   - Wall
-  - 
+  - Path
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 2984491871
+    locked: 0
+  - name: Ground
+    uniqueID: 482059991
+    locked: 0
+  - name: Entities
+    uniqueID: 2430358565
+    locked: 0
+  - name: FG
+    uniqueID: 1794492869
     locked: 0
