@@ -63,12 +63,12 @@ namespace UnitMan.Source
 
             motion = (Vector2) _currentDirection * MOVE_SPEED;
 
-            if (CanTurn()) rigidBody.velocity = motion;
+            if (CanTurn()) _rigidBody.velocity = motion;
         }
 
         private void PollBufferedInput() {
             bool isInBufferWindow = Time.realtimeSinceStartup - inputContext.startTime <= BUFFER_WINDOW_SECONDS;
-            if (isInBufferWindow && CanTurn()) rigidBody.velocity = motion;
+            if (isInBufferWindow && CanTurn()) _rigidBody.velocity = motion;
         }
 
         private bool CanTurn() {
@@ -82,7 +82,7 @@ namespace UnitMan.Source
         }
 
         private Vector2Int[] CheckPossibleTurns() {
-            Vector2 playerPosition = thisTransform.position;
+            Vector2 playerPosition = _transform.position;
             RaycastHit2D upHit = Physics2D.Raycast(playerPosition, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
             RaycastHit2D downHit = Physics2D.Raycast(playerPosition, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
             RaycastHit2D leftHit = Physics2D.Raycast(playerPosition, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
