@@ -34,5 +34,9 @@ namespace UnitMan
 
             return buffer.ToArray();
         }
+        
+        public static int TaxiCabDistance(Vector2Int start, Vector2Int end) {
+            return Mathf.Abs(start.y - end.y) + Mathf.Abs(start.x - end.x);
+        }
     }
 }
