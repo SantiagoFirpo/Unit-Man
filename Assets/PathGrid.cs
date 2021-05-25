@@ -36,7 +36,7 @@ namespace UnitMan
             foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin) {
                 Vector3Int tilePosition;
                 if (tilemap.HasTile(position)) {
-                    buffer.Add(new Vector2Int(position.x, position.y));
+                    buffer.Add(new Vector2Int((int) tilemap.CellToWorld(position).x, (int) tilemap.CellToWorld(position).y));
                 }
                 // Debug.Log(position);
                 // Debug.Log($"{position.x}, {position.y}");
