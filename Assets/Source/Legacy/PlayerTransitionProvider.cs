@@ -4,25 +4,25 @@ using UnitMan.Source;
 namespace UnitMan.Source
 { 
     public class PlayerTransitionProvider : ITransitionProvider {
-        private readonly Player _player;
-        public PlayerTransitionProvider(Player player) {
-            this._player = player;
+        private readonly PlayerController _playerController;
+        public PlayerTransitionProvider(PlayerController playerController) {
+            this._playerController = playerController;
         }
 
         public int GetTransition(int currentState) {
             const int nullTransition = -1;
             switch (currentState) {
-                case (int) Player.PlayerState.Idle: {
-                    if (_player.motion != Vector2.zero) {
-                        return (int) Player.PlayerState.Move;
+                case (int) PlayerController.PlayerState.Idle: {
+                    if (_playerController.motion != Vector2.zero) {
+                        return (int) PlayerController.PlayerState.Move;
                     }
                     
                     return nullTransition;
 
                 }
-                case (int) Player.PlayerState.Move: {
-                    if (_player.motion == Vector2.zero) {
-                        return (int) Player.PlayerState.Idle;
+                case (int) PlayerController.PlayerState.Move: {
+                    if (_playerController.motion == Vector2.zero) {
+                        return (int) PlayerController.PlayerState.Idle;
                     }
 
                     return nullTransition;
