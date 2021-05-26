@@ -7,9 +7,11 @@ namespace UnitMan.Source.Utilities.AI
 {
     public class PathNode
     {
-        public readonly int distanceToStart = 0;
-        public readonly int distanceToEnd = 0;
-        public readonly int totalCost = 0;
+        public int costFromStart = 999;
+        public int distanceToEndHeuristic = 0;
+        public int totalCost = 0;
+        
+        public PathNode previousNode;
         public Vector2Int position;
         private readonly Vector2Int _startPosition;
         private readonly Vector2Int _endPosition;
@@ -19,9 +21,12 @@ namespace UnitMan.Source.Utilities.AI
             this.position = position;
             _startPosition = startPosition;
             _endPosition = endPosition;
-            distanceToStart = PathGrid.TaxiCabDistance(this.position, _startPosition);
-            distanceToEnd = PathGrid.TaxiCabDistance(this.position, _endPosition);
-            totalCost = distanceToStart + distanceToEnd;
+            distanceToEndHeuristic = PathGrid.TaxiCabDistance(this.position, _endPosition);
+            totalCost = costFromStart + distanceToEndHeuristic;
+        }
+
+        public void CalculateTotalCost() {
+            totalCost = costFromStart + distanceToEndHeuristic;
         }
 
         public Vector2Int[] GetNeighborPositions() {
@@ -41,14 +46,16 @@ namespace UnitMan.Source.Utilities.AI
         private static Vector2Int NeighborPositionSelector(PathNode x) => x.position;
 
         public PathNode[] CreateNeighbors() {
-            List<PathNode> neighborBuffer = new List<PathNode>();
+            List<PathNode> neighborBuffer = new List<PathNode>() {};
             for (int neighborX = -1; neighborX <= 1; neighborX++) {
                 for (int neighborY = -1; neighborY <= 1; neighborY++) {
                     Vector2Int localNeighborPosition = new Vector2Int(neighborX, neighborY);
                     Vector2Int globalNeighborPosition = position + localNeighborPosition;
-                    if (Mathf.Abs(neighborX) != Mathf.Abs(neighborY)
-                        && globalNeighborPosition != this.position
-                        && PathGrid.Instance.grid.Contains(globalNeighborPosition)) {
+                    var grid = PathGrid.Instance.grid;
+                    bool isPositionValid = grid.Contains(globalNeighborPosition);
+                    bool isCardinal = Mathf.Abs(neighborX) != Mathf.Abs(neighborY);
+                    if (isCardinal
+                        && isPositionValid) {
                         neighborBuffer.Add(new PathNode(globalNeighborPosition, _startPosition, _endPosition));
                     }
                 }
