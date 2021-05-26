@@ -35,18 +35,20 @@ namespace UnitMan.Source.Utilities.AI
             //     }
             // }
 
-            return GetNeighbors().Select(NeighborPositionSelector).ToArray();
+            return CreateNeighbors().Select(NeighborPositionSelector).ToArray();
         }
 
         private static Vector2Int NeighborPositionSelector(PathNode x) => x.position;
 
-        public PathNode[] GetNeighbors() {
+        public PathNode[] CreateNeighbors() {
             List<PathNode> neighborBuffer = new List<PathNode>();
             for (int neighborX = -1; neighborX <= 1; neighborX++) {
                 for (int neighborY = -1; neighborY <= 1; neighborY++) {
                     Vector2Int localNeighborPosition = new Vector2Int(neighborX, neighborY);
                     Vector2Int globalNeighborPosition = position + localNeighborPosition;
-                    if (Mathf.Abs(neighborX) != Mathf.Abs(neighborY) && globalNeighborPosition != this.position && PathGrid.Instance.grid.Contains(globalNeighborPosition)) {
+                    if (Mathf.Abs(neighborX) != Mathf.Abs(neighborY)
+                        && globalNeighborPosition != this.position
+                        && PathGrid.Instance.grid.Contains(globalNeighborPosition)) {
                         neighborBuffer.Add(new PathNode(globalNeighborPosition, _startPosition, _endPosition));
                     }
                 }

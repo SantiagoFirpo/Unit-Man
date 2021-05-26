@@ -27,24 +27,19 @@ namespace UnitMan
             }
             _tilemap = GetComponent<Tilemap>();
             grid = GetAllTilePositions(_tilemap);
-            Debug.Log(_tilemap.GetTile(new Vector3Int(1, 0, 0)));
+            // _tilemap.SetTile(Vector3Int.zero, null);
         }
 
-        private static Vector2Int[] GetAllTilePositions(Tilemap tilemap)
-        {
-            List<Vector2Int> buffer = new List<Vector2Int>() { };
+        private static Vector2Int[] GetAllTilePositions(Tilemap tilemap) {
+            List<Vector2Int> positions = new List<Vector2Int>();
             foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin) {
-                Vector3Int tilePosition;
                 if (tilemap.HasTile(position)) {
-                    buffer.Add(new Vector2Int((int) tilemap.CellToWorld(position).x, (int) tilemap.CellToWorld(position).y));
+                    positions.Add(Vector2Int.RoundToInt((Vector3) position));
                 }
-                // Debug.Log(position);
-                // Debug.Log($"{position.x}, {position.y}");
             }
-
-            return buffer.ToArray();
+            return positions.ToArray();
         }
-        
+
         public static int TaxiCabDistance(Vector2Int start, Vector2Int end) {
             return Mathf.Abs(start.y - end.y) + Mathf.Abs(start.x - end.x);
         }
