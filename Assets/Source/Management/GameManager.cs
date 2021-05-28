@@ -1,19 +1,28 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace UnitMan
+namespace UnitMan.Source.Management
 {
-    public class Gamemanager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
-        public static Gamemanager Instance { get; private set; }
+        public static GameManager Instance { get; private set; }
 
-        public int score = 0;
+        public int pelletsEaten = 0;
         // Start is called before the first frame update
         private void Awake() {
             if (Instance != null) {GameObject.Destroy(gameObject);}
             Instance = this;
+        }
+
+        public void CheckIfGameIsWon() {
+            if (pelletsEaten >= 89) {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+                foreach (Actor actor in FindObjectsOfType<Actor>()) {
+                    actor.Initialize();
+                }
+                
+                
+            }
         }
     }
 }
