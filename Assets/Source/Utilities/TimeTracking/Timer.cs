@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UnitMan.Source.Utilities.TimeTracking {
     public class Timer
 {
     //Responsibility: Abstract model for finite timers inside other classes
     public delegate void TimerChange();
-    public event TimerChange OnEnd;
+    public event System.Action OnEnd;
     private readonly float _waitTime;
     private readonly float _delay;
     private float _currentTime = 0f;
@@ -42,7 +43,8 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         _currentTime = 0f;
         paused = true;
     }
-    public void Setup() {
+
+    private void Setup() {
         _currentTime = 0f;
         paused = !_autoStart;
     }
