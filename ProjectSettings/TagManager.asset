@@ -47,6 +47,9 @@ TagManager:
   - name: Ground
     uniqueID: 482059991
     locked: 0
+  - name: Collectibles
+    uniqueID: 367231929
+    locked: 0
   - name: Entities
     uniqueID: 2430358565
     locked: 0
