@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnitMan.Source.Utilities.AI
+namespace UnitMan.Source.Utilities.Pathfinding
 {
     public class Agent : MonoBehaviour
     {

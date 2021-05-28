@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnitMan.Source.Utilities.AI;
 using UnityEngine;
 
-namespace UnitMan.Source.Utilities
+namespace UnitMan.Source.Utilities.Pathfinding
 {
     public static class AStar
     {
