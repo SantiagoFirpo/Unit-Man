@@ -1,17 +1,22 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnitMan.Source.Utilities;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Numerics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Vector3 = UnityEngine.Vector3;
 
 namespace UnitMan
 {
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
     {
-        private Tilemap _tilemap;
-        public Vector2Int[] grid;
+        
+        public Tilemap walkableTilemap;
+        public Tilemap wallTilemap;
+        
+        public readonly Dictionary<Vector2Int, bool> grid = new Dictionary<Vector2Int, bool>();
 
 
         public static PathGrid Instance {get; private set; }
@@ -25,9 +30,14 @@ namespace UnitMan
             else {
                 Destroy(this.gameObject);
             }
-            _tilemap = GetComponent<Tilemap>();
-            grid = GetAllTilePositions(_tilemap);
-            // _tilemap.SetTile(Vector3Int.zero, null);
+            walkableTilemap = GetComponent<Tilemap>();
+            foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
+                grid.Add(position, true);
+            }
+            foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
+                grid.Add(position, false);
+            }
+            // walkableTilemap.SetTile(Vector3Int.zero, null);
         }
 
         private static Vector2Int[] GetAllTilePositions(Tilemap tilemap) {
