@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnitMan.Source.Utilities;
+using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -12,25 +13,18 @@ namespace UnitMan.Source
     [RequireComponent(typeof(PlayerInput), typeof(CircleCollider2D))]
     public class PlayerController : Actor
     {
-        [SerializeField] private int _currentState;
-        [SerializeField] private int _previousState;
-
+        public static PlayerController Instance { get; private set; }
         private const float MOVE_SPEED = 3f;
         private const float WALL_CHECK_DISTANCE = 0.8f;
-        const float ALMOST_ONE = 0.9f;
-
-        private StateMachine _stateMachine;
-        private ITransitionProvider _transitionProvider;
+        private const float ALMOST_ONE = 0.9f;
 
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
-        private InputAction.CallbackContext inputContext;
-        private InputAction.CallbackContext inputBuffer;
-        private const float BUFFER_WINDOW_SECONDS = 0.1f;
+        private InputAction.CallbackContext _inputContext;
 
         private Vector2Int _currentDirection;
         private LayerMask _wallLayer;
-        
+
         private readonly Vector2 _upLeft = new Vector2(-0.5f, 0.5f);
         private readonly Vector2 _upRight = new Vector2(0.5f, 0.5f);
 
@@ -41,9 +35,9 @@ namespace UnitMan.Source
         private Vector2 _almostUpRight;
         private Vector2 _almostDownLeft;
         private Vector2 _almostDownRight;
-        
-        Vector2 playerPosition;
-        
+
+        private Vector2 _playerPosition;
+
         private readonly bool[] _possibleTurns = {false, false, false, false};
 
         private enum Turns
@@ -51,36 +45,35 @@ namespace UnitMan.Source
             Up = 0, Down = 1, Left = 2, Right = 3
         }
 
-
-        public enum PlayerState
-        {
-            Idle,
-            Move
-        }
+        public bool isInvincible = false;
+        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, 0f);
+        private const float INVINCIBLE_TIME_SECONDS = 10f;
 
 
         // Start is called before the first frame update
         protected override void Awake() {
             base.Awake();
-            _transitionProvider = new PlayerTransitionProvider(this);
-            _stateMachine = new StateMachine(
-                _transitionProvider,
-                new[] {
-                    (int) PlayerState.Idle,
-                    (int) PlayerState.Move
-                });
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.onActionTriggered += OnInputChanged;
             _wallLayer = LayerMask.GetMask("Wall");
+            
+            if (Instance != null) {GameObject.Destroy(this);}
+            Instance = this;
 
             _almostUpLeft = _upLeft * ALMOST_ONE;
             _almostUpRight = _upRight * ALMOST_ONE;
             _almostDownLeft = _downLeft * ALMOST_ONE;
             _almostDownRight = _downRight * ALMOST_ONE;
+
+            _invincibleTimer.OnEnd += DisableInvincibility;
+        }
+
+        private void DisableInvincibility() {
+            isInvincible = false;
         }
 
         private void FixedUpdate() {
-            playerPosition = _transform.position;
+            _playerPosition = _transform.position;
             if (!IsCardinalDirection(_inputVector)) return;
             CheckPossibleTurns();
             int index = GetDirectionIndex(_inputVector);
@@ -122,19 +115,19 @@ namespace UnitMan.Source
         }
 
         private void CheckPossibleTurns() {
-            playerPosition = _transform.position;
+            _playerPosition = _transform.position;
             
-            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D upHitOne = Physics2D.Raycast(_playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D upHitTwo = Physics2D.Raycast(_playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
 
-            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D downHitOne = Physics2D.Raycast(_playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D downHitTwo = Physics2D.Raycast(_playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
 
-            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D leftHitOne = Physics2D.Raycast(_playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D leftHitTwo = Physics2D.Raycast(_playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
             
-            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D rightHitOne = Physics2D.Raycast(_playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D rightHitTwo = Physics2D.Raycast(_playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
             
             _possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
             _possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
@@ -148,9 +141,9 @@ namespace UnitMan.Source
         }
 
         private void OnInputChanged(InputAction.CallbackContext context) {
-            inputContext = context;
-            _inputVector = inputContext.action.name switch {
-                "Move" => RoundToInt(inputContext.ReadValue<Vector2>()),
+            _inputContext = context;
+            _inputVector = _inputContext.action.name switch {
+                "Move" => RoundToInt(_inputContext.ReadValue<Vector2>()),
                 _ => _inputVector
             };
         }
@@ -168,6 +161,11 @@ namespace UnitMan.Source
             
             Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
             Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
+        }
+
+        public void SetInvincible() {
+            isInvincible = true;
+            _invincibleTimer.Begin();
         }
     }
 }
