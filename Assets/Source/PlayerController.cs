@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnitMan.Source.Utilities;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using static UnityEngine.Vector2Int;
 
 namespace UnitMan.Source
@@ -15,28 +10,16 @@ namespace UnitMan.Source
     {
         public static PlayerController Instance { get; private set; }
         private const float MOVE_SPEED = 3f;
-        private const float WALL_CHECK_DISTANCE = 0.8f;
-        private const float ALMOST_ONE = 0.9f;
+        
 
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
         private InputAction.CallbackContext _inputContext;
 
         private Vector2Int _currentDirection;
-        private LayerMask _wallLayer;
+        
 
-        private readonly Vector2 _upLeft = new Vector2(-0.5f, 0.5f);
-        private readonly Vector2 _upRight = new Vector2(0.5f, 0.5f);
-
-        private readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
-        private readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
-
-        private Vector2 _almostUpLeft;
-        private Vector2 _almostUpRight;
-        private Vector2 _almostDownLeft;
-        private Vector2 _almostDownRight;
-
-        private readonly bool[] _possibleTurns = {false, false, false, false};
+   
 
         private enum Turns
         {
@@ -53,15 +36,9 @@ namespace UnitMan.Source
             base.Awake();
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.onActionTriggered += OnInputChanged;
-            _wallLayer = LayerMask.GetMask("Wall");
-            
+
             if (Instance != null) {GameObject.Destroy(this);}
             Instance = this;
-
-            _almostUpLeft = _upLeft * ALMOST_ONE;
-            _almostUpRight = _upRight * ALMOST_ONE;
-            _almostDownLeft = _downLeft * ALMOST_ONE;
-            _almostDownRight = _downRight * ALMOST_ONE;
 
             _invincibleTimer.OnEnd += DisableInvincibility;
         }
@@ -70,12 +47,12 @@ namespace UnitMan.Source
             isInvincible = false;
         }
 
-        private void FixedUpdate() {
+        protected override void FixedUpdate() {
+            base.FixedUpdate();
             if (!IsCardinalDirection(_inputVector)) return;
-            CheckPossibleTurns();
             int index = GetDirectionIndex(_inputVector);
 
-            if (_possibleTurns[index]) {
+            if (possibleTurns[index]) {
                 _currentDirection = _inputVector;
             }
                 
@@ -106,27 +83,7 @@ namespace UnitMan.Source
 
             return index;
         }
-
-        private void CheckPossibleTurns() {
-            Vector2 playerPosition = _transform.position;
-            
-            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
-
-            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
-
-            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
-            
-            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
-            
-            _possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
-            _possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
-            _possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
-            _possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
-        }
+        
 
 
         private bool IsCardinalDirection(Vector2 vector) {
