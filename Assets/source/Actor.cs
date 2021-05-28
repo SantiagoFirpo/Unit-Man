@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace UnitMan.Source {
-    [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
+    [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
     public class Actor : MonoBehaviour {
         protected CircleCollider2D _circleCollider;
         protected Rigidbody2D _rigidBody;
