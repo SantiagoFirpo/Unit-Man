@@ -36,8 +36,6 @@ namespace UnitMan.Source
         private Vector2 _almostDownLeft;
         private Vector2 _almostDownRight;
 
-        private Vector2 _playerPosition;
-
         private readonly bool[] _possibleTurns = {false, false, false, false};
 
         private enum Turns
@@ -73,7 +71,6 @@ namespace UnitMan.Source
         }
 
         private void FixedUpdate() {
-            _playerPosition = _transform.position;
             if (!IsCardinalDirection(_inputVector)) return;
             CheckPossibleTurns();
             int index = GetDirectionIndex(_inputVector);
@@ -110,24 +107,20 @@ namespace UnitMan.Source
             return index;
         }
 
-        private bool CanTurn() {
-            return _possibleTurns[GetDirectionIndex(_inputVector)];
-        }
-
         private void CheckPossibleTurns() {
-            _playerPosition = _transform.position;
+            Vector2 playerPosition = _transform.position;
             
-            RaycastHit2D upHitOne = Physics2D.Raycast(_playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D upHitTwo = Physics2D.Raycast(_playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, _wallLayer);
 
-            RaycastHit2D downHitOne = Physics2D.Raycast(_playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D downHitTwo = Physics2D.Raycast(_playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, _wallLayer);
 
-            RaycastHit2D leftHitOne = Physics2D.Raycast(_playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D leftHitTwo = Physics2D.Raycast(_playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, _wallLayer);
             
-            RaycastHit2D rightHitOne = Physics2D.Raycast(_playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
-            RaycastHit2D rightHitTwo = Physics2D.Raycast(_playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
+            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, _wallLayer);
             
             _possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
             _possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
