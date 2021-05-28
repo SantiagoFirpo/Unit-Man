@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using UnitMan.Source.Management;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source
 {
     public class PelletController : MonoBehaviour
     {
@@ -22,7 +20,8 @@ namespace UnitMan
         }
 
         protected virtual void UpdatePlayerState() {
-            
+            GameManager.Instance.pelletsEaten++;
+            GameManager.Instance.CheckIfGameIsWon();
         }
     }
 }
