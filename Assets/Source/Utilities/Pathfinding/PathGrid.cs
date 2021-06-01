@@ -5,6 +5,7 @@ using System.Numerics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 namespace UnitMan
@@ -30,7 +31,6 @@ namespace UnitMan
             else {
                 Destroy(this.gameObject);
             }
-            walkableTilemap = GetComponent<Tilemap>();
             foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
                 grid.Add(position, true);
             }
@@ -44,7 +44,7 @@ namespace UnitMan
             List<Vector2Int> positions = new List<Vector2Int>();
             foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin) {
                 if (tilemap.HasTile(position)) {
-                    positions.Add(Vector2Int.RoundToInt((Vector3) position));
+                    positions.Add(new Vector2Int(position.x, position.y));
                 }
             }
             return positions.ToArray();

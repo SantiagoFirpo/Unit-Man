@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using UnitMan.Source.Utilities;
-using UnitMan.Source.Utilities.AI;
+using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace UnitMan.Source {
     public class Enemy : Actor {
