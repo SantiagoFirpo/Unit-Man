@@ -45,6 +45,7 @@ namespace UnitMan.Source {
                MoveThroughPath();
            }
            _rigidBody.velocity = motion;
+           if (_rigidBody.velocity == Vector2.zero) TurnToAvailableDirection();
        }
 
        
@@ -72,16 +73,19 @@ namespace UnitMan.Source {
            _nodeQueue = ShortestPathToPlayer();
        }
 
-       // private void OnCollisionEnter2D(Collision2D other) {
-       //     if (other.gameObject.layer != wallLayer) return;
-       //     if (_nodeQueue.Count == 0 || _possibleTurnsAmount > 2) return;
-       //     for (int i = 0; i < 3; i++) {
-       //         if (!possibleTurns[i]) continue;
-       //         if (allDirections[i] == _direction) continue;
-       //         _direction = allDirections[i];
-       //         return;
-       //     }
-       // }
+       private void TurnToAvailableDirection() {
+           Vector2Int originDirection = _direction * -1;
+           for (int i = 0; i <= 3; i++) {
+               if (!possibleTurns[i]) continue;
+               Debug.Log("Can't turn this direction");
+               Vector2Int targetTurn = IntToDirection(i);
+               if (targetTurn == originDirection) continue;
+               Debug.Log("Came from this direction!");
+               Debug.Log($"The first valid direction is {targetTurn}");
+               _direction = targetTurn;
+               return;
+           }
+       }
 
        
     }
