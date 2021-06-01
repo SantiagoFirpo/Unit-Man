@@ -53,7 +53,7 @@ namespace UnitMan.Source
         protected override void FixedUpdate() {
             base.FixedUpdate();
             if (!IsCardinalDirection(_inputVector)) return;
-            int index = GetDirectionIndex(_inputVector);
+            int index = DirectionToInt(_inputVector);
 
             if (possibleTurns[index]) {
                 _currentDirection = _inputVector;
@@ -69,7 +69,7 @@ namespace UnitMan.Source
             _rigidBody.velocity = motion;
         }
 
-        private static int GetDirectionIndex(Vector2Int vector) {
+        private static int DirectionToInt(Vector2Int vector) {
             int index = -1;
             if (vector == up) {
                 index = 0;
@@ -85,6 +85,16 @@ namespace UnitMan.Source
             }
 
             return index;
+        }
+        
+        private static Vector2Int IntToDirection(int number) {
+            return number switch {
+                0 => Vector2Int.right,
+                1 => Vector2Int.left,
+                2 => Vector2Int.down,
+                3 => Vector2Int.right,
+                _ => Vector2Int.zero
+            };
         }
         
 
