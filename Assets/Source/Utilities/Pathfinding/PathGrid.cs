@@ -25,12 +25,9 @@ namespace UnitMan
 
         private void Awake()
         {
-            if (Instance == null) {
-                Instance = this;
-            }
-            else {
-                Destroy(this.gameObject);
-            }
+            Instance = this;
+            
+           
             foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
                 grid.Add(position, true);
             }
