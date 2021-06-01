@@ -11,7 +11,7 @@ namespace UnitMan.Source
     public class PlayerController : Actor
     {
         public static PlayerController Instance { get; private set; }
-        private const float MOVE_SPEED = 3f;
+        private const float MOVE_SPEED = 5f;
         
 
         private PlayerInput _playerInput;
@@ -53,7 +53,7 @@ namespace UnitMan.Source
         protected override void FixedUpdate() {
             base.FixedUpdate();
             if (!IsCardinalDirection(_inputVector)) return;
-            int index = DirectionToInt(_inputVector);
+            int index = Actor.DirectionToInt(_inputVector);
 
             if (possibleTurns[index]) {
                 _currentDirection = _inputVector;
@@ -69,34 +69,6 @@ namespace UnitMan.Source
             _rigidBody.velocity = motion;
         }
 
-        private static int DirectionToInt(Vector2Int vector) {
-            int index = -1;
-            if (vector == up) {
-                index = 0;
-            }
-            else if (vector == down) {
-                index = 1;
-            }
-            else if (vector == left) {
-                index = 2;
-            }
-            else if (vector == right) {
-                index = 3;
-            }
-
-            return index;
-        }
-        
-        private static Vector2Int IntToDirection(int number) {
-            return number switch {
-                0 => Vector2Int.right,
-                1 => Vector2Int.left,
-                2 => Vector2Int.down,
-                3 => Vector2Int.right,
-                _ => Vector2Int.zero
-            };
-        }
-        
 
 
         private bool IsCardinalDirection(Vector2 vector) {
@@ -132,13 +104,12 @@ namespace UnitMan.Source
         }
 
         private void OnCollisionEnter2D(Collision2D other) {
-            if (other.gameObject.CompareTag("Enemy")) {
-                if (isInvincible) {
-                    //Eat ghost
-                }
-                else {
-                    GameManager.Instance.Die();
-                }
+            if (!other.gameObject.CompareTag("Enemy")) return;
+            if (isInvincible) {
+                //Eat ghost
+            }
+            else {
+                GameManager.Instance.Die();
             }
         }
         
