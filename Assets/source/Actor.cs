@@ -31,7 +31,8 @@ namespace UnitMan.Source {
         
         protected LayerMask wallLayer;
         
-        protected readonly bool[] possibleTurns = {false, false, false, false};
+        [SerializeField]
+        protected bool[] possibleTurns = {false, false, false, false};
         protected int _possibleTurnsAmount;
 
         protected Dictionary<int, Vector2Int> allDirections = new Dictionary<int, Vector2Int>();
@@ -58,7 +59,7 @@ namespace UnitMan.Source {
             allDirections.Add(2, Vector2Int.left);
             allDirections.Add(3, Vector2Int.right);
 
-            wallLayer = LayerMask.NameToLayer("Wall");
+            wallLayer = LayerMask.GetMask("Wall");
         }
 
         private void ResetPosition() {
@@ -85,6 +86,34 @@ namespace UnitMan.Source {
             possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
             possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
             UpdatePossibleTurnsAmount();
+        }
+        
+        public static int DirectionToInt(Vector2Int vector) {
+            int index = -1;
+            if (vector == Vector2Int.up) {
+                index = 0;
+            }
+            else if (vector == Vector2Int.down) {
+                index = 1;
+            }
+            else if (vector == Vector2Int.left) {
+                index = 2;
+            }
+            else if (vector == Vector2Int.right) {
+                index = 3;
+            }
+
+            return index;
+        }
+        
+        public static Vector2Int IntToDirection(int number) {
+            return number switch {
+                0 => Vector2Int.right,
+                1 => Vector2Int.left,
+                2 => Vector2Int.down,
+                3 => Vector2Int.right,
+                _ => Vector2Int.zero
+            };
         }
         
         private void UpdatePossibleTurnsAmount() {
