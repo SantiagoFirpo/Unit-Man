@@ -5038,6 +5038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pelletsEaten: 0
+  lives: 3
 --- !u!4 &1229582676
 Transform:
   m_ObjectHideFlags: 0
@@ -8948,7 +8949,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9056,9 +9057,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4291801952637646556, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
+      propertyPath: playerTransform
+      value: 
+      objectReference: {fileID: 338281675}
     - target: {fileID: 8877664366230884091, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
       propertyPath: m_Name
       value: Inky
+      objectReference: {fileID: 0}
+    - target: {fileID: 8877664366230884091, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8877664366230884092, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
       propertyPath: playerTransform
@@ -9070,7 +9079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8877664366230884095, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8877664366230884095, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9108,5 +9117,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8877664366230884092, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ee69a83774ea80f48a0d59a819c6ab92, type: 3}
