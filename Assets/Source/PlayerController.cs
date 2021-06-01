@@ -1,3 +1,5 @@
+using System;
+using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -34,6 +36,7 @@ namespace UnitMan.Source
         // Start is called before the first frame update
         protected override void Awake() {
             base.Awake();
+            startPosition = new Vector3(2f, -4f, 0f);
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.onActionTriggered += OnInputChanged;
 
@@ -117,5 +120,17 @@ namespace UnitMan.Source
             isInvincible = true;
             _invincibleTimer.Begin();
         }
+
+        private void OnCollisionEnter2D(Collision2D other) {
+            if (other.gameObject.CompareTag("Enemy")) {
+                if (isInvincible) {
+                    //Eat ghost
+                }
+                else {
+                    GameManager.Instance.Die();
+                }
+            }
+        }
+        
     }
 }
