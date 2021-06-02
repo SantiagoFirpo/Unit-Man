@@ -10,7 +10,6 @@ namespace UnitMan.Source
     [RequireComponent(typeof(PlayerInput), typeof(CircleCollider2D))]
     public class PlayerController : Actor
     {
-        public static PlayerController Instance { get; private set; }
         private const float MOVE_SPEED = 5f;
         
 
@@ -40,10 +39,12 @@ namespace UnitMan.Source
             _playerInput = GetComponent<PlayerInput>();
             _playerInput.onActionTriggered += OnInputChanged;
 
-            if (Instance != null) {GameObject.Destroy(this);}
-            Instance = this;
-
             _invincibleTimer.OnEnd += DisableInvincibility;
+        }
+
+        private void OnDisable() {
+            _playerInput.onActionTriggered -= OnInputChanged;
+            _invincibleTimer.OnEnd -= DisableInvincibility;
         }
 
         private void DisableInvincibility() {
@@ -66,7 +67,7 @@ namespace UnitMan.Source
             //     _transform.position = Vector3Int.RoundToInt(_transform.position);
             // }
 
-            _rigidBody.velocity = motion;
+            rigidBody.velocity = motion;
         }
 
 

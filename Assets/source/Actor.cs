@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnitMan.Source.Management;
@@ -7,9 +8,10 @@ using UnityEngine;
 namespace UnitMan.Source {
     [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
     public abstract class Actor : MonoBehaviour, IInitializable {
-        protected CircleCollider2D _circleCollider;
-        protected Rigidbody2D _rigidBody;
+        protected CircleCollider2D circleCollider;
+        protected Rigidbody2D rigidBody;
         protected Transform _transform;
+        
         protected GameObject _gameObject;
 
         protected Vector3 startPosition;
@@ -41,9 +43,9 @@ namespace UnitMan.Source {
             Initialize();
         }
 
-        public void Initialize() {
-            _circleCollider = GetComponent<CircleCollider2D>();
-            _rigidBody = GetComponent<Rigidbody2D>();
+        public virtual void Initialize() {
+            circleCollider = GetComponent<CircleCollider2D>();
+            rigidBody = GetComponent<Rigidbody2D>();
             _transform = transform;
             _gameObject = gameObject;
             
@@ -60,6 +62,10 @@ namespace UnitMan.Source {
             allDirections.Add(3, Vector2Int.right);
 
             wallLayer = LayerMask.GetMask("Wall");
+        }
+
+        private void OnDisable() {
+            GameManager.OnReset -= ResetPosition;
         }
 
         private void ResetPosition() {
