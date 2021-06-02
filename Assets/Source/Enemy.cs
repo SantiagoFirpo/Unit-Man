@@ -20,6 +20,8 @@ namespace UnitMan.Source {
 
        protected float pathfindingIntervalSeconds = 4f;
        private PlayerController _playerController;
+       private float _currentMoveSpeed;
+       private float _slowMoveSpeed;
 
        protected override void Awake() {
            base.Awake();
@@ -35,16 +37,13 @@ namespace UnitMan.Source {
        }
 
        private void UpdateState(bool isInvincible) {
-           if (isInvincible) {
-               moveSpeed /= 2f;
-           }
-           else {
-               moveSpeed *= 2f;
-           }
+           _currentMoveSpeed = isInvincible ? _slowMoveSpeed : moveSpeed;
        }
 
        private void Start() {
            _directionTimer.Begin();
+           _currentMoveSpeed = moveSpeed;
+           _slowMoveSpeed = moveSpeed/2f;
        }
 
        private Queue<Vector2Int> ShortestPathToPlayer() {
@@ -65,7 +64,7 @@ namespace UnitMan.Source {
            //     TurnToAvailableDirection();
            // }
 
-           motion = _direction * (int) moveSpeed;
+           motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
        }
 
