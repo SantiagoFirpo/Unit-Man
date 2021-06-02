@@ -28,7 +28,8 @@ namespace UnitMan.Source.Management
         }
 
         public void CheckIfGameIsWon() {
-            if (pelletsEaten < 284) return;
+            if (pelletsEaten < 282) return;
+            Debug.Log("You won!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
             foreach (Actor actor in FindObjectsOfType<Actor>()) {
                 actor.Initialize();
