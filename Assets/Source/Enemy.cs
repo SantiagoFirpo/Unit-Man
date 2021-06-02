@@ -22,7 +22,7 @@ namespace UnitMan.Source {
 
        protected override void Awake() {
            base.Awake();
-           startPosition = new Vector3(1f, 0f, 0f);
+           startPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
@@ -80,10 +80,10 @@ namespace UnitMan.Source {
        }
 
        private void OnCollisionEnter2D(Collision2D other) {
-           if (other.gameObject.CompareTag("Player")) {
-               if (_playerController.isInvincible) {
-                   
-               }
+           if (!other.gameObject.CompareTag("Player")) return;
+           if (_playerController.isInvincible) {
+               // gameObject.SetActive(false);
+               _transform.position = startPosition;
            }
        }
 
