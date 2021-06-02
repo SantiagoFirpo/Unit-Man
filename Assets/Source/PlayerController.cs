@@ -29,6 +29,7 @@ namespace UnitMan.Source
 
         public bool isInvincible = false;
         private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, 0f);
+        public static event Action<bool> OnInvincibleChanged;
         private const float INVINCIBLE_TIME_SECONDS = 10f;
 
 
@@ -53,6 +54,7 @@ namespace UnitMan.Source
 
         private void DisableInvincibility() {
             isInvincible = false;
+            OnInvincibleChanged?.Invoke(isInvincible);
         }
 
         protected override void FixedUpdate() {
@@ -102,6 +104,7 @@ namespace UnitMan.Source
         public void SetInvincible() {
             isInvincible = true;
             _invincibleTimer.Begin();
+            OnInvincibleChanged?.Invoke(isInvincible);
         }
 
         private void OnCollisionEnter2D(Collision2D other) {
