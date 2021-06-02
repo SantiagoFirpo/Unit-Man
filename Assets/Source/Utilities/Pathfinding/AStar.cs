@@ -8,6 +8,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
     public static class AStar
     {
         public static Queue<Vector2Int> ShortestPathBetween(Vector2Int startPosition, Vector2Int endPosition) {
+            
             PathNode startNode = new PathNode(startPosition, startPosition, endPosition) {costFromStart = 0};
             PathNode currentNode = startNode;
             

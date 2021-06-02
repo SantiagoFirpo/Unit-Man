@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
-using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
+using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
     public abstract class Enemy : Actor {
        private Timer _directionTimer;
        protected float moveSpeed;
-       private Queue<Vector2Int> _nodeQueue = new Queue<Vector2Int>();
+       private Queue<Vector2Int> lockedPositionQueue = new Queue<Vector2Int>();
+       private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
        private Transform _playerTransform;
 
@@ -41,14 +44,22 @@ namespace UnitMan.Source {
            _slowMoveSpeed = moveSpeed/2f;
        }
 
-       private Queue<Vector2Int> ShortestPathToPlayer() {
-           return AStar.ShortestPathBetween(Vector2Int.RoundToInt(_transform.position), Vector2Int.RoundToInt(_playerTransform.position));
+       private void MultithreadedPathToPlayer(Vector3 position, Vector3 playerPosition) {
+           void ThreadStart() {
+               Queue<Vector2Int> path = AStar.ShortestPathBetween(Vector2Int.RoundToInt(position), Vector2Int.RoundToInt(playerPosition));
+               lock (lockedPositionQueue) {
+                   lockedPositionQueue = path;
+               }
+           }
+
+           Thread thread = new Thread((ThreadStart) ThreadStart);
+           thread.Start();
        }
 
        protected override void FixedUpdate() {
            base.FixedUpdate();
            UpdateGridPosition();
-           if (_nodeQueue.Count != 0) {
+           if (_positionQueue.Count != 0) {
                MoveThroughPath();
            }
            if (rigidBody.velocity == Vector2.zero)
@@ -63,19 +74,23 @@ namespace UnitMan.Source {
            rigidBody.velocity = motion;
        }
 
-       
+       private void Update() {
+           if (lockedPositionQueue != null) {
+               _positionQueue = lockedPositionQueue;
+           }
+       }
 
        private void UpdateGridPosition() {
            _gridPosition = Vector2Int.RoundToInt(_transform.position);
        }
 
        private void MoveThroughPath() {
-           Vector2Int nextPosition = _nodeQueue.Peek();
+           Vector2Int nextPosition = _positionQueue.Peek();
            Vector2Int actualDirection = nextPosition - _gridPosition;
            _direction = actualDirection == Vector2Int.zero ? _direction : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
            if (VectorApproximately(_transform.position, nextPosition, 0.05f)) {
-               _nodeQueue.Dequeue();
+               _positionQueue.Dequeue();
            }
        }
 
@@ -88,7 +103,8 @@ namespace UnitMan.Source {
        }
 
        private void UpdatePath() {
-           _nodeQueue = ShortestPathToPlayer();
+           MultithreadedPathToPlayer(_transform.position, _playerTransform.position);
+
        }
 
        private void TurnToAvailableDirection() {
