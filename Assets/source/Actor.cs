@@ -130,6 +130,10 @@ namespace UnitMan.Source {
                 }
             }
         }
+        
+        public static bool VectorApproximately(Vector3 v1, Vector2Int v2, float maxDelta) {
+            return (Mathf.Abs(v1.x - v2.x) <= maxDelta && Mathf.Abs(v1.y - v2.y) <= maxDelta);
+        }
 
         protected virtual void FixedUpdate() {
             CheckPossibleTurns();
