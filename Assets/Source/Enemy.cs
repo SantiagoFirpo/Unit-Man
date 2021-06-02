@@ -11,7 +11,7 @@ namespace UnitMan.Source {
        protected float moveSpeed;
        private float _fixedMoveSpeed;
        private Agent _agent;
-       private Queue<PathNode> _nodeQueue = new Queue<PathNode>();
+       private Queue<Vector2Int> _nodeQueue = new Queue<Vector2Int>();
        
        private Transform _playerTransform;
 
@@ -35,7 +35,7 @@ namespace UnitMan.Source {
            _directionTimer.Begin();
        }
 
-       private Queue<PathNode> ShortestPathToPlayer() {
+       private Queue<Vector2Int> ShortestPathToPlayer() {
            return AStar.ShortestPathBetween(Vector2Int.RoundToInt(_transform.position), Vector2Int.RoundToInt(_playerTransform.position));
        }
 
@@ -45,8 +45,16 @@ namespace UnitMan.Source {
            if (_nodeQueue.Count != 0) {
                MoveThroughPath();
            }
+           if (rigidBody.velocity == Vector2.zero)
+               TurnToAvailableDirection();
+           
+
+           // if (rigidBody.velocity == Vector2.zero) {
+           //     TurnToAvailableDirection();
+           // }
+
+           motion = _direction * (int) moveSpeed;
            rigidBody.velocity = motion;
-           if (rigidBody.velocity == Vector2.zero) TurnToAvailableDirection();
        }
 
        
@@ -56,10 +64,9 @@ namespace UnitMan.Source {
        }
 
        private void MoveThroughPath() {
-           Vector2Int nextPosition = _nodeQueue.Peek().position;
+           Vector2Int nextPosition = _nodeQueue.Peek();
            Vector2Int actualDirection = nextPosition - _gridPosition;
            _direction = actualDirection == Vector2Int.zero ? _direction : actualDirection;
-           motion = _direction * (int) moveSpeed;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
            if (VectorApproximately(_transform.position, nextPosition, 0.05f)) {
                _nodeQueue.Dequeue();
@@ -78,13 +85,9 @@ namespace UnitMan.Source {
            Vector2Int originDirection = _direction * -1;
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
-               Debug.Log("Can't turn this direction");
-               Vector2Int targetTurn = IntToDirection(i);
-               if (targetTurn == originDirection) continue;
-               Debug.Log("Came from this direction!");
-               Debug.Log($"The first valid direction is {targetTurn}");
-               _direction = targetTurn;
-               return;
+               if (Actor.IntToDirection(i) != originDirection) {
+                   _direction = Actor.IntToDirection(i);
+               }
            }
        }
 
