@@ -10,6 +10,10 @@ namespace UnitMan.Source.Management
 
         public static event Action OnReset;
 
+        public GameObject player;
+
+        public GameObject[] sceneObjects;
+
         public int pelletsEaten = 0;
 
         public int lives = 3; 
@@ -17,16 +21,17 @@ namespace UnitMan.Source.Management
         private void Awake() {
             if (Instance != null) {GameObject.Destroy(gameObject);}
             Instance = this;
+
+            foreach (GameObject sceneObject in sceneObjects) {
+                sceneObject.SetActive(true);
+            }
         }
 
         public void CheckIfGameIsWon() {
-            if (pelletsEaten >= 89) {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-                foreach (Actor actor in FindObjectsOfType<Actor>()) {
-                    actor.Initialize();
-                }
-                
-                
+            if (pelletsEaten < 284) return;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+            foreach (Actor actor in FindObjectsOfType<Actor>()) {
+                actor.Initialize();
             }
         }
 
