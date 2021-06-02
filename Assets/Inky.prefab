@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 8877664366230884094}
   - component: {fileID: 8877664366230884093}
   - component: {fileID: 8877664366230884080}
-  - component: {fileID: 8877664366230884081}
   - component: {fileID: 8877664366230884082}
-  - component: {fileID: 4291801952637646556}
+  - component: {fileID: 7079307446248341177}
   m_Layer: 6
   m_Name: Inky
   m_TagString: Untagged
@@ -134,18 +133,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &8877664366230884081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877664366230884091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd21aed510643c2a4b571a5d7b66bb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!58 &8877664366230884082
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -162,7 +149,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &4291801952637646556
+--- !u!114 &7079307446248341177
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,8 +158,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8877664366230884091}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb721de29ee34dce8b60bd9955f5b942, type: 3}
+  m_Script: {fileID: 11500000, guid: 6136d8891a304f81a0793cdead231875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   motion: {x: 0, y: 0}
-  playerTransform: {fileID: 0}
+  possibleTurns: 00000000
