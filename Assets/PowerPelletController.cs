@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnitMan.Source;
+using UnitMan.Source.Management;
 using UnityEngine;
 
 namespace UnitMan
 {
     public class PowerPelletController : PelletController
     {
+        private PlayerController _playerController;
         protected override void Awake() {
             base.Awake();
-            base.scoreValue = 100;
+            scoreValue = 100;
+            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
         }
 
 
-        protected override void UpdatePlayerState() {
-            PlayerController.Instance.SetInvincible();
+        protected override void UpdatePlayerState() { 
+            _playerController.SetInvincible();
         }
     }
 }
