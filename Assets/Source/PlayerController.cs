@@ -15,20 +15,11 @@ namespace UnitMan.Source
 
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
-        private InputAction.CallbackContext _inputContext;
 
         private Vector2Int _currentDirection;
         
-
-   
-
-        private enum Turns
-        {
-            Up = 0, Down = 1, Left = 2, Right = 3
-        }
-
-        public bool isInvincible = false;
-        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, 0f);
+        public bool isInvincible;
+        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
         public static event Action<bool> OnInvincibleChanged;
         private const float INVINCIBLE_TIME_SECONDS = 10f;
 
@@ -78,8 +69,8 @@ namespace UnitMan.Source
 
 
 
-        private bool IsCardinalDirection(Vector2 vector) {
-            return Mathf.Abs(_inputVector.x) != Mathf.Abs(_inputVector.y);
+        private static bool IsCardinalDirection(Vector2 vector) {
+            return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
         }
 
         private void OnMove(InputAction.CallbackContext context) {
