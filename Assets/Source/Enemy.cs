@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -11,9 +12,8 @@ namespace UnitMan.Source {
        private float _fixedMoveSpeed;
        private Agent _agent;
        private Queue<PathNode> _nodeQueue = new Queue<PathNode>();
-
-       [SerializeField]
-       private Transform playerTransform;
+       
+       private Transform _playerTransform;
 
        private Vector2Int _gridPosition;
        private Vector2Int _direction;
@@ -24,6 +24,7 @@ namespace UnitMan.Source {
            base.Awake();
            startPosition = new Vector3(1f, 0f, 0f);
            _fixedMoveSpeed = moveSpeed / 50f;
+           _playerTransform = GameManager.Instance.player.transform;
            _agent = GetComponent<Agent>();
            _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            UpdatePath();
@@ -35,7 +36,7 @@ namespace UnitMan.Source {
        }
 
        private Queue<PathNode> ShortestPathToPlayer() {
-           return AStar.ShortestPathBetween(Vector2Int.RoundToInt(_transform.position), Vector2Int.RoundToInt(playerTransform.position));
+           return AStar.ShortestPathBetween(Vector2Int.RoundToInt(_transform.position), Vector2Int.RoundToInt(_playerTransform.position));
        }
 
        protected override void FixedUpdate() {
@@ -44,8 +45,8 @@ namespace UnitMan.Source {
            if (_nodeQueue.Count != 0) {
                MoveThroughPath();
            }
-           _rigidBody.velocity = motion;
-           if (_rigidBody.velocity == Vector2.zero) TurnToAvailableDirection();
+           rigidBody.velocity = motion;
+           if (rigidBody.velocity == Vector2.zero) TurnToAvailableDirection();
        }
 
        
