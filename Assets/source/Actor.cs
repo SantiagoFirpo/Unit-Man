@@ -114,9 +114,9 @@ namespace UnitMan.Source {
         
         public static Vector2Int IntToDirection(int number) {
             return number switch {
-                0 => Vector2Int.right,
-                1 => Vector2Int.left,
-                2 => Vector2Int.down,
+                0 => Vector2Int.up,
+                1 => Vector2Int.down,
+                2 => Vector2Int.left,
                 3 => Vector2Int.right,
                 _ => Vector2Int.zero
             };
