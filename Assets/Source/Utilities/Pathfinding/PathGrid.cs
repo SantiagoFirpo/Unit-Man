@@ -1,14 +1,8 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
-namespace UnitMan
+namespace UnitMan.Source.Utilities.Pathfinding
 {
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
