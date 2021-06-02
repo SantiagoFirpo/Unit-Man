@@ -13949,13 +13949,12 @@ MonoBehaviour:
   - {fileID: 811056402}
   - {fileID: 2055087597}
   - {fileID: 1504394301}
-  - {fileID: 914163331}
   - {fileID: 1491379716}
   - {fileID: 186817789}
   - {fileID: 758070429}
+  - {fileID: 914163331}
+  - {fileID: 914163331}
   - {fileID: 8877664366810112996}
-  - {fileID: 8877664367099322892}
-  - {fileID: 8877664366791219919}
   pelletsEaten: 0
   lives: 3
 --- !u!4 &1229582676
@@ -13966,7 +13965,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1229582674}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9147584, y: 1.5172601, z: -26.419092}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -25178,11 +25177,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.z
