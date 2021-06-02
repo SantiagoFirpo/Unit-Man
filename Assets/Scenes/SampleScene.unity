@@ -14180,6 +14180,8 @@ MonoBehaviour:
   - {fileID: 914163331}
   - {fileID: 8877664366810112996}
   - {fileID: 710049339}
+  - {fileID: 8877664367099322892}
+  - {fileID: 8877664366791219919}
   pelletsEaten: 0
   lives: 3
 --- !u!4 &1229582676
