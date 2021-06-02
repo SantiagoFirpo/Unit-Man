@@ -7,7 +7,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 {
     public static class AStar
     {
-        public static Queue<PathNode> ShortestPathBetween(Vector2Int startPosition, Vector2Int endPosition) {
+        public static Queue<Vector2Int> ShortestPathBetween(Vector2Int startPosition, Vector2Int endPosition) {
             PathNode startNode = new PathNode(startPosition, startPosition, endPosition) {costFromStart = 0};
             PathNode currentNode = startNode;
             
@@ -21,7 +21,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
                 checkedNodes.Add(currentNode);
 
                 if (currentNode.position == endPosition) {
-                    Queue<PathNode> path = TracePath(startNode, currentNode);
+                    Queue<Vector2Int> path = TracePath(startNode, currentNode);
                     return path;
                 }
 
@@ -46,15 +46,15 @@ namespace UnitMan.Source.Utilities.Pathfinding
             return null;
         }
 
-        private static Queue<PathNode> TracePath(PathNode startNode, PathNode endNode) {
-            Queue<PathNode> path = new Queue<PathNode>();
+        private static Queue<Vector2Int> TracePath(PathNode startNode, PathNode endNode) {
+            Queue<Vector2Int> path = new Queue<Vector2Int>();
             PathNode currentNode = endNode;
             while (currentNode.previousNode != null) {
-                path.Enqueue(currentNode);
+                path.Enqueue(currentNode.position);
                 currentNode = currentNode.previousNode;
             }
 
-            path = new Queue<PathNode>(path.Reverse());
+            path = new Queue<Vector2Int>(path.Reverse());
             return path;
         }
 
