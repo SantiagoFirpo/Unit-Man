@@ -11,7 +11,7 @@ namespace UnitMan.Source
     public class PlayerController : Actor
     {
         private const float MOVE_SPEED = 5f;
-        
+        private InputMaps _inputMaps;
 
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
@@ -36,14 +36,18 @@ namespace UnitMan.Source
         protected override void Awake() {
             base.Awake();
             startPosition = new Vector3(2f, -4f, 0f);
+            _inputMaps = new InputMaps();
+            _inputMaps.Player.Enable();
+            _inputMaps.Player.Move.performed += OnMove;
             _playerInput = GetComponent<PlayerInput>();
-            _playerInput.onActionTriggered += OnInputChanged;
+            // _playerInput.onActionTriggered += OnMove;
 
             _invincibleTimer.OnEnd += DisableInvincibility;
         }
 
         private void OnDisable() {
-            _playerInput.onActionTriggered -= OnInputChanged;
+            _playerInput.onActionTriggered -= OnMove;
+            _inputMaps.Player.Disable();
             _invincibleTimer.OnEnd -= DisableInvincibility;
         }
 
@@ -76,12 +80,8 @@ namespace UnitMan.Source
             return Mathf.Abs(_inputVector.x) != Mathf.Abs(_inputVector.y);
         }
 
-        private void OnInputChanged(InputAction.CallbackContext context) {
-            _inputContext = context;
-            _inputVector = _inputContext.action.name switch {
-                "Move" => RoundToInt(_inputContext.ReadValue<Vector2>()),
-                _ => _inputVector
-            };
+        private void OnMove(InputAction.CallbackContext context) {
+            _inputVector = RoundToInt(context.ReadValue<Vector2>());
         }
 
         private void OnDrawGizmos() {
