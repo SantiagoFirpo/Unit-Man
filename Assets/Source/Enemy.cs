@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -9,8 +8,6 @@ namespace UnitMan.Source {
     public abstract class Enemy : Actor {
        private Timer _directionTimer;
        protected float moveSpeed;
-       private float _fixedMoveSpeed;
-       private Agent _agent;
        private Queue<Vector2Int> _nodeQueue = new Queue<Vector2Int>();
        
        private Transform _playerTransform;
@@ -26,10 +23,8 @@ namespace UnitMan.Source {
        protected override void Awake() {
            base.Awake();
            startPosition = new Vector3(1f, 0f, 0f);
-           _fixedMoveSpeed = moveSpeed / 50f;
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _agent = GetComponent<Agent>();
            _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            UpdatePath();
            _directionTimer.OnEnd += UpdatePath;
@@ -82,10 +77,6 @@ namespace UnitMan.Source {
            if (VectorApproximately(_transform.position, nextPosition, 0.05f)) {
                _nodeQueue.Dequeue();
            }
-       }
-
-       private static bool VectorApproximately(Vector3 v1, Vector2Int v2, float maxDelta) {
-           return (Mathf.Abs(v1.x - v2.x) <= maxDelta && Mathf.Abs(v1.y - v2.y) <= maxDelta);
        }
 
        private void OnCollisionEnter2D(Collision2D other) {
