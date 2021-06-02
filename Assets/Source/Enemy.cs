@@ -19,16 +19,28 @@ namespace UnitMan.Source {
        private Vector2Int _direction;
 
        protected float pathfindingIntervalSeconds = 4f;
+       private PlayerController _playerController;
 
        protected override void Awake() {
            base.Awake();
            startPosition = new Vector3(1f, 0f, 0f);
            _fixedMoveSpeed = moveSpeed / 50f;
            _playerTransform = GameManager.Instance.player.transform;
+           _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _agent = GetComponent<Agent>();
            _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            UpdatePath();
            _directionTimer.OnEnd += UpdatePath;
+           PlayerController.OnInvincibleChanged += UpdateState;
+       }
+
+       private void UpdateState(bool isInvincible) {
+           if (isInvincible) {
+               moveSpeed /= 2f;
+           }
+           else {
+               moveSpeed *= 2f;
+           }
        }
 
        private void Start() {
@@ -75,6 +87,14 @@ namespace UnitMan.Source {
 
        private static bool VectorApproximately(Vector3 v1, Vector2Int v2, float maxDelta) {
            return (Mathf.Abs(v1.x - v2.x) <= maxDelta && Mathf.Abs(v1.y - v2.y) <= maxDelta);
+       }
+
+       private void OnCollisionEnter2D(Collision2D other) {
+           if (other.gameObject.CompareTag("Player")) {
+               if (_playerController.isInvincible) {
+                   
+               }
+           }
        }
 
        private void UpdatePath() {
