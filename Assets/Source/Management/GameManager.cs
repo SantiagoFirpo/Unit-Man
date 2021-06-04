@@ -14,12 +14,12 @@ namespace UnitMan.Source.Management
 
         public GameObject[] sceneObjects;
 
-        public int pelletsEaten = 0;
+        public int pelletsEaten;
 
         public int lives = 3; 
         // Start is called before the first frame update
         private void Awake() {
-            if (Instance != null) {GameObject.Destroy(gameObject);}
+            if (Instance != null) {Destroy(gameObject);}
             Instance = this;
 
             foreach (GameObject sceneObject in sceneObjects) {
