@@ -20,12 +20,17 @@ namespace UnitMan.Source {
         protected const float WALL_CHECK_DISTANCE = 0.8f;
         protected const float ALMOST_ONE = 0.9f;
         
-        protected readonly Vector2 _upLeft = new Vector2(-0.5f, 0.5f);
-        protected readonly Vector2 _upRight = new Vector2(0.5f, 0.5f);
+        protected readonly Vector2 upLeft = new Vector2(-0.5f, 0.5f);
+        protected readonly Vector2 upRight = new Vector2(0.5f, 0.5f);
 
-        protected readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
-        protected readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
+        protected readonly Vector2 downLeft = new Vector2(-0.5f, -0.5f);
+        protected readonly Vector2 downRight = new Vector2(0.5f, -0.5f);
 
+        private readonly Vector2 _up = Vector2.up;
+        private readonly Vector2 _down = Vector2.down;
+        private readonly Vector2 _left = Vector2.left;
+        private readonly Vector2 _right = Vector2.right;
+        
         private Vector2 _almostUpLeft;
         private Vector2 _almostUpRight;
         private Vector2 _almostDownLeft;
@@ -35,10 +40,7 @@ namespace UnitMan.Source {
         
         [SerializeField]
         protected bool[] possibleTurns = {false, false, false, false};
-        protected int _possibleTurnsAmount;
 
-        protected Dictionary<int, Vector2Int> allDirections = new Dictionary<int, Vector2Int>();
-        
         protected virtual void Awake() {
             Initialize();
         }
@@ -51,15 +53,10 @@ namespace UnitMan.Source {
             
             GameManager.OnReset += ResetPosition;
 
-            _almostUpLeft = _upLeft * ALMOST_ONE;
-            _almostUpRight = _upRight * ALMOST_ONE;
-            _almostDownLeft = _downLeft * ALMOST_ONE;
-            _almostDownRight = _downRight * ALMOST_ONE;
-            
-            allDirections.Add(0, Vector2Int.up);
-            allDirections.Add(1, Vector2Int.down);
-            allDirections.Add(2, Vector2Int.left);
-            allDirections.Add(3, Vector2Int.right);
+            _almostUpLeft = upLeft * ALMOST_ONE;
+            _almostUpRight = upRight * ALMOST_ONE;
+            _almostDownLeft = downLeft * ALMOST_ONE;
+            _almostDownRight = downRight * ALMOST_ONE;
 
             wallLayer = LayerMask.GetMask("Wall");
         }
@@ -75,23 +72,22 @@ namespace UnitMan.Source {
         private void CheckPossibleTurns() {
             Vector2 playerPosition = _transform.position;
             
-            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.up, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.up, WALL_CHECK_DISTANCE, wallLayer);
-
-            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.down, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.down, WALL_CHECK_DISTANCE, wallLayer);
-
-            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Vector2.left, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Vector2.left, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, _up, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, _up, WALL_CHECK_DISTANCE, wallLayer);
             
-            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Vector2.right, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Vector2.right, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, _down, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, _down, WALL_CHECK_DISTANCE, wallLayer);
+            
+            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, _left, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, _left, WALL_CHECK_DISTANCE, wallLayer);
+            
+            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, _right, WALL_CHECK_DISTANCE, wallLayer);
+            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, _right, WALL_CHECK_DISTANCE, wallLayer);
             
             possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
             possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
             possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
             possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
-            UpdatePossibleTurnsAmount();
         }
         
         public static int DirectionToInt(Vector2Int vector) {
@@ -121,16 +117,7 @@ namespace UnitMan.Source {
                 _ => Vector2Int.zero
             };
         }
-        
-        private void UpdatePossibleTurnsAmount() {
-            _possibleTurnsAmount = 0;
-            foreach (bool isTurnValid in possibleTurns) {
-                if (isTurnValid) {
-                    _possibleTurnsAmount++;
-                }
-            }
-        }
-        
+
         public static bool VectorApproximately(Vector3 v1, Vector2Int v2, float maxDelta) {
             return (Mathf.Abs(v1.x - v2.x) <= maxDelta && Mathf.Abs(v1.y - v2.y) <= maxDelta);
         }
