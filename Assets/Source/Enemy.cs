@@ -40,12 +40,14 @@ namespace UnitMan.Source {
        private readonly Vector3 _downRightMap = new Vector3(9f, -20f, 0f);
 
        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
+       private Vector3 _hubPosition;
 
        protected override void Awake() {
            base.Awake();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
            startPosition = thisTransform.position;
+           _hubPosition = new Vector3(2f, 1f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
@@ -127,7 +129,7 @@ namespace UnitMan.Source {
        }
        
        private void ComputePathToHub() {
-           MultithreadedPath(thisTransform.position, startPosition);
+           MultithreadedPath(thisTransform.position, _hubPosition);
        }
        
        private void ComputePathAwayFromPlayer() {
