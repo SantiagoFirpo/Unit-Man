@@ -3,8 +3,8 @@
     public class Pinky : Enemy
     {
         public override void Initialize() {
-            base.moveSpeed = 4.5f;
-            base.pathfindingIntervalSeconds = 10f;
+            standardMoveSpeed = 4.5f;
+            pathfindingIntervalSeconds = 10f;
             base.Initialize();
             
         }

@@ -3,8 +3,8 @@
     public class Blinky : Enemy
     {
         public override void Initialize() {
-            base.moveSpeed = 3f;
-            base.pathfindingIntervalSeconds = 5f;
+            standardMoveSpeed = 3f;
+            pathfindingIntervalSeconds = 5f;
             base.Initialize();
         }
     }

@@ -3,8 +3,8 @@
     public class Inky : Enemy
     {
         public override void Initialize() {
-            base.moveSpeed = 4f;
-            base.pathfindingIntervalSeconds = 3f;
+            standardMoveSpeed = 4f;
+            pathfindingIntervalSeconds = 3f;
             base.Initialize();
             
         }
