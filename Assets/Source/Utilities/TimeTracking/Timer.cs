@@ -8,7 +8,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     public event System.Action OnEnd;
     private readonly float _waitTime;
     private readonly float _delay;
-    private float _currentTime = 0f;
+    private float _currentTime;
     private readonly bool _autoStart;
     private readonly bool _oneShot;
 
