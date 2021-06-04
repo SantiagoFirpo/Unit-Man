@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using UnitMan.Source.Management;
@@ -10,7 +9,6 @@ namespace UnitMan.Source {
     public abstract class Enemy : Actor {
        private Timer _directionTimer;
        protected float moveSpeed;
-       private Queue<Vector2Int> lockedPositionQueue = new Queue<Vector2Int>();
        private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
        private Transform _playerTransform;
@@ -70,7 +68,7 @@ namespace UnitMan.Source {
            if (_positionQueue.Count > 0) {
                MoveThroughPath();
            }
-           if (rigidBody.velocity == Vector2.zero) {
+           if (rigidBody.velocity == Vector2.zero) { //else 
                TurnToValidDirection();
            }
 
@@ -79,7 +77,7 @@ namespace UnitMan.Source {
        }
 
        private void UpdateGridPosition() {
-           _gridPosition = Vector2Int.RoundToInt(_transform.position);
+           _gridPosition = Vector2Int.RoundToInt(thisTransform.position);
        }
 
        private void MoveThroughPath() {
@@ -87,7 +85,7 @@ namespace UnitMan.Source {
            Vector2Int actualDirection = nextPosition - _gridPosition;
            _direction = actualDirection == Vector2Int.zero ? _direction : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (VectorApproximately(_transform.position, nextPosition, 0.05f)) {
+           if (VectorApproximately(thisTransform.position, nextPosition, 0.08f)) { // previous value: 0.05f
                _positionQueue.Dequeue();
            }
        }
@@ -96,25 +94,31 @@ namespace UnitMan.Source {
            if (!other.gameObject.CompareTag("Player")) return;
            if (_playerController.isInvincible) {
                // gameObject.SetActive(false);
-               _transform.position = startPosition;
+               thisTransform.position = startPosition;
            }
        }
 
        private void ComputePathToPlayer() {
-           MultithreadedPath(_transform.position, _playerTransform.position);
+           MultithreadedPath(thisTransform.position, _playerTransform.position);
 
        }
 
        private void TurnToValidDirection() {
            Vector2Int originDirection = _direction * -1;
+           int possibleTurnsTotal = 0;
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
-               if (Actor.IntToDirection(i) != originDirection) {
+               possibleTurnsTotal++;
+               if (Actor.IntToDirection(i) != originDirection || possibleTurnsTotal == 1) {
                    _direction = Actor.IntToDirection(i);
                }
            }
        }
 
+       // private static int GetQuadrant(Vector2 position, Vector2[] bounds) {
+       //     if (bounds.Length != 4) return 0;
+       //     if (position.x < )
+       // }
        
     }
 }
