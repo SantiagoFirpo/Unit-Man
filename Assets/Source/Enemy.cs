@@ -23,7 +23,14 @@ namespace UnitMan.Source {
 
        private int _inactiveLayer;
        private int _defaultLayer;
+
+       public enum State
+       {
+           Alive, Fleeing, Dead
+       }
        
+       public State state = State.Alive;
+
        private bool _isAlive = true;
        private const float MOVE_SPEED_INACTIVE = 15f;
 
@@ -48,12 +55,7 @@ namespace UnitMan.Source {
        }
 
        private void UpdateState(bool isInvincible) {
-           if (!_isAlive) return;
-           _currentMoveSpeed = isInvincible ? _slowMoveSpeed : standardMoveSpeed;
-           _pathToPlayerTimer.paused = isInvincible;
-           if (!isInvincible) return;
-           _positionQueue.Clear();
-           ComputePathAwayFromPlayer();
+           SetState(isInvincible ? State.Fleeing : State.Alive);
        }
 
        private void Start() {
@@ -87,11 +89,9 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           // if (!_isAlive && _positionQueue != null) {
-           //     _isAlive = true;
-           //     thisGameObject.layer = _inactiveLayer;
-           //     _currentMoveSpeed = standardMoveSpeed;
-           // }
+           if (thisTransform.position == startPosition && state == State.Dead) {
+               SetState(State.Alive);
+           }
 
            motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
@@ -113,13 +113,13 @@ namespace UnitMan.Source {
 
        private void OnCollisionEnter2D(Collision2D other) {
            if (!other.gameObject.CompareTag("Player")) return;
-           // if (!_playerController.isInvincible) return;
-           // _isAlive = false;
-           // _pathToPlayerTimer.paused = true;
-           // _positionQueue.Clear();
-           // _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-           // ComputePathToHub();
-           thisTransform.position = startPosition;
+           if (state == State.Fleeing) {
+               SetState(State.Dead);
+               // thisTransform.position = startPosition;
+           }
+           else {
+               GameManager.Instance.Die();
+           }
        }
 
        private void ComputePathToPlayer() {
@@ -165,6 +165,47 @@ namespace UnitMan.Source {
                true => 4
            };
        }
-       
+
+       private void SetState(State state) {
+           this.state = state;
+           OnStateEntered();
+       }
+
+       private void OnStateEntered() {
+           switch (state)
+           {
+               case State.Alive: {
+                   _positionQueue.Clear();
+                   thisGameObject.layer = _defaultLayer;
+                   _currentMoveSpeed = standardMoveSpeed;
+                   _pathToPlayerTimer.paused = false;
+                   ComputePathToPlayer();
+                   
+                   break;
+               }
+               case State.Fleeing: {
+                   _positionQueue.Clear();
+                   thisGameObject.layer = _defaultLayer;
+                   _currentMoveSpeed = _slowMoveSpeed;
+                   _pathToPlayerTimer.paused = true;
+                   ComputePathAwayFromPlayer();
+                   
+                   break;
+               }
+               case State.Dead: {
+                   thisGameObject.layer = _inactiveLayer;
+                   _positionQueue.Clear();
+                   _currentMoveSpeed = MOVE_SPEED_INACTIVE;
+                   _pathToPlayerTimer.paused = true;
+                   // ComputePathToHub();
+                   thisTransform.position = startPosition;
+                   
+                   break;
+               }
+               default: {
+                   return;
+               }
+           }
+       }
     }
 }
