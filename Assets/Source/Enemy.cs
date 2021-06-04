@@ -7,7 +7,7 @@ using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
     public abstract class Enemy : Actor {
-       private Timer _directionTimer;
+       private Timer _pathToPlayerTimer;
        protected float moveSpeed;
        private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
@@ -26,23 +26,29 @@ namespace UnitMan.Source {
        private readonly Vector3 _downLeftMap = new Vector3(-9f, -20f, 0f);
        private readonly Vector3 _downRightMap = new Vector3(9f, -20f, 0f);
 
+       private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
+
        protected override void Awake() {
            base.Awake();
            startPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            ComputePathToPlayer();
-           _directionTimer.OnEnd += ComputePathToPlayer;
+           _pathToPlayerTimer.OnEnd += ComputePathToPlayer;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
 
        private void UpdateState(bool isInvincible) {
            _currentMoveSpeed = isInvincible ? _slowMoveSpeed : moveSpeed;
+           _pathToPlayerTimer.paused = isInvincible;
+           if (!isInvincible) return;
+           _positionQueue.Clear();
+           ComputePathAwayFromPlayer();
        }
 
        private void Start() {
-           _directionTimer.Begin();
+           _pathToPlayerTimer.Begin();
            _currentMoveSpeed = moveSpeed;
            _slowMoveSpeed = moveSpeed/2f;
        }
@@ -100,7 +106,19 @@ namespace UnitMan.Source {
 
        private void ComputePathToPlayer() {
            MultithreadedPath(thisTransform.position, _playerTransform.position);
-
+       }
+       
+       private void ComputePathAwayFromPlayer() {
+           int playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
+           Vector3 finalPosition = playerQuadrant switch {
+               1 => _downLeftMap,
+               2 => _downRightMap,
+               3 => _upRightMap,
+               4 => _upLeftMap,
+               _ => startPosition
+           };
+           
+           MultithreadedPath(thisTransform.position, finalPosition);
        }
 
        private void TurnToValidDirection() {
@@ -115,10 +133,16 @@ namespace UnitMan.Source {
            }
        }
 
-       // private static int GetQuadrant(Vector2 position, Vector2[] bounds) {
-       //     if (bounds.Length != 4) return 0;
-       //     if (position.x < )
-       // }
+       private static int GetQuadrant(Vector2 position, Vector2 centralPosition) {
+           bool isUp = position.y >= centralPosition.y;
+           bool isRight = position.x >= centralPosition.x;
+           return isRight switch {
+               true when isUp => 1,
+               false when isUp => 2,
+               false => 3,
+               true => 4
+           };
+       }
        
     }
 }
