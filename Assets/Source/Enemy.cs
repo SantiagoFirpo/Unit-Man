@@ -8,7 +8,7 @@ using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 namespace UnitMan.Source {
     public abstract class Enemy : Actor {
        private Timer _pathToPlayerTimer;
-       protected float moveSpeed;
+       protected float standardMoveSpeed;
        private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
        private Transform _playerTransform;
@@ -21,6 +21,12 @@ namespace UnitMan.Source {
        private float _currentMoveSpeed;
        private float _slowMoveSpeed;
 
+       private int _inactiveLayer;
+       private int _defaultLayer;
+       
+       private bool _isAlive = true;
+       private const float MOVE_SPEED_INACTIVE = 15f;
+
        private readonly Vector3 _upRightMap = new Vector3(9f, 2f, 0f);
        private readonly Vector3 _upLeftMap = new Vector3(-9f, 3f, 0f);
        private readonly Vector3 _downLeftMap = new Vector3(-9f, -20f, 0f);
@@ -30,7 +36,9 @@ namespace UnitMan.Source {
 
        protected override void Awake() {
            base.Awake();
-           startPosition = new Vector3(2f, 0f, 0f);
+           _inactiveLayer = LayerMask.NameToLayer("Dead");
+           _defaultLayer = LayerMask.NameToLayer("Enemies");
+           startPosition = thisTransform.position;
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
@@ -40,7 +48,8 @@ namespace UnitMan.Source {
        }
 
        private void UpdateState(bool isInvincible) {
-           _currentMoveSpeed = isInvincible ? _slowMoveSpeed : moveSpeed;
+           if (!_isAlive) return;
+           _currentMoveSpeed = isInvincible ? _slowMoveSpeed : standardMoveSpeed;
            _pathToPlayerTimer.paused = isInvincible;
            if (!isInvincible) return;
            _positionQueue.Clear();
@@ -49,8 +58,8 @@ namespace UnitMan.Source {
 
        private void Start() {
            _pathToPlayerTimer.Begin();
-           _currentMoveSpeed = moveSpeed;
-           _slowMoveSpeed = moveSpeed/2f;
+           _currentMoveSpeed = standardMoveSpeed;
+           _slowMoveSpeed = standardMoveSpeed/2f;
        }
 
        private void MultithreadedPath(Vector3 initialPosition, Vector3 finalPosition) {
@@ -78,6 +87,12 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
+           if (!_isAlive && _positionQueue != null) {
+               _isAlive = true;
+               thisGameObject.layer = _inactiveLayer;
+               _currentMoveSpeed = standardMoveSpeed;
+           }
+
            motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
        }
@@ -99,13 +114,21 @@ namespace UnitMan.Source {
        private void OnCollisionEnter2D(Collision2D other) {
            if (!other.gameObject.CompareTag("Player")) return;
            if (_playerController.isInvincible) {
-               // gameObject.SetActive(false);
-               thisTransform.position = startPosition;
+               _isAlive = false;
+               _pathToPlayerTimer.paused = true;
+               _positionQueue.Clear();
+               _currentMoveSpeed = MOVE_SPEED_INACTIVE;
+               ComputePathToHub();
+               // thisTransform.position = startPosition;
            }
        }
 
        private void ComputePathToPlayer() {
            MultithreadedPath(thisTransform.position, _playerTransform.position);
+       }
+       
+       private void ComputePathToHub() {
+           MultithreadedPath(thisTransform.position, startPosition);
        }
        
        private void ComputePathAwayFromPlayer() {
