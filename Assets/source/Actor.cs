@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities;
 using UnityEngine;
@@ -10,21 +7,21 @@ namespace UnitMan.Source {
     public abstract class Actor : MonoBehaviour, IInitializable {
         protected CircleCollider2D circleCollider;
         protected Rigidbody2D rigidBody;
-        protected Transform _transform;
+        protected Transform thisTransform;
         
-        protected GameObject _gameObject;
+        protected GameObject thisGameObject;
 
         protected Vector3 startPosition;
         public Vector2 motion = Vector2.zero;
-        
-        protected const float WALL_CHECK_DISTANCE = 0.8f;
-        protected const float ALMOST_ONE = 0.9f;
-        
-        protected readonly Vector2 upLeft = new Vector2(-0.5f, 0.5f);
-        protected readonly Vector2 upRight = new Vector2(0.5f, 0.5f);
 
-        protected readonly Vector2 downLeft = new Vector2(-0.5f, -0.5f);
-        protected readonly Vector2 downRight = new Vector2(0.5f, -0.5f);
+        private const float WALL_CHECK_DISTANCE = 0.8f;
+        private const float ALMOST_ONE = 0.9f;
+
+        private readonly Vector2 _upLeft = new Vector2(-0.5f, 0.5f);
+        private readonly Vector2 _upRight = new Vector2(0.5f, 0.5f);
+
+        private readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
+        private readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
 
         private readonly Vector2 _up = Vector2.up;
         private readonly Vector2 _down = Vector2.down;
@@ -48,15 +45,15 @@ namespace UnitMan.Source {
         public virtual void Initialize() {
             circleCollider = GetComponent<CircleCollider2D>();
             rigidBody = GetComponent<Rigidbody2D>();
-            _transform = transform;
-            _gameObject = gameObject;
+            thisTransform = transform;
+            thisGameObject = gameObject;
             
             GameManager.OnReset += ResetPosition;
 
-            _almostUpLeft = upLeft * ALMOST_ONE;
-            _almostUpRight = upRight * ALMOST_ONE;
-            _almostDownLeft = downLeft * ALMOST_ONE;
-            _almostDownRight = downRight * ALMOST_ONE;
+            _almostUpLeft = _upLeft * ALMOST_ONE;
+            _almostUpRight = _upRight * ALMOST_ONE;
+            _almostDownLeft = _downLeft * ALMOST_ONE;
+            _almostDownRight = _downRight * ALMOST_ONE;
 
             wallLayer = LayerMask.GetMask("Wall");
         }
@@ -66,11 +63,11 @@ namespace UnitMan.Source {
         }
 
         private void ResetPosition() {
-            _transform.position = startPosition;
+            thisTransform.position = startPosition;
         }
 
         private void CheckPossibleTurns() {
-            Vector2 playerPosition = _transform.position;
+            Vector2 playerPosition = thisTransform.position;
             
             RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, _up, WALL_CHECK_DISTANCE, wallLayer);
             RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, _up, WALL_CHECK_DISTANCE, wallLayer);
@@ -118,12 +115,27 @@ namespace UnitMan.Source {
             };
         }
 
-        public static bool VectorApproximately(Vector3 v1, Vector2Int v2, float maxDelta) {
-            return (Mathf.Abs(v1.x - v2.x) <= maxDelta && Mathf.Abs(v1.y - v2.y) <= maxDelta);
+        protected static bool VectorApproximately(Vector3 v1, Vector2Int v2, float toleranceInclusive) {
+            return (Mathf.Abs(v1.x - v2.x) <= toleranceInclusive && Mathf.Abs(v1.y - v2.y) <= toleranceInclusive);
         }
 
         protected virtual void FixedUpdate() {
             CheckPossibleTurns();
+        }
+        
+        private void OnDrawGizmos() {
+            Vector3 position = transform.position;
+            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
+            
+            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
+            
+            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
+            
+            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
         }
     }
 }
