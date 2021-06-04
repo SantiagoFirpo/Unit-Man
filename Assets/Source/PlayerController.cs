@@ -7,7 +7,7 @@ using static UnityEngine.Vector2Int;
 
 namespace UnitMan.Source
 {
-    [RequireComponent(typeof(PlayerInput), typeof(CircleCollider2D))]
+    [RequireComponent(typeof(PlayerInput))]
     public class PlayerController : Actor
     {
         private const float MOVE_SPEED = 5f;
@@ -75,21 +75,6 @@ namespace UnitMan.Source
 
         private void OnMove(InputAction.CallbackContext context) {
             _inputVector = RoundToInt(context.ReadValue<Vector2>());
-        }
-
-        private void OnDrawGizmos() {
-            Vector3 position = transform.position;
-            Debug.DrawRay(position + (Vector3) upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) downLeft * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) downRight * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) downLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) upLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
         }
 
         public void SetInvincible() {
