@@ -79,17 +79,17 @@ namespace UnitMan.Source
 
         private void OnDrawGizmos() {
             Vector3 position = transform.position;
-            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
             
-            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) downLeft * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) downRight * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
             
-            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) downLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) upLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
             
-            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
+            Debug.DrawRay(position + (Vector3) upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
         }
 
         public void SetInvincible() {
