@@ -15,24 +15,27 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     public bool paused;
 
     private void Update(float deltaTime) {
-        if (!paused && _currentTime < _waitTime) {
-            _currentTime += Time.deltaTime;
-        }
-        else if (!paused && _currentTime >= _waitTime){
-            OnEnd?.Invoke();
-            if (_oneShot) {
-                //Timer ended but is oneShot
-                paused = true;
-                _currentTime = Mathf.Round(_currentTime);
+        switch (paused) {
+            case false when _currentTime < _waitTime:
+                _currentTime += Time.deltaTime;
+                break;
+            case false when _currentTime >= _waitTime: {
+                OnEnd?.Invoke();
+                if (_oneShot) {
+                    //Timer ended but is oneShot
+                    paused = true;
+                    _currentTime = Mathf.Round(_currentTime);
                 
-            }
-            else {
-                //Timer ended and reset
-                _currentTime = 0f;
-                paused = false;
+                }
+                else {
+                    //Timer ended and reset
+                    _currentTime = 0f;
+                    paused = false;
+                }
+
+                break;
             }
         }
-            
     }
     public void Begin() {
         _currentTime = 0f;
