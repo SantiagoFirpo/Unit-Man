@@ -23,14 +23,19 @@ namespace UnitMan.Source {
        private float _currentMoveSpeed;
        private float _slowMoveSpeed;
 
+       private readonly Vector3 _upRightMap = new Vector3(9f, 2f, 0f);
+       private readonly Vector3 _upLeftMap = new Vector3(-9f, 3f, 0f);
+       private readonly Vector3 _downLeftMap = new Vector3(-9f, -20f, 0f);
+       private readonly Vector3 _downRightMap = new Vector3(9f, -20f, 0f);
+
        protected override void Awake() {
            base.Awake();
            startPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _directionTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
-           UpdatePath();
-           _directionTimer.OnEnd += UpdatePath;
+           ComputePathToPlayer();
+           _directionTimer.OnEnd += ComputePathToPlayer;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
 
@@ -44,40 +49,33 @@ namespace UnitMan.Source {
            _slowMoveSpeed = moveSpeed/2f;
        }
 
-       private void MultithreadedPathToPlayer(Vector3 position, Vector3 playerPosition) {
+       private void MultithreadedPath(Vector3 initialPosition, Vector3 finalPosition) {
            void ThreadStart() {
-               Queue<Vector2Int> path = AStar.ShortestPathBetween(Vector2Int.RoundToInt(position), Vector2Int.RoundToInt(playerPosition));
-               lock (lockedPositionQueue) {
-                   lockedPositionQueue = path;
+               Queue<Vector2Int> path = AStar.ShortestPathBetween(
+                   Vector2Int.RoundToInt(initialPosition),
+                   Vector2Int.RoundToInt(finalPosition));
+               
+               lock (_positionQueue) {
+                   _positionQueue = path;
                }
            }
 
-           Thread thread = new Thread((ThreadStart) ThreadStart);
+           Thread thread = new Thread(ThreadStart);
            thread.Start();
        }
 
        protected override void FixedUpdate() {
            base.FixedUpdate();
            UpdateGridPosition();
-           if (_positionQueue.Count != 0) {
+           if (_positionQueue.Count > 0) {
                MoveThroughPath();
            }
-           if (rigidBody.velocity == Vector2.zero)
-               TurnToAvailableDirection();
-           
-
-           // if (rigidBody.velocity == Vector2.zero) {
-           //     TurnToAvailableDirection();
-           // }
+           if (rigidBody.velocity == Vector2.zero) {
+               TurnToValidDirection();
+           }
 
            motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
-       }
-
-       private void Update() {
-           if (lockedPositionQueue != null) {
-               _positionQueue = lockedPositionQueue;
-           }
        }
 
        private void UpdateGridPosition() {
@@ -102,12 +100,12 @@ namespace UnitMan.Source {
            }
        }
 
-       private void UpdatePath() {
-           MultithreadedPathToPlayer(_transform.position, _playerTransform.position);
+       private void ComputePathToPlayer() {
+           MultithreadedPath(_transform.position, _playerTransform.position);
 
        }
 
-       private void TurnToAvailableDirection() {
+       private void TurnToValidDirection() {
            Vector2Int originDirection = _direction * -1;
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
