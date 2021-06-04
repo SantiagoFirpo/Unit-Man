@@ -87,11 +87,11 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (!_isAlive && _positionQueue != null) {
-               _isAlive = true;
-               thisGameObject.layer = _inactiveLayer;
-               _currentMoveSpeed = standardMoveSpeed;
-           }
+           // if (!_isAlive && _positionQueue != null) {
+           //     _isAlive = true;
+           //     thisGameObject.layer = _inactiveLayer;
+           //     _currentMoveSpeed = standardMoveSpeed;
+           // }
 
            motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
@@ -113,14 +113,13 @@ namespace UnitMan.Source {
 
        private void OnCollisionEnter2D(Collision2D other) {
            if (!other.gameObject.CompareTag("Player")) return;
-           if (_playerController.isInvincible) {
-               _isAlive = false;
-               _pathToPlayerTimer.paused = true;
-               _positionQueue.Clear();
-               _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-               ComputePathToHub();
-               // thisTransform.position = startPosition;
-           }
+           // if (!_playerController.isInvincible) return;
+           // _isAlive = false;
+           // _pathToPlayerTimer.paused = true;
+           // _positionQueue.Clear();
+           // _currentMoveSpeed = MOVE_SPEED_INACTIVE;
+           // ComputePathToHub();
+           thisTransform.position = startPosition;
        }
 
        private void ComputePathToPlayer() {
