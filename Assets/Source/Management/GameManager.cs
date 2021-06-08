@@ -23,6 +23,9 @@ namespace UnitMan.Source.Management
             Instance = this;
 
             foreach (GameObject sceneObject in sceneObjects) {
+                if (sceneObject.activeSelf) {
+                    sceneObject.SetActive(false);
+                }
                 sceneObject.SetActive(true);
             }
         }
