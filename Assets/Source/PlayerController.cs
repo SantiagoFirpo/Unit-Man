@@ -83,15 +83,5 @@ namespace UnitMan.Source
             OnInvincibleChanged?.Invoke(isInvincible);
         }
 
-        private void OnCollisionEnter2D(Collision2D other) {
-            if (!other.gameObject.CompareTag("Enemy")) return;
-            if (isInvincible) {
-                //Eat ghost
-            }
-            else {
-                GameManager.Instance.Die();
-            }
-        }
-        
     }
 }
