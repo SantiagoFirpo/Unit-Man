@@ -51,11 +51,11 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         paused = !_autoStart;
     }
 
-    public Timer(float targetWaitTime = 1, float targetDelay = 0, bool targetAutoStart = false, bool targetOneShot = true) {
-        _waitTime = targetWaitTime;
-        _delay = targetDelay;
-        _autoStart = targetAutoStart;
-        _oneShot = targetOneShot;
+    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool isOneShot = true) {
+        _waitTime = waitTime;
+        _delay = delay;
+        _autoStart = autoStart;
+        _oneShot = isOneShot;
         TimerManager.OnFrameUpdate += Update;
         TimerManager.Initialized += Setup;
     }
