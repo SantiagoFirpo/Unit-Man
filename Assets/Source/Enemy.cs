@@ -126,13 +126,15 @@ namespace UnitMan.Source {
 
        private void OnCollisionEnter2D(Collision2D other) {
            if (!other.gameObject.CompareTag("Player")) return;
-           if (state == State.Fleeing) {
-               SetState(State.Dead);
-               // thisTransform.position = startPosition;
+           switch (state) {
+               case State.Fleeing:
+                   SetState(State.Dead);
+                   break;
+               case State.Alive:
+                   GameManager.Instance.Die();
+                   break;
            }
-           else {
-               GameManager.Instance.Die();
-           }
+           // thisTransform.position = startPosition;
        }
 
        private void ComputePathToPlayer() {
