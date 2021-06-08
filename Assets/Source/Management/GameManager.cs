@@ -40,7 +40,9 @@ namespace UnitMan.Source.Management
         }
 
         public void Die() {
+            Debug.Log("Died!");
             lives--;
+            UIModel.Instance.LoseLife();
             if (lives < 0) {
                 GameOver();
             }
@@ -55,6 +57,7 @@ namespace UnitMan.Source.Management
 
         private static void GameOver() {
             Debug.Log("Game Over!");
+            SceneManager.LoadScene("Game Over");
         }
     }
 }
