@@ -118,12 +118,15 @@ namespace UnitMan.Source {
         protected static bool VectorApproximately(Vector3 v1, Vector2Int v2, float toleranceInclusive) {
             return (Mathf.Abs(v1.x - v2.x) <= toleranceInclusive && Mathf.Abs(v1.y - v2.y) <= toleranceInclusive);
         }
+        protected static bool VectorApproximately(Vector3 v1, Vector3 v2, float toleranceInclusive) {
+            return (Mathf.Abs(v1.x - v2.x) <= toleranceInclusive && Mathf.Abs(v1.y - v2.y) <= toleranceInclusive);
+        }
 
         protected virtual void FixedUpdate() {
             CheckPossibleTurns();
         }
         
-        private void OnDrawGizmos() {
+        protected virtual void OnDrawGizmos() {
             Vector3 position = transform.position;
             Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
             Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
