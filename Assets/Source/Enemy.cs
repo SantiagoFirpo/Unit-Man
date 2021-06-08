@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -6,8 +8,10 @@ using UnityEngine;
 using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
-    public abstract class Enemy : Actor {
+    public class Enemy : Actor {
        private Timer _pathToPlayerTimer;
+       
+       [SerializeField]
        protected float standardMoveSpeed;
        private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
@@ -16,6 +20,7 @@ namespace UnitMan.Source {
        private Vector2Int _gridPosition;
        private Vector2Int _direction;
 
+       [SerializeField]
        protected float pathfindingIntervalSeconds = 4f;
        private PlayerController _playerController;
        private float _currentMoveSpeed;
@@ -30,9 +35,9 @@ namespace UnitMan.Source {
        }
        
        public State state = State.Alive;
-
-       private bool _isAlive = true;
-       private const float MOVE_SPEED_INACTIVE = 15f;
+       
+       private const float MOVE_SPEED_INACTIVE = 6f;
+       private const float SPEED_TOLERANCE_CONVERSION = 0.017f;
 
        private readonly Vector3 _upRightMap = new Vector3(9f, 2f, 0f);
        private readonly Vector3 _upLeftMap = new Vector3(-9f, 3f, 0f);
@@ -41,13 +46,17 @@ namespace UnitMan.Source {
 
        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
        private Vector3 _hubPosition;
+       
+       [SerializeField]
+       private Color debugColor;
 
        protected override void Awake() {
            base.Awake();
+           _positionQueue.Clear();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
            startPosition = thisTransform.position;
-           _hubPosition = new Vector3(2f, 1f, 0f);
+           _hubPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
@@ -91,13 +100,15 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (thisTransform.position == startPosition && state == State.Dead) {
+           if (VectorApproximately(thisTransform.position, startPosition, PositionCheckTolerance)  && state == State.Dead) {
                SetState(State.Alive);
            }
 
            motion = (Vector2) _direction * _currentMoveSpeed;
            rigidBody.velocity = motion;
        }
+
+       private float PositionCheckTolerance => 0.07f; //_currentMoveSpeed * SPEED_TOLERANCE_CONVERSION;
 
        private void UpdateGridPosition() {
            _gridPosition = Vector2Int.RoundToInt(thisTransform.position);
@@ -108,7 +119,7 @@ namespace UnitMan.Source {
            Vector2Int actualDirection = nextPosition - _gridPosition;
            _direction = actualDirection == Vector2Int.zero ? _direction : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (VectorApproximately(thisTransform.position, nextPosition, 0.08f)) { // previous value: 0.05f
+           if (VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
                _positionQueue.Dequeue();
            }
        }
@@ -168,8 +179,9 @@ namespace UnitMan.Source {
            };
        }
 
-       private void SetState(State state) {
-           this.state = state;
+       private void SetState(State targetState) {
+           _positionQueue.Clear();
+           this.state = targetState;
            OnStateEntered();
        }
 
@@ -207,6 +219,17 @@ namespace UnitMan.Source {
                default: {
                    return;
                }
+           }
+       }
+
+       protected override void OnDrawGizmos() {
+           base.OnDrawGizmos();
+           if (_positionQueue.Count <= 0) return;
+           Vector2 previousPosition = _positionQueue.Peek();
+           foreach (Vector2Int position in _positionQueue) {
+               Gizmos.color = debugColor;
+               Gizmos.DrawLine(previousPosition, (Vector2) position);
+               previousPosition = position;
            }
        }
     }
