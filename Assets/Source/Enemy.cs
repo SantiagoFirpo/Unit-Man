@@ -81,10 +81,7 @@ namespace UnitMan.Source {
                Queue<Vector2Int> path = AStar.ShortestPathBetween(
                    Vector2Int.RoundToInt(initialPosition),
                    Vector2Int.RoundToInt(finalPosition));
-               
-               lock (_positionQueue) {
-                   _positionQueue = path;
-               }
+               _positionQueue = path;
            }
 
            Thread thread = new Thread(ThreadStart);
@@ -196,7 +193,7 @@ namespace UnitMan.Source {
 
        private void SetState(State targetState) {
            _positionQueue.Clear();
-           this.state = targetState;
+           state = targetState;
            OnStateEntered();
        }
 
