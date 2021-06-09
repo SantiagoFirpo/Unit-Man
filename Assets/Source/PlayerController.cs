@@ -21,7 +21,7 @@ namespace UnitMan.Source
         public bool isInvincible;
         private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
         public static event Action<bool> OnInvincibleChanged;
-        private const float INVINCIBLE_TIME_SECONDS = 10f;
+        public const float INVINCIBLE_TIME_SECONDS = 10f;
 
 
         // Start is called before the first frame update
@@ -35,6 +35,12 @@ namespace UnitMan.Source
             // _playerInput.onActionTriggered += OnMove;
 
             _invincibleTimer.OnEnd += DisableInvincibility;
+        }
+
+        private void Update() {
+            if (isInvincible) {
+                UIModel.Instance.UpdateInvincibleTime(_invincibleTimer.currentTime);
+            }
         }
 
         private void OnDisable() {
