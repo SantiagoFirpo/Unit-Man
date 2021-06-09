@@ -66,12 +66,7 @@ namespace UnitMan.Source
 
             rigidBody.velocity = motion;
         }
-
-
-
-        private static bool IsCardinalDirection(Vector2 vector) {
-            return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
-        }
+        
 
         private void OnMove(InputAction.CallbackContext context) {
             _inputVector = RoundToInt(context.ReadValue<Vector2>());

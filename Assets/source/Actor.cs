@@ -105,6 +105,10 @@ namespace UnitMan.Source {
             return index;
         }
         
+        protected static bool IsCardinalDirection(Vector2 vector) {
+            return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
+        }
+        
         public static Vector2Int IntToDirection(int number) {
             return number switch {
                 0 => Vector2Int.up,
