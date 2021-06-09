@@ -43,8 +43,7 @@ namespace UnitMan
         // Start is called before the first frame update
         private int _lives = 3;
         private int _score;
-        private float _normalizedInvincibleTimer = 0f;
-        
+
         [SerializeField]
         private TMP_Text _livesLabel;
         
