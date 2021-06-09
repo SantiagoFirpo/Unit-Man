@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using UnitMan.Source.Management;
@@ -117,7 +118,9 @@ namespace UnitMan.Source {
        private void MoveThroughPath() {
            Vector2Int nextPosition = _positionQueue.Peek();
            Vector2Int actualDirection = nextPosition - _gridPosition;
-           _direction = actualDirection == Vector2Int.zero ? _direction : actualDirection;
+           // Debug.Log();
+               
+           _direction = !IsCardinalDirection(actualDirection) ? _direction : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
            if (VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
                _positionQueue.Dequeue();
@@ -135,6 +138,16 @@ namespace UnitMan.Source {
                    break;
            }
            // thisTransform.position = startPosition;
+       }
+
+       private static Vector2Int[] PositionsToTurns(Collection<Vector2Int> positions) {
+           Vector2Int[] result = new Vector2Int[positions.Count-1];
+           for (int i = 0; i < positions.Count-1; i++) {
+               result[i] = positions[i+1] - positions[i]; 
+               
+               
+           }
+           return result;
        }
 
        private void ComputePathToPlayer() {
