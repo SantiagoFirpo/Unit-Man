@@ -57,7 +57,7 @@ namespace UnitMan.Source
         protected override void FixedUpdate() {
             base.FixedUpdate();
             if (!IsCardinalDirection(_inputVector)) return;
-            int index = Actor.DirectionToInt(_inputVector);
+            int index = DirectionToInt(_inputVector);
 
             if (possibleTurns[index]) {
                 _currentDirection = _inputVector;
