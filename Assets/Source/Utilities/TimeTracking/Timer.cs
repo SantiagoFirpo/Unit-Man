@@ -8,7 +8,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     public event System.Action OnEnd;
     private readonly float _waitTime;
     private readonly float _delay;
-    private float _currentTime;
+    public float currentTime;
     private readonly bool _autoStart;
     private readonly bool _oneShot;
 
@@ -16,20 +16,20 @@ namespace UnitMan.Source.Utilities.TimeTracking {
 
     private void Update(float deltaTime) {
         switch (paused) {
-            case false when _currentTime < _waitTime:
-                _currentTime += Time.deltaTime;
+            case false when currentTime < _waitTime:
+                currentTime += Time.deltaTime;
                 break;
-            case false when _currentTime >= _waitTime: {
+            case false when currentTime >= _waitTime: {
                 OnEnd?.Invoke();
                 if (_oneShot) {
                     //Timer ended but is oneShot
                     paused = true;
-                    _currentTime = Mathf.Round(_currentTime);
+                    currentTime = Mathf.Round(currentTime);
                 
                 }
                 else {
                     //Timer ended and reset
-                    _currentTime = 0f;
+                    currentTime = 0f;
                     paused = false;
                 }
 
@@ -38,16 +38,16 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         }
     }
     public void Begin() {
-        _currentTime = 0f;
+        currentTime = 0f;
         paused = false;
     }
     public void Stop() {
-        _currentTime = 0f;
+        currentTime = 0f;
         paused = true;
     }
 
     private void Setup() {
-        _currentTime = 0f;
+        currentTime = 0f;
         paused = !_autoStart;
     }
 
