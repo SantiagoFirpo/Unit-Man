@@ -7,19 +7,32 @@ namespace UnitMan.Source.Utilities.Pathfinding
 {
     public static class AStar
     {
+        public static Queue<PathNode> nodePool = new Queue<PathNode>();
+
+        public static void InitializeNodePool() {
+            Vector2Int maxPosition = Vector2Int.one * 120;
+            for (int i = 0; i < 200; i++) {
+                nodePool.Enqueue(new PathNode(maxPosition, maxPosition, maxPosition));
+            }
+        }
+        private static PathNode GetPoolNode(Vector2Int position, Vector2Int startPosition, Vector2Int endPosition) {
+            if (nodePool.Count == 0) return null;
+            PathNode node = nodePool.Peek();
+            nodePool.Dequeue();
+            node.Reconstruct(position, startPosition, endPosition);
+            return node;
+        }
         public static Queue<Vector2Int> ShortestPathBetween(Vector2Int startPosition, Vector2Int endPosition) {
             
             PathNode startNode = new PathNode(startPosition, startPosition, endPosition) {costFromStart = 0};
             PathNode currentNode = startNode;
             
-
             List<PathNode> nodesToCheck = new List<PathNode>() {startNode};
-            List<PathNode> checkedNodes = new List<PathNode>();
             // for (int i = 0; i < totalCells; i++)
             while (nodesToCheck.Count > 0) {
                 currentNode = nodesToCheck[FindSmallestTotalCost(nodesToCheck)];
                 nodesToCheck.Remove(currentNode);
-                checkedNodes.Add(currentNode);
+                currentNode.searched = true;
 
                 if (currentNode.position == endPosition) {
                     Queue<Vector2Int> path = TracePath(startNode, currentNode);
@@ -28,23 +41,27 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
                 PathNode[] neighborNodes = currentNode.CreateNeighbors();
 
-                foreach (PathNode neighbor in neighborNodes) {
-                    if (checkedNodes.Contains(neighbor) || neighbor == null) continue;
-                    int tentativeCost = currentNode.costFromStart +
-                                                 PathGrid.TaxiCabDistance(neighbor.position, currentNode.position);
-                    if (tentativeCost >= neighbor.costFromStart) continue;
-                    neighbor.previousNode = currentNode;
-                    neighbor.costFromStart = tentativeCost;
-
-                    if (!nodesToCheck.Contains(neighbor)) {
-                        nodesToCheck.Add(neighbor);
-                    }
-                }
+                SearchNeighbors(neighborNodes, currentNode, nodesToCheck);
 
                 
             }
-            Debug.LogError($"Agent never reached end position, stopped at{currentNode.position}");
+            // Debug.LogError($"Agent never reached end position, stopped at{currentNode.position}");
             return null;
+        }
+
+        private static void SearchNeighbors(PathNode[] neighborNodes, PathNode currentNode, List<PathNode> nodesToCheck) {
+            foreach (PathNode neighbor in neighborNodes) {
+                if (neighbor == null || neighbor.searched) continue;
+                int tentativeCost = currentNode.costFromStart +
+                                    PathGrid.TaxiCabDistance(neighbor.position, currentNode.position);
+                if (tentativeCost >= neighbor.costFromStart) continue;
+                neighbor.previousNode = currentNode;
+                neighbor.costFromStart = tentativeCost;
+
+                if (!nodesToCheck.Contains(neighbor)) {
+                    nodesToCheck.Add(neighbor);
+                }
+            }
         }
 
         private static Queue<Vector2Int> TracePath(PathNode startNode, PathNode endNode) {

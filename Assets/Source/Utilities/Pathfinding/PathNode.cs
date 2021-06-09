@@ -6,17 +6,26 @@ namespace UnitMan.Source.Utilities.Pathfinding
     public class PathNode
     {
         public int costFromStart = 999;
-        public readonly int distanceToEndHeuristic = 0;
+        public int distanceToEndHeuristic = 0;
 
         public int TotalCost => costFromStart + distanceToEndHeuristic;
 
         public PathNode previousNode;
         public Vector2Int position;
-        private readonly Vector2Int _startPosition;
-        private readonly Vector2Int _endPosition;
+        public bool searched = false;
+        
+        private Vector2Int _startPosition;
+        private Vector2Int _endPosition;
 
 
         public PathNode(Vector2Int position, Vector2Int startPosition, Vector2Int endPosition) {
+            this.position = position;
+            _startPosition = startPosition;
+            _endPosition = endPosition;
+            distanceToEndHeuristic = PathGrid.TaxiCabDistance(this.position, _endPosition);
+        }
+
+        public void Reconstruct(Vector2Int position, Vector2Int startPosition, Vector2Int endPosition) {
             this.position = position;
             _startPosition = startPosition;
             _endPosition = endPosition;
