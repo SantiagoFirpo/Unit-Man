@@ -267,7 +267,7 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
                    _pathToPlayerTimer.paused = true;
-                   ComputePathToHub();
+                   // ComputePathToHub();
                    // thisTransform.position = startPosition;
                    
                    break;
