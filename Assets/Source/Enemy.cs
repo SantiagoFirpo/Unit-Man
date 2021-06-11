@@ -51,6 +51,8 @@ namespace UnitMan.Source {
        [SerializeField]
        private Color debugColor;
 
+       private Queue<Vector2Int> _directionQueue;
+
        protected override void Awake() {
            base.Awake();
            _positionQueue.Clear();
@@ -82,6 +84,7 @@ namespace UnitMan.Source {
                    Vector2Int.RoundToInt(initialPosition),
                    Vector2Int.RoundToInt(finalPosition));
                _positionQueue = path;
+               _directionQueue = PositionsToTurns(path.ToArray());
            }
 
            Thread thread = new Thread(ThreadStart);
@@ -98,7 +101,7 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (VectorApproximately(thisTransform.position, startPosition, PositionCheckTolerance)  && state == State.Dead) {
+           if (VectorApproximately(thisTransform.position, startPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
                SetState(State.Alive);
            }
 
@@ -106,12 +109,12 @@ namespace UnitMan.Source {
            rigidBody.velocity = motion;
        }
 
-       private float PositionCheckTolerance => 0.07f; //_currentMoveSpeed * SPEED_TOLERANCE_CONVERSION;
+       private const float POSITION_CHECK_TOLERANCE = 0.07f; //_currentMoveSpeed * SPEED_TOLERANCE_CONVERSION;
 
        private void UpdateGridPosition() {
            _gridPosition = Vector2Int.RoundToInt(thisTransform.position);
        }
-
+        
        private void MoveThroughPath() {
            Vector2Int nextPosition = _positionQueue.Peek();
            Vector2Int actualDirection = nextPosition - _gridPosition;
@@ -122,6 +125,20 @@ namespace UnitMan.Source {
            if (VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
                _positionQueue.Dequeue();
            }
+       }
+       
+       private void FollowPath() {
+           Vector2Int nextPosition = _positionQueue.Peek();
+           Vector2Int nextDirection = _directionQueue.Peek();
+           if (possibleTurns[DirectionToInt(nextDirection)]) {
+               _direction = nextDirection;
+           }
+           // Debug.Log(_direction, thisGameObject);
+           // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
+           if (!VectorApproximately(thisTransform.position, nextPosition,
+               _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) return; // previous value: 0.05f
+           _positionQueue.Dequeue();
+           _directionQueue.Dequeue();
        }
 
        private void OnCollisionEnter2D(Collision2D other) {
@@ -137,12 +154,11 @@ namespace UnitMan.Source {
            // thisTransform.position = startPosition;
        }
 
-       private static Vector2Int[] PositionsToTurns(Collection<Vector2Int> positions) {
-           Vector2Int[] result = new Vector2Int[positions.Count-1];
-           for (int i = 0; i < positions.Count-1; i++) {
-               result[i] = positions[i+1] - positions[i]; 
-               
-               
+       private static Queue<Vector2Int> PositionsToTurns(Vector2Int[] positions) {
+           int turnsLength = positions.Length - 1;
+           Queue<Vector2Int> result = new Queue<Vector2Int>(turnsLength);
+           for (int i = 0; i < turnsLength; i++) {
+               result.Enqueue(positions[i+1] - positions[i]);
            }
            return result;
        }
