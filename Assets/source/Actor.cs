@@ -6,7 +6,7 @@ namespace UnitMan.Source {
     [RequireComponent(typeof(CircleCollider2D), typeof(Rigidbody2D))]
     public abstract class Actor : MonoBehaviour, IInitializable {
         protected CircleCollider2D circleCollider;
-        protected Rigidbody2D rigidBody;
+        public Rigidbody2D rigidBody;
         protected Transform thisTransform;
         
         protected GameObject thisGameObject;
