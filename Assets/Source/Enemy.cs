@@ -16,6 +16,8 @@ namespace UnitMan.Source {
        protected float standardMoveSpeed;
        private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
+       private readonly Timer _retreatTimer = new Timer(MAX_RETREAT_SECONDS);
+       
        private Transform _playerTransform;
 
        private Vector2Int _gridPosition;
@@ -52,6 +54,7 @@ namespace UnitMan.Source {
        private Color debugColor;
 
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
+       private const float MAX_RETREAT_SECONDS = 6f;
 
        protected override void Awake() {
            base.Awake();
@@ -63,9 +66,16 @@ namespace UnitMan.Source {
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _retreatTimer.OnEnd += ResetPositionAndState;
            ComputePathToPlayer();
            _pathToPlayerTimer.OnEnd += ComputePathToPlayer;
            PlayerController.OnInvincibleChanged += UpdateState;
+       }
+
+       private void ResetPositionAndState() {
+           thisTransform.position = startPosition;
+           SetState(State.Alive);
+           AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Siren, 1, true);
        }
 
        private void UpdateState(bool isInvincible) {
@@ -147,15 +157,22 @@ namespace UnitMan.Source {
            switch (state) {
                case State.Fleeing:
                    SetState(State.Dead);
+                   GameManager.Instance.Freeze();
                    break;
                case State.Alive:
                    GameManager.Instance.Die();
+                   break;
+               case State.Dead:
                    break;
                default:
                    return;
            }
            // thisTransform.position = startPosition;
        }
+
+       
+
+       
 
        private static Queue<Vector2Int> PositionsToTurns(Vector2Int[] positions) {
            int turnsLength = positions.Length - 1;
