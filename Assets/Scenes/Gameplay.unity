@@ -22191,25 +22191,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 849417398336988106, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
   m_PrefabInstance: {fileID: 849417397998741250}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &2055087598
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2055087597}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b06e025a94e73b241bb2f93cdfdd78e3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2055087599 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 849417398336988107, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
@@ -27095,14 +27076,6 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -27130,18 +27103,6 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988105, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 849417398336988106, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_Name
       value: Player
@@ -27153,10 +27114,6 @@ PrefabInstance:
     - target: {fileID: 849417398336988108, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
       propertyPath: m_Mass
       value: 0.6361725
-      objectReference: {fileID: 0}
-    - target: {fileID: 849417398336988108, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
-      propertyPath: m_Simulated
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
