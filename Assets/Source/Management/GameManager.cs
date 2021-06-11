@@ -1,4 +1,6 @@
 using System;
+using TMPro;
+using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,26 +9,41 @@ namespace UnitMan.Source.Management
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
-
+        private Timer _startupTimer = new Timer(4f, 0f, true);
+        
         public static event Action OnReset;
 
         public GameObject player;
 
         public GameObject[] sceneObjects;
+        public Actor[] actors;
 
         public int pelletsEaten;
 
-        public int lives = 3; 
+        public int lives = 3;
+
+        [SerializeField]
+        private GameObject readyText;
+
         // Start is called before the first frame update
         private void Awake() {
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
+            _startupTimer.OnEnd += StartLevel;
 
             foreach (GameObject sceneObject in sceneObjects) {
                 if (sceneObject.activeSelf) {
                     sceneObject.SetActive(false);
                 }
                 sceneObject.SetActive(true);
+            }
+        }
+
+        private void StartLevel() {
+            readyText.SetActive(false);
+            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Siren, 1, true);
+            foreach (Actor actor in actors) {
+                actor.rigidBody.simulated = true;
             }
         }
 
