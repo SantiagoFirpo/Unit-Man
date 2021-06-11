@@ -51,7 +51,7 @@ namespace UnitMan.Source {
        [SerializeField]
        private Color debugColor;
 
-       private Queue<Vector2Int> _directionQueue;
+       private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
 
        protected override void Awake() {
            base.Awake();
@@ -94,8 +94,9 @@ namespace UnitMan.Source {
        protected override void FixedUpdate() {
            base.FixedUpdate();
            UpdateGridPosition();
-           if (_positionQueue.Count > 0) {
-               MoveThroughPath();
+           if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
+               // MoveThroughPath();
+               FollowPath();
            }
            if (rigidBody.velocity == Vector2.zero) { //else 
                TurnToValidDirection();
@@ -150,6 +151,8 @@ namespace UnitMan.Source {
                case State.Alive:
                    GameManager.Instance.Die();
                    break;
+               default:
+                   return;
            }
            // thisTransform.position = startPosition;
        }
@@ -165,10 +168,12 @@ namespace UnitMan.Source {
 
        private void ComputePathToPlayer() {
            MultithreadedPath(thisTransform.position, _playerTransform.position);
+           RemoveFirstPosition();
        }
        
        private void ComputePathToHub() {
            MultithreadedPath(thisTransform.position, _hubPosition);
+           RemoveFirstPosition();
        }
        
        private void ComputePathAwayFromPlayer() {
@@ -182,6 +187,12 @@ namespace UnitMan.Source {
            };
            
            MultithreadedPath(thisTransform.position, finalPosition);
+           RemoveFirstPosition();
+       }
+
+       private void RemoveFirstPosition() {
+           if (_positionQueue.Count == 0) return;
+           _positionQueue.Dequeue();
        }
 
        private void TurnToValidDirection() {
@@ -239,8 +250,8 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
                    _pathToPlayerTimer.paused = true;
-                   // ComputePathToHub();
-                   thisTransform.position = startPosition;
+                   ComputePathToHub();
+                   // thisTransform.position = startPosition;
                    
                    break;
                }
@@ -252,7 +263,7 @@ namespace UnitMan.Source {
 
        protected override void OnDrawGizmos() {
            base.OnDrawGizmos();
-           if (_positionQueue.Count <= 0) return;
+           if (_positionQueue.Count == 0) return;
            Vector2 previousPosition = _positionQueue.Peek();
            foreach (Vector2Int position in _positionQueue) {
                Gizmos.color = debugColor;
