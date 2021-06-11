@@ -8,8 +8,11 @@ namespace UnitMan.Source.Management
 {
     public class GameManager : MonoBehaviour
     {
+        private const float FREEZE_SECONDS = 1f;
+        private readonly Timer _pauseTimer = new Timer(FREEZE_SECONDS);
         public static GameManager Instance { get; private set; }
-        private Timer _startupTimer = new Timer(4f, 0f, true);
+        private readonly Timer _startupTimer = new Timer(4f, 0f, true);
+        public PlayerController playerController;
         
         public static event Action OnReset;
 
@@ -29,21 +32,27 @@ namespace UnitMan.Source.Management
         private void Awake() {
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
+            playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
+            _pauseTimer.OnEnd += UnpauseFreeze;
 
-            foreach (GameObject sceneObject in sceneObjects) {
-                if (sceneObject.activeSelf) {
-                    sceneObject.SetActive(false);
-                }
-                sceneObject.SetActive(true);
-            }
+            // foreach (GameObject sceneObject in sceneObjects) {
+            //     if (sceneObject.activeSelf) {
+            //         sceneObject.SetActive(false);
+            //     }
+            //     sceneObject.SetActive(true);
+            // }
         }
 
         private void StartLevel() {
+            SetPause(false);
             readyText.SetActive(false);
             AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Siren, 1, true);
+        }
+
+        public void SetPause(bool paused) {
             foreach (Actor actor in actors) {
-                actor.rigidBody.simulated = true;
+                actor.rigidBody.simulated = !paused;
             }
         }
 
@@ -67,7 +76,20 @@ namespace UnitMan.Source.Management
                 Reset();
             }
         }
+        
+        
+        public void Freeze() {
+            playerController.invincibleTimer.paused = true;
+            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.EatGhost, 1, false);
+            SetPause(true);
+            _pauseTimer.Begin();
+        }
 
+        private void UnpauseFreeze() {
+            playerController.invincibleTimer.paused = false;
+            Instance.SetPause(false);
+            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
+        }
         private void Reset() {
             OnReset?.Invoke();
         }
