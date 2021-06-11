@@ -11407,10 +11407,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c6fdfc4b0984750af3fc5a76eedcd6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _track0: {fileID: 834075352}
-  _track1: {fileID: 1484807736}
-  _track2: {fileID: 1864465114}
-  _munch: {fileID: 8300000, guid: f9f52ac366d48dc4e8d581395fd35850, type: 3}
+  track0: {fileID: 834075352}
+  track1: {fileID: 1484807736}
+  track2: {fileID: 1864465114}
+  munch: {fileID: 8300000, guid: f9f52ac366d48dc4e8d581395fd35850, type: 3}
   eatGhost: {fileID: 8300000, guid: 95c1f919440e9a94e88705ae27ee2780, type: 3}
   death: {fileID: 8300000, guid: 379bffca65f8eb9479bfdca53e46ca02, type: 3}
   intermission: {fileID: 8300000, guid: b764fb7d6c53d2f49bc43bc48ffdc73f, type: 3}
@@ -14825,6 +14825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1d26327bd0c4b72b9cfce261022a97f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   player: {fileID: 2055087597}
   sceneObjects:
   - {fileID: 519420028}
@@ -22190,6 +22191,25 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 849417398336988106, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
   m_PrefabInstance: {fileID: 849417397998741250}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2055087598
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055087597}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b06e025a94e73b241bb2f93cdfdd78e3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2055087599 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 849417398336988107, guid: 1cd827127b02f5747a7bd58dcbbd1c87, type: 3}
