@@ -7,7 +7,9 @@ using static UnityEngine.Vector2Int;
 
 namespace UnitMan.Source
 {
-    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(PlayerInput),
+        typeof(SpriteRenderer),
+        typeof(Animator))]
     public class PlayerController : Actor
     {
         private const float MOVE_SPEED = 5f;
@@ -20,6 +22,7 @@ namespace UnitMan.Source
         
         public bool isInvincible;
         public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
+        private SpriteRenderer _spriteRenderer;
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
@@ -32,6 +35,7 @@ namespace UnitMan.Source
             _inputMaps.Player.Enable();
             _inputMaps.Player.Move.performed += OnMove;
             _playerInput = GetComponent<PlayerInput>();
+            _spriteRenderer = GetComponent<SpriteRenderer>();
             // _playerInput.onActionTriggered += OnMove;
 
             invincibleTimer.OnEnd += DisableInvincibility;
@@ -41,6 +45,13 @@ namespace UnitMan.Source
             if (isInvincible) {
                 UIModel.Instance.UpdateInvincibleTime(invincibleTimer.currentTime);
             }
+
+            UpdateAnimationDirection();
+        }
+
+        private void UpdateAnimationDirection() {
+            _spriteRenderer.flipX = _currentDirection.x < 0;
+            // thisTransform.rotation.eulerAngles = (0f, _currentDirection.y != 0 ? 90f : 0f, 0f);
         }
 
         private void OnDisable() {
