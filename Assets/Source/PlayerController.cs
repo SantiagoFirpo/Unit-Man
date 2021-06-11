@@ -19,7 +19,7 @@ namespace UnitMan.Source
         private Vector2Int _currentDirection;
         
         public bool isInvincible;
-        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
+        public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
@@ -34,24 +34,25 @@ namespace UnitMan.Source
             _playerInput = GetComponent<PlayerInput>();
             // _playerInput.onActionTriggered += OnMove;
 
-            _invincibleTimer.OnEnd += DisableInvincibility;
+            invincibleTimer.OnEnd += DisableInvincibility;
         }
 
         private void Update() {
             if (isInvincible) {
-                UIModel.Instance.UpdateInvincibleTime(_invincibleTimer.currentTime);
+                UIModel.Instance.UpdateInvincibleTime(invincibleTimer.currentTime);
             }
         }
 
         private void OnDisable() {
             _playerInput.onActionTriggered -= OnMove;
             _inputMaps.Player.Disable();
-            _invincibleTimer.OnEnd -= DisableInvincibility;
+            invincibleTimer.OnEnd -= DisableInvincibility;
         }
 
         private void DisableInvincibility() {
             isInvincible = false;
             OnInvincibleChanged?.Invoke(isInvincible);
+            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Siren, 1, true);
         }
 
         protected override void FixedUpdate() {
@@ -80,7 +81,8 @@ namespace UnitMan.Source
 
         public void SetInvincible() {
             isInvincible = true;
-            _invincibleTimer.Begin();
+            invincibleTimer.Begin();
+            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.PowerPellet, 1, true);
             OnInvincibleChanged?.Invoke(isInvincible);
         }
 
