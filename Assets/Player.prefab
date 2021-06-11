@@ -131,7 +131,7 @@ Rigidbody2D:
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 19e530781612c304f969a562726f5e4d, type: 2}
   m_Interpolate: 1
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &849417398336988111
@@ -176,9 +176,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 079de3925f028ee46983e564ad35e924, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rigidBody: {fileID: 0}
   motion: {x: 0, y: 0}
-  _currentState: 0
-  _previousState: 0
+  possibleTurns: 00000000
+  isInvincible: 0
 --- !u!58 &849417398336988109
 CircleCollider2D:
   m_ObjectHideFlags: 0
