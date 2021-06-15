@@ -54,6 +54,7 @@ namespace UnitMan.Source {
 
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
        private Animator _animator;
+       private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
@@ -256,8 +257,9 @@ namespace UnitMan.Source {
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = standardMoveSpeed;
                    _pathToPlayerTimer.paused = false;
+                   _animator.SetBool(FleeingAnimator, false);
                    ComputePathToPlayer();
-                   
+
                    break;
                }
                case State.Fleeing: {
@@ -265,8 +267,9 @@ namespace UnitMan.Source {
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = _slowMoveSpeed;
                    _pathToPlayerTimer.paused = true;
+                   _animator.SetBool(FleeingAnimator, true);
                    ComputePathAwayFromPlayer();
-                   
+
                    break;
                }
                case State.Dead: {
