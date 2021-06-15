@@ -21,7 +21,6 @@ namespace UnitMan.Source {
        private Transform _playerTransform;
 
        private Vector2Int _gridPosition;
-       private Vector2Int _direction;
 
        [SerializeField]
        protected float pathfindingIntervalSeconds = 4f;
@@ -54,6 +53,7 @@ namespace UnitMan.Source {
        private Color debugColor;
 
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
+       private Animator _animator;
        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
@@ -64,6 +64,7 @@ namespace UnitMan.Source {
        protected override void Awake() {
            base.Awake();
            _positionQueue.Clear();
+           _animator = GetComponent<Animator>();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
            startPosition = thisTransform.position;
@@ -121,7 +122,7 @@ namespace UnitMan.Source {
                SetState(State.Alive);
            }
 
-           motion = (Vector2) _direction * _currentMoveSpeed;
+           motion = (Vector2) currentDirection * _currentMoveSpeed;
            rigidBody.velocity = motion;
        }
 
@@ -136,7 +137,7 @@ namespace UnitMan.Source {
            Vector2Int actualDirection = nextPosition - _gridPosition;
            // Debug.Log();
                
-           _direction = !IsCardinalDirection(actualDirection) ? _direction : actualDirection;
+           currentDirection = !IsCardinalDirection(actualDirection) ? currentDirection : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
            if (VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
                _positionQueue.Dequeue();
@@ -147,7 +148,7 @@ namespace UnitMan.Source {
            Vector2Int nextPosition = _positionQueue.Peek();
            Vector2Int nextDirection = _directionQueue.Peek();
            if (possibleTurns[DirectionToInt(nextDirection)]) {
-               _direction = nextDirection;
+               currentDirection = nextDirection;
            }
            // Debug.Log(_direction, thisGameObject);
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
@@ -181,6 +182,7 @@ namespace UnitMan.Source {
 
        private static Queue<Vector2Int> PositionsToTurns(Vector2Int[] positions) {
            int turnsLength = positions.Length - 1;
+           if (turnsLength <= 0) return null;
            Queue<Vector2Int> result = new Queue<Vector2Int>(turnsLength);
            for (int i = 0; i < turnsLength; i++) {
                result.Enqueue(positions[i+1] - positions[i]);
@@ -218,13 +220,13 @@ namespace UnitMan.Source {
        }
 
        private void TurnToValidDirection() {
-           Vector2Int originDirection = _direction * -1;
+           Vector2Int originDirection = currentDirection * -1;
            int possibleTurnsTotal = 0;
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
                possibleTurnsTotal++;
                if (Actor.EnumToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
-                   _direction = Actor.EnumToVector2Int(i);
+                   currentDirection = Actor.EnumToVector2Int(i);
                }
            }
        }
