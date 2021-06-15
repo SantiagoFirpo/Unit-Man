@@ -56,6 +56,11 @@ namespace UnitMan.Source {
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
        private const float MAX_RETREAT_SECONDS = 6f;
 
+       public enum Quadrant
+       {
+           UpRight, UpLeft, DownLeft, DownRight
+       }
+
        protected override void Awake() {
            base.Awake();
            _positionQueue.Clear();
@@ -194,12 +199,12 @@ namespace UnitMan.Source {
        }
        
        private void ComputePathAwayFromPlayer() {
-           int playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
+           Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
            Vector3 finalPosition = playerQuadrant switch {
-               1 => _downLeftMap,
-               2 => _downRightMap,
-               3 => _upRightMap,
-               4 => _upLeftMap,
+               Quadrant.UpRight => _downLeftMap,
+               Quadrant.UpLeft => _downRightMap,
+               Quadrant.DownLeft => _upRightMap,
+               Quadrant.DownRight => _upLeftMap,
                _ => startPosition
            };
            
@@ -218,21 +223,21 @@ namespace UnitMan.Source {
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
                possibleTurnsTotal++;
-               if (Actor.IntToDirection(i) != originDirection || possibleTurnsTotal == 1) {
-                   _direction = Actor.IntToDirection(i);
+               if (Actor.EnumToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
+                   _direction = Actor.EnumToVector2Int(i);
                }
            }
        }
 
-       private static int GetQuadrant(Vector2 position, Vector2 centralPosition) {
+       private static Quadrant GetQuadrant(Vector2 position, Vector2 centralPosition) {
            bool isUp = position.y >= centralPosition.y;
            bool isRight = position.x >= centralPosition.x;
-           return isRight switch {
-               true when isUp => 1,
-               false when isUp => 2,
-               false => 3,
-               true => 4
-           };
+           if (isUp) {
+               return isRight ? Quadrant.UpRight : Quadrant.UpLeft;
+           }
+           else {
+               return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
+           }
        }
 
        private void SetState(State targetState) {
