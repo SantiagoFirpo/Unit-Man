@@ -18,11 +18,10 @@ namespace UnitMan.Source
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
 
-        private Vector2Int _currentDirection;
-        
         public bool isInvincible;
         public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
         private SpriteRenderer _spriteRenderer;
+        private Animator _animator;
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
@@ -36,23 +35,50 @@ namespace UnitMan.Source
             _inputMaps.Player.Move.performed += OnMove;
             _playerInput = GetComponent<PlayerInput>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
+            _animator = GetComponent<Animator>();
             // _playerInput.onActionTriggered += OnMove;
 
             invincibleTimer.OnEnd += DisableInvincibility;
         }
 
-        private void Update() {
+        protected override void Update() {
+            base.Update();
             if (isInvincible) {
                 UIModel.Instance.UpdateInvincibleTime(invincibleTimer.currentTime);
             }
-
-            UpdateAnimationDirection();
         }
 
-        private void UpdateAnimationDirection() {
-            _spriteRenderer.flipX = _currentDirection.x < 0;
-            // thisTransform.rotation.eulerAngles = (0f, _currentDirection.y != 0 ? 90f : 0f, 0f);
-        }
+        // protected override void UpdateAnimation() {
+        //     if (rigidBody.velocity == Vector2.zero) {
+        //         _animator.enabled = false;
+        //         return;
+        //     }
+        //     _animator.enabled = true;
+        //     Vector3 currentRotation = thisTransform.eulerAngles;
+        //     if (currentDirection == Up) {
+        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
+        //             currentRotation.y,
+        //             90f);
+        //     }
+        //     else if (currentDirection == Down) {
+        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
+        //             currentRotation.y,
+        //             -90f);
+        //     }
+        //     else if (currentDirection == Left) {
+        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
+        //             currentRotation.y, 180f);
+        //     }
+        //     else if (currentDirection == Right) {
+        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
+        //             currentRotation.y,
+        //             0f);
+        //     }
+        //     // _spriteRenderer.flipX = _currentDirection.x < 0;
+        //     // thisTransform.eulerAngles = new Vector3(currentRotation.x,
+        //     //                                         currentRotation.y,
+        //     //                                         _currentDirection.y < 0 ? -90f : 90f);
+        // }
 
         private void OnDisable() {
             _playerInput.onActionTriggered -= OnMove;
@@ -72,11 +98,11 @@ namespace UnitMan.Source
             int index = DirectionToInt(_inputVector);
 
             if (possibleTurns[index]) {
-                _currentDirection = _inputVector;
+                currentDirection = _inputVector;
             }
                 
 
-            motion = (Vector2) _currentDirection * MOVE_SPEED;
+            motion = (Vector2) currentDirection * MOVE_SPEED;
 
             // if (_rigidBody.velocity == Vector2.zero) {
             //     _transform.position = Vector3Int.RoundToInt(_transform.position);
