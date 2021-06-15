@@ -31,10 +31,10 @@ namespace UnitMan.Source {
         private readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
         private readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
 
-        protected static readonly Vector2 Up = Vector2.up;
-        protected static readonly Vector2 Down = Vector2.down;
-        protected static readonly Vector2 Left = Vector2.left;
-        protected static readonly Vector2 Right = Vector2.right;
+        public static readonly Vector2 Up = Vector2.up;
+        public static readonly Vector2 Down = Vector2.down;
+        public static readonly Vector2 Left = Vector2.left;
+        public static readonly Vector2 Right = Vector2.right;
 
         private Vector2 _almostUpLeft;
         private Vector2 _almostUpRight;
@@ -135,13 +135,6 @@ namespace UnitMan.Source {
                 (int) Direction.Right => Vector2Int.right,
                 _ => Vector2Int.zero
             };
-        }
-
-        protected static bool VectorApproximately(Vector3 v1, Vector2Int v2, float toleranceInclusive) {
-            return (Mathf.Abs(v1.x - v2.x) <= toleranceInclusive && Mathf.Abs(v1.y - v2.y) <= toleranceInclusive);
-        }
-        protected static bool VectorApproximately(Vector3 v1, Vector3 v2, float toleranceInclusive) {
-            return (Mathf.Abs(v1.x - v2.x) <= toleranceInclusive && Mathf.Abs(v1.y - v2.y) <= toleranceInclusive);
         }
 
         protected virtual void FixedUpdate() {
