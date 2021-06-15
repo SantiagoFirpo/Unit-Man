@@ -118,7 +118,7 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (VectorApproximately(thisTransform.position, startPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
+           if (PathGrid.VectorApproximately(thisTransform.position, startPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
                SetState(State.Alive);
            }
 
@@ -139,7 +139,7 @@ namespace UnitMan.Source {
                
            currentDirection = !IsCardinalDirection(actualDirection) ? currentDirection : actualDirection;
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
+           if (PathGrid.VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
                _positionQueue.Dequeue();
            }
        }
@@ -152,7 +152,7 @@ namespace UnitMan.Source {
            }
            // Debug.Log(_direction, thisGameObject);
            // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (!VectorApproximately(thisTransform.position, nextPosition,
+           if (!PathGrid.VectorApproximately(thisTransform.position, nextPosition,
                _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) return; // previous value: 0.05f
            _positionQueue.Dequeue();
            _directionQueue.Dequeue();
