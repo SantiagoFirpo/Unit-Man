@@ -74,7 +74,7 @@ namespace UnitMan.Source {
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, true);
            _retreatTimer.OnEnd += ResetPositionAndState;
-           ComputePathToPlayer();
+           // ComputePathToPlayer();
            _pathFindingDelay.OnEnd += UpdateCanPathfind;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
@@ -107,9 +107,28 @@ namespace UnitMan.Source {
                _positionQueue = path;
                _directionQueue = PositionsToTurns(path.ToArray());
            }
-
+            
+           //Toggle these two blocks to toggle multithreading:
+           
+           // ThreadStart();
+           
            Thread thread = new Thread(ThreadStart);
            thread.Start();
+       }
+
+       private void MultithreadedNextTurn(Vector3 initialPosition, Vector3 finalPosition) {
+           _directionQueue.Enqueue( DirectionToVector2Int(GetBestDirection(initialPosition, finalPosition)));
+       }
+
+       private static Direction GetBestDirection(Vector3 initialPosition, Vector3 finalPosition) {
+           float offsetX = finalPosition.x - initialPosition.x;
+           float offsetY = finalPosition.y - initialPosition.y;
+
+           if (Mathf.Abs(offsetX) > Mathf.Abs(offsetY)) {
+               return offsetY > 0f ? Direction.Up : Direction.Down;
+           }
+
+           return offsetX > 0f ? Direction.Right : Direction.Left;
        }
 
        protected override void FixedUpdate() {
@@ -176,7 +195,7 @@ namespace UnitMan.Source {
        private void FollowPath() {
            Vector2Int nextPosition = _positionQueue.Peek();
            Vector2Int nextDirection = _directionQueue.Peek();
-           if (possibleTurns[DirectionToInt(nextDirection)]) {
+           if (possibleTurns[VectorToInt(nextDirection)]) {
                currentDirection = nextDirection;
            }
            // Debug.Log(_direction, thisGameObject);
@@ -258,8 +277,8 @@ namespace UnitMan.Source {
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i]) continue;
                possibleTurnsTotal++;
-               if (Actor.EnumToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
-                   currentDirection = Actor.EnumToVector2Int(i);
+               if (Actor.DirectionToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
+                   currentDirection = Actor.DirectionToVector2Int(i);
                }
            }
        }
