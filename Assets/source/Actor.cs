@@ -1,6 +1,7 @@
 using System;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities;
+using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
 namespace UnitMan.Source {
@@ -12,6 +13,8 @@ namespace UnitMan.Source {
         protected CircleCollider2D circleCollider;
         public Rigidbody2D rigidBody;
         protected Transform thisTransform;
+        
+        private static readonly Vector2 Vector2Zero = Vector2.zero;
         
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
@@ -138,7 +141,8 @@ namespace UnitMan.Source {
         }
 
         protected virtual void FixedUpdate() {
-            CheckPossibleTurns();
+            // CheckPossibleTurns();
+            PathGrid.Instance.CheckPossibleTurns(thisTransform.position, possibleTurns);
         }
         
         protected virtual void OnDrawGizmos() {
