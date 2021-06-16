@@ -6,53 +6,53 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     //Responsibility: Abstract model for finite timers inside other classes
     public delegate void TimerChange();
     public event System.Action OnEnd;
-    private readonly float _waitTime;
+    public readonly float waitTime;
     private readonly float _delay;
     public float currentTime;
     private readonly bool _autoStart;
-    private readonly bool _oneShot;
+    private readonly bool _isNotLooped;
 
-    public bool paused;
+    public bool active;
 
     private void Update(float deltaTime) {
-        if (paused) return;
-        if (currentTime < _waitTime) {
+        if (!active) return;
+        if (currentTime < waitTime) {
             currentTime += Time.deltaTime;
         }
         else {
             OnEnd?.Invoke();
-            if (_oneShot) {
+            if (_isNotLooped) {
                 //Timer ended but is oneShot
-                paused = true;
+                active = false;
                 currentTime = Mathf.Round(currentTime);
             }
             else {
                 //Timer ended and reset
                 currentTime = 0f;
-                paused = false;
+                active = true;
             }
         }
 
     }
     public void Begin() {
         currentTime = 0f;
-        paused = false;
+        active = true;
     }
     public void Stop() {
         currentTime = 0f;
-        paused = true;
+        active = false;
     }
 
     private void Setup() {
         currentTime = 0f;
-        paused = !_autoStart;
+        active = _autoStart;
     }
 
-    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool isOneShot = true) {
-        _waitTime = waitTime;
+    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool isNotLooped = true) {
+        this.waitTime = waitTime;
         _delay = delay;
         _autoStart = autoStart;
-        _oneShot = isOneShot;
+        _isNotLooped = isNotLooped;
         TimerManager.OnFrameUpdate += Update;
         TimerManager.Initialized += Setup;
     }
