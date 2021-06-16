@@ -36,6 +36,9 @@ namespace UnitMan.Source {
            Alive, Fleeing, Dead
        }
        
+       public static readonly Direction[] horizontalDirections = new Direction[] {Direction.Left, Direction.Right};
+       public static readonly Direction[] verticalDirections = new Direction[] {Direction.Up, Direction.Down};
+       
        public State state = State.Alive;
        
        private const float MOVE_SPEED_INACTIVE = 6f;
@@ -117,7 +120,21 @@ namespace UnitMan.Source {
        }
 
        private void MultithreadedNextTurn(Vector3 initialPosition, Vector3 finalPosition) {
-           _directionQueue.Enqueue( DirectionToVector2Int(GetBestDirection(initialPosition, finalPosition)));
+           _directionQueue.Clear();
+           Direction idealDirection = GetBestDirection(initialPosition, finalPosition);
+           Direction[] neighborDirections = GetNeighborDirections(idealDirection);
+           Direction directionBuffer = idealDirection;
+           if (!possibleTurns[(int) idealDirection]) {
+               if (!possibleTurns[(int) neighborDirections[0]]) {
+                   directionBuffer = neighborDirections[1];
+               }
+           }
+           _directionQueue.Enqueue( DirectionToVector2Int(directionBuffer));
+       }
+
+       private Direction[] GetNeighborDirections(Direction idealDirection) {
+           bool isVerticalDirection = (int) idealDirection < 2;
+           return isVerticalDirection ? horizontalDirections : verticalDirections;
        }
 
        private static Direction GetBestDirection(Vector3 initialPosition, Vector3 finalPosition) {
@@ -142,12 +159,11 @@ namespace UnitMan.Source {
                _canPathfind = false;
                ComputePathToPlayer();
            }
-           
-           // bool isInIntersection = _possibleTurnsTotal >= 3;
-           // if (isInIntersection && CanPathfind()) {
-           //      ComputePathToPlayer();
-           //      _pathFindingDelay.Begin();
+
+           // if (_canPathfind && isInIntersection) {
+           //     MultithreadedNextTurn(_gridPosition, _playerTransform.position);
            // }
+           
            if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
                // MoveThroughPath();
                FollowPath();
