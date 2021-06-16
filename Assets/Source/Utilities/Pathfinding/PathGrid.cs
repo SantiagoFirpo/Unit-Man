@@ -84,17 +84,16 @@ namespace UnitMan.Source.Utilities.Pathfinding
             bool canTurnLeft = grid[tilePosition + Left];
             bool canTurnRight = grid[tilePosition + Right];
             if (otherTilePosition != tilePosition) {
-                turns[(int) Actor.Direction.Up] = canTurnUp && grid[otherTilePosition + Up];
-                turns[(int) Actor.Direction.Down] = canTurnDown && grid[otherTilePosition + Down];
-                turns[(int) Actor.Direction.Left] = canTurnLeft && grid[otherTilePosition + Left];
-                turns[(int) Actor.Direction.Right] = canTurnRight && grid[otherTilePosition + Right];
+                canTurnUp = canTurnUp && grid[otherTilePosition + Up];
+                canTurnDown =  canTurnDown && grid[otherTilePosition + Down];
+                canTurnLeft = canTurnLeft && grid[otherTilePosition + Left];
+                canTurnRight = canTurnRight && grid[otherTilePosition + Right];
             }
-            else {
-                turns[(int) Actor.Direction.Up] = canTurnUp;
-                turns[(int) Actor.Direction.Down] = canTurnDown;
-                turns[(int) Actor.Direction.Left] = canTurnLeft;
-                turns[(int) Actor.Direction.Right] = canTurnRight;
-            }
+            turns[(int) Actor.Direction.Up] = canTurnUp;
+            turns[(int) Actor.Direction.Down] = canTurnDown;
+            turns[(int) Actor.Direction.Left] = canTurnLeft;
+            turns[(int) Actor.Direction.Right] = canTurnRight;
+            
         }
 
         public static bool VectorApproximately(Vector3 v1, Vector2Int v2, float toleranceInclusive) {
