@@ -93,7 +93,7 @@ namespace UnitMan.Source
         protected override void FixedUpdate() {
             base.FixedUpdate();
             if (!IsCardinalDirection(_inputVector)) return;
-            int index = DirectionToInt(_inputVector);
+            int index = VectorToInt(_inputVector);
 
             if (possibleTurns[index]) {
                 currentDirection = _inputVector;

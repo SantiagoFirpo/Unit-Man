@@ -87,7 +87,7 @@ namespace UnitMan.Source {
             thisTransform.position = startPosition;
         }
 
-        public static int DirectionToInt(Vector2 vector) {
+        public static int VectorToInt(Vector2 vector) {
             int index = -1;
             if (vector == Up) {
                 index = (int) Direction.Up;
@@ -104,17 +104,27 @@ namespace UnitMan.Source {
 
             return index;
         }
-        
+
         protected static bool IsCardinalDirection(Vector2 vector) {
             return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
         }
         
-        public static Vector2Int EnumToVector2Int(int enumDirection) {
+        public static Vector2Int DirectionToVector2Int(int enumDirection) {
             return enumDirection switch {
                 (int) Direction.Up => Vector2Int.up,
                 (int) Direction.Down => Vector2Int.down,
                 (int) Direction.Left => Vector2Int.left,
                 (int) Direction.Right => Vector2Int.right,
+                _ => Vector2Int.zero
+            };
+        }
+        
+        public static Vector2Int DirectionToVector2Int(Direction enumDirection) {
+            return enumDirection switch {
+                Direction.Up => PathGrid.Up,
+                Direction.Down => PathGrid.Down,
+                Direction.Left => PathGrid.Left,
+                Direction.Right => PathGrid.Right,
                 _ => Vector2Int.zero
             };
         }
