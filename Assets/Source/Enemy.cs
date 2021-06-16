@@ -59,6 +59,7 @@ namespace UnitMan.Source {
        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
        private int _possibleTurnsTotal;
        private bool _canPathfind;
+       private Vector3 _currentTargetPosition;
        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
@@ -121,7 +122,7 @@ namespace UnitMan.Source {
 
        private void MultithreadedNextTurn(Vector3 initialPosition, Vector3 finalPosition) {
            _directionQueue.Clear();
-           Direction idealDirection = GetBestDirection(initialPosition, finalPosition);
+           Direction idealDirection = GetBestDirections(initialPosition, finalPosition);
            Direction[] neighborDirections = GetNeighborDirections(idealDirection);
            Direction directionBuffer = idealDirection;
            if (!possibleTurns[(int) idealDirection]) {
@@ -137,9 +138,11 @@ namespace UnitMan.Source {
            return isVerticalDirection ? horizontalDirections : verticalDirections;
        }
 
-       private static Direction GetBestDirection(Vector3 initialPosition, Vector3 finalPosition) {
+       private static Direction GetBestDirections(Vector3 initialPosition, Vector3 finalPosition) {
            float offsetX = finalPosition.x - initialPosition.x;
            float offsetY = finalPosition.y - initialPosition.y;
+
+           Queue<Direction> directionsBuffer = new Queue<Direction>();
 
            if (Mathf.Abs(offsetX) > Mathf.Abs(offsetY)) {
                return offsetY > 0f ? Direction.Up : Direction.Down;
@@ -161,7 +164,7 @@ namespace UnitMan.Source {
            }
 
            // if (_canPathfind && isInIntersection) {
-           //     MultithreadedNextTurn(_gridPosition, _playerTransform.position);
+           //     MultithreadedNextTurn(_gridPosition, _currentTargetPosition);
            // }
            
            if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
