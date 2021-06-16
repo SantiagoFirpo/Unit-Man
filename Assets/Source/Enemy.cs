@@ -55,6 +55,7 @@ namespace UnitMan.Source {
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
        private int _possibleTurnsTotal;
+       private bool _canPathfind;
        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
@@ -71,11 +72,15 @@ namespace UnitMan.Source {
            _hubPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, true);
            _retreatTimer.OnEnd += ResetPositionAndState;
            ComputePathToPlayer();
-           _pathFindingDelay.OnEnd += ComputePathToPlayer;
+           _pathFindingDelay.OnEnd += UpdateCanPathfind;
            PlayerController.OnInvincibleChanged += UpdateState;
+       }
+
+       private void UpdateCanPathfind() {
+           _canPathfind = true;
        }
 
        private void ResetPositionAndState() {
@@ -112,6 +117,13 @@ namespace UnitMan.Source {
            UpdateGridPosition();
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
 
+           bool isInIntersection = _possibleTurnsTotal > 2;
+           if (_canPathfind && isInIntersection) {
+               _pathFindingDelay.Begin();
+               _canPathfind = false;
+               ComputePathToPlayer();
+           }
+           
            // bool isInIntersection = _possibleTurnsTotal >= 3;
            // if (isInIntersection && CanPathfind()) {
            //      ComputePathToPlayer();
