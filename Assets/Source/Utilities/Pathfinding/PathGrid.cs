@@ -58,25 +58,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
             float offsetX = position.x - tilePosition.x;
             float offsetY = position.y - tilePosition.y;
             
-            // if (Math.Abs(position.x - tilePosition.x) < 0.1f) {
-            //     bool isInTwoTilesVertical = Mathf.Abs(position.y - tilePosition.y) >= 0.1f;
-            //     if (position.y > tilePosition.y && isInTwoTilesVertical) {
-            //         otherTilePosition = tilePosition + Up;
-            //     }
-            //     else if (isInTwoTilesVertical) {
-            //         otherTilePosition = tilePosition + Down;
-            //     }
-            //     
-            // }
-            // else {
-            //     bool isInTwoTilesHorizontal = Mathf.Abs(position.x - tilePosition.x) >= 0.1f;
-            //     if (position.x > tilePosition.x && isInTwoTilesHorizontal) {
-            //         otherTilePosition = tilePosition + Right;
-            //     }
-            //     else if (isInTwoTilesHorizontal) {
-            //         otherTilePosition = tilePosition + Left;
-            //     }
-            // }
             bool isBetweenHorizontal = Mathf.Abs(offsetY) < 0.1f && Mathf.Abs(offsetX) >= 0.1f;
             bool isBetweenVertical = Mathf.Abs(offsetX) < 0.1f && Mathf.Abs(offsetY) >= 0.1f;
             if (isBetweenHorizontal) {
