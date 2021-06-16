@@ -21,7 +21,6 @@ namespace UnitMan.Source
         public bool isInvincible;
         public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
         private SpriteRenderer _spriteRenderer;
-        private Animator _animator;
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
@@ -35,7 +34,6 @@ namespace UnitMan.Source
             _inputMaps.Player.Move.performed += OnMove;
             _playerInput = GetComponent<PlayerInput>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _animator = GetComponent<Animator>();
             // _playerInput.onActionTriggered += OnMove;
 
             invincibleTimer.OnEnd += DisableInvincibility;

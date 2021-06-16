@@ -47,7 +47,7 @@ namespace UnitMan.Source {
         protected LayerMask wallLayer;
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
-        private Animator _animator;
+        protected Animator animator;
 
         public enum Direction
         {
@@ -61,7 +61,7 @@ namespace UnitMan.Source {
         public virtual void Initialize() {
             circleCollider = GetComponent<CircleCollider2D>();
             rigidBody = GetComponent<Rigidbody2D>();
-            _animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
             thisTransform = transform;
             thisGameObject = gameObject;
             
@@ -87,26 +87,26 @@ namespace UnitMan.Source {
             thisTransform.position = startPosition;
         }
 
-        private void CheckPossibleTurns() {
-            Vector2 playerPosition = thisTransform.position;
-            
-            RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Up, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Up, WALL_CHECK_DISTANCE, wallLayer);
-            
-            RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Down, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Down, WALL_CHECK_DISTANCE, wallLayer);
-            
-            RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
-            
-            RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Right, WALL_CHECK_DISTANCE, wallLayer);
-            RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Right, WALL_CHECK_DISTANCE, wallLayer);
-            
-            possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
-            possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
-            possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
-            possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
-        }
+        // private void CheckPossibleTurns() {
+        //     Vector2 playerPosition = thisTransform.position;
+        //     
+        //     RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Up, WALL_CHECK_DISTANCE, wallLayer);
+        //     RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Up, WALL_CHECK_DISTANCE, wallLayer);
+        //     
+        //     RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Down, WALL_CHECK_DISTANCE, wallLayer);
+        //     RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Down, WALL_CHECK_DISTANCE, wallLayer);
+        //     
+        //     RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
+        //     RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
+        //     
+        //     RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Right, WALL_CHECK_DISTANCE, wallLayer);
+        //     RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Right, WALL_CHECK_DISTANCE, wallLayer);
+        //     
+        //     possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
+        //     possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
+        //     possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
+        //     possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
+        // }
         
         public static int DirectionToInt(Vector2 vector) {
             int index = -1;
@@ -161,9 +161,9 @@ namespace UnitMan.Source {
         }
 
         protected void UpdateAnimation() {
-            _animator.enabled = rigidBody.velocity != Vector2.zero;
-            _animator.SetInteger(DirectionXAnimator, currentDirection.x);
-            _animator.SetInteger(DirectionYAnimator, currentDirection.y);
+            animator.enabled = rigidBody.velocity != Vector2.zero;
+            animator.SetInteger(DirectionXAnimator, currentDirection.x);
+            animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }
     }
 }
