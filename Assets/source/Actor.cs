@@ -87,27 +87,6 @@ namespace UnitMan.Source {
             thisTransform.position = startPosition;
         }
 
-        // private void CheckPossibleTurns() {
-        //     Vector2 playerPosition = thisTransform.position;
-        //     
-        //     RaycastHit2D upHitOne = Physics2D.Raycast(playerPosition + _almostUpLeft, Up, WALL_CHECK_DISTANCE, wallLayer);
-        //     RaycastHit2D upHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Up, WALL_CHECK_DISTANCE, wallLayer);
-        //     
-        //     RaycastHit2D downHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Down, WALL_CHECK_DISTANCE, wallLayer);
-        //     RaycastHit2D downHitTwo = Physics2D.Raycast(playerPosition + _almostDownRight, Down, WALL_CHECK_DISTANCE, wallLayer);
-        //     
-        //     RaycastHit2D leftHitOne = Physics2D.Raycast(playerPosition + _almostDownLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
-        //     RaycastHit2D leftHitTwo = Physics2D.Raycast(playerPosition + _almostUpLeft, Left, WALL_CHECK_DISTANCE, wallLayer);
-        //     
-        //     RaycastHit2D rightHitOne = Physics2D.Raycast(playerPosition + _almostDownRight, Right, WALL_CHECK_DISTANCE, wallLayer);
-        //     RaycastHit2D rightHitTwo = Physics2D.Raycast(playerPosition + _almostUpRight, Right, WALL_CHECK_DISTANCE, wallLayer);
-        //     
-        //     possibleTurns[0] = !(upHitOne.collider || upHitTwo.collider);
-        //     possibleTurns[1] = !(downHitOne.collider || downHitTwo.collider);
-        //     possibleTurns[2] = !(leftHitOne.collider || leftHitTwo.collider);
-        //     possibleTurns[3] = !(rightHitOne.collider || rightHitTwo.collider);
-        // }
-        
         public static int DirectionToInt(Vector2 vector) {
             int index = -1;
             if (vector == Up) {
