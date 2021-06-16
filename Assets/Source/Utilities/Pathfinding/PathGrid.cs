@@ -55,23 +55,46 @@ namespace UnitMan.Source.Utilities.Pathfinding
         public void CheckPossibleTurns(Vector3 position, bool[] turns, float colliderSize = 0.9f) {
             Vector2Int tilePosition = VectorToVector2Int(position);
             Vector2Int otherTilePosition = tilePosition;
-            if (Math.Abs(position.x - tilePosition.x) < 0.1f) {
-                bool isInTwoTilesVertical = Mathf.Abs(position.y - tilePosition.y) >= 0.1f;
-                if (position.y > tilePosition.y && isInTwoTilesVertical) {
-                    otherTilePosition = tilePosition + Up;
-                }
-                else if (isInTwoTilesVertical) {
-                    otherTilePosition = tilePosition + Down;
-                }
-                
-            }
-            else {
-                bool isInTwoTilesHorizontal = Mathf.Abs(position.x - tilePosition.x) >= 0.1f;
-                if (position.x > tilePosition.x && isInTwoTilesHorizontal) {
+            float offsetX = position.x - tilePosition.x;
+            float offsetY = position.y - tilePosition.y;
+            
+            // if (Math.Abs(position.x - tilePosition.x) < 0.1f) {
+            //     bool isInTwoTilesVertical = Mathf.Abs(position.y - tilePosition.y) >= 0.1f;
+            //     if (position.y > tilePosition.y && isInTwoTilesVertical) {
+            //         otherTilePosition = tilePosition + Up;
+            //     }
+            //     else if (isInTwoTilesVertical) {
+            //         otherTilePosition = tilePosition + Down;
+            //     }
+            //     
+            // }
+            // else {
+            //     bool isInTwoTilesHorizontal = Mathf.Abs(position.x - tilePosition.x) >= 0.1f;
+            //     if (position.x > tilePosition.x && isInTwoTilesHorizontal) {
+            //         otherTilePosition = tilePosition + Right;
+            //     }
+            //     else if (isInTwoTilesHorizontal) {
+            //         otherTilePosition = tilePosition + Left;
+            //     }
+            // }
+            bool isBetweenHorizontal = Mathf.Abs(offsetY) < 0.1f && Mathf.Abs(offsetX) >= 0.1f;
+            bool isBetweenVertical = Mathf.Abs(offsetX) < 0.1f && Mathf.Abs(offsetY) >= 0.1f;
+            if (isBetweenHorizontal) {
+                bool isRight = offsetX > 0f;
+                if (isRight) {
                     otherTilePosition = tilePosition + Right;
                 }
-                else if (isInTwoTilesHorizontal) {
+                else {
                     otherTilePosition = tilePosition + Left;
+                }
+            }
+            else if (isBetweenVertical) {
+                bool isUp = offsetY > 0f;
+                if (isUp) {
+                    otherTilePosition = tilePosition + Up;
+                }
+                else {
+                    otherTilePosition = tilePosition + Down;
                 }
             }
             
