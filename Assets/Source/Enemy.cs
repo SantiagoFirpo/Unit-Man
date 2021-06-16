@@ -10,7 +10,7 @@ using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
     public class Enemy : Actor {
-       private Timer _pathToPlayerTimer;
+       private Timer _pathFindingDelay;
        
        [SerializeField]
        protected float standardMoveSpeed;
@@ -53,8 +53,8 @@ namespace UnitMan.Source {
        private Color debugColor;
 
        private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
-       private Animator _animator;
        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
+       private int _possibleTurnsTotal;
        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
@@ -65,17 +65,16 @@ namespace UnitMan.Source {
        protected override void Awake() {
            base.Awake();
            _positionQueue.Clear();
-           _animator = GetComponent<Animator>();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
            startPosition = thisTransform.position;
            _hubPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _pathToPlayerTimer = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            _retreatTimer.OnEnd += ResetPositionAndState;
            ComputePathToPlayer();
-           _pathToPlayerTimer.OnEnd += ComputePathToPlayer;
+           _pathFindingDelay.OnEnd += ComputePathToPlayer;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
 
@@ -90,7 +89,7 @@ namespace UnitMan.Source {
        }
 
        private void Start() {
-           _pathToPlayerTimer.Begin();
+           _pathFindingDelay.Begin();
            _currentMoveSpeed = standardMoveSpeed;
            _slowMoveSpeed = standardMoveSpeed/2f;
        }
@@ -111,6 +110,13 @@ namespace UnitMan.Source {
        protected override void FixedUpdate() {
            base.FixedUpdate();
            UpdateGridPosition();
+           _possibleTurnsTotal = GetTrueCount(possibleTurns);
+
+           // bool isInIntersection = _possibleTurnsTotal >= 3;
+           // if (isInIntersection && CanPathfind()) {
+           //      ComputePathToPlayer();
+           //      _pathFindingDelay.Begin();
+           // }
            if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
                // MoveThroughPath();
                FollowPath();
@@ -125,6 +131,16 @@ namespace UnitMan.Source {
 
            motion = (Vector2) currentDirection * _currentMoveSpeed;
            rigidBody.velocity = motion;
+       }
+
+       private static int GetTrueCount(bool[] boolArray) {
+           int result = 0;
+           foreach (bool item in boolArray) {
+               if (item) {
+                   result++;
+               }
+           }
+           return result;
        }
 
        private const float POSITION_CHECK_TOLERANCE = 0.07f; //_currentMoveSpeed * SPEED_TOLERANCE_CONVERSION;
@@ -189,6 +205,10 @@ namespace UnitMan.Source {
                result.Enqueue(positions[i+1] - positions[i]);
            }
            return result;
+       }
+
+       private bool CanPathfind() {
+           return (!_pathFindingDelay.active) && _pathFindingDelay.currentTime == _pathFindingDelay.waitTime;
        }
 
        private void ComputePathToPlayer() {
@@ -256,9 +276,9 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = standardMoveSpeed;
-                   _pathToPlayerTimer.paused = false;
-                   _animator.SetBool(FleeingAnimator, false);
-                   ComputePathToPlayer();
+                   _pathFindingDelay.Begin();
+                   animator.SetBool(FleeingAnimator, false);
+                   // ComputePathToPlayer();
 
                    break;
                }
@@ -266,17 +286,16 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = _slowMoveSpeed;
-                   _pathToPlayerTimer.paused = true;
-                   _animator.SetBool(FleeingAnimator, true);
+                   _pathFindingDelay.active = false;
+                   animator.SetBool(FleeingAnimator, true);
                    ComputePathAwayFromPlayer();
-
                    break;
                }
                case State.Dead: {
                    thisGameObject.layer = _inactiveLayer;
                    _positionQueue.Clear();
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-                   _pathToPlayerTimer.paused = true;
+                   _pathFindingDelay.active = false;
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
                    

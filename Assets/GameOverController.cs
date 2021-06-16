@@ -10,7 +10,7 @@ namespace UnitMan
     public class GameOverController : MonoBehaviour
     {
         // Start is called before the first frame update
-        private readonly Timer _returnTimer = new Timer(autoStart: true, isOneShot: true);
+        private readonly Timer _returnTimer = new Timer(autoStart: true, isNotLooped: true);
 
         private void Awake() {
             _returnTimer.OnEnd += ReturnToMainScreen;
