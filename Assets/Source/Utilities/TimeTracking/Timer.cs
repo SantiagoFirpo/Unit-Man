@@ -10,7 +10,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     private readonly float _delay;
     public float currentTime;
     private readonly bool _autoStart;
-    private readonly bool _isNotLooped;
+    private readonly bool _oneTime;
 
     public bool active;
 
@@ -21,8 +21,8 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         }
         else {
             OnEnd?.Invoke();
-            if (_isNotLooped) {
-                //Timer ended but is oneShot
+            if (_oneTime) {
+                //Timer ended but is oneTime
                 active = false;
                 currentTime = Mathf.Round(currentTime);
             }
@@ -48,11 +48,11 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         active = _autoStart;
     }
 
-    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool isNotLooped = true) {
+    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool oneTime = true) {
         this.waitTime = waitTime;
         _delay = delay;
         _autoStart = autoStart;
-        _isNotLooped = isNotLooped;
+        _oneTime = oneTime;
         TimerManager.OnFrameUpdate += Update;
         TimerManager.Initialized += Setup;
     }
