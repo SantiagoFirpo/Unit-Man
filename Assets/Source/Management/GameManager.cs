@@ -79,14 +79,14 @@ namespace UnitMan.Source.Management
         
         
         public void Freeze() {
-            playerController.invincibleTimer.paused = true;
+            playerController.invincibleTimer.active = false;
             AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.EatGhost, 1, false);
             SetPause(true);
             _pauseTimer.Begin();
         }
 
         private void UnpauseFreeze() {
-            playerController.invincibleTimer.paused = false;
+            playerController.invincibleTimer.active = true;
             Instance.SetPause(false);
             AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
         }
