@@ -307,7 +307,7 @@ namespace UnitMan.Source {
            for (int i = 0; i <= 3; i++) {
                if (!possibleTurns[i] || VectorToInt(OriginDirection) == i) continue;
                possibleTurnsTotal++;
-               if (possibleTurnsTotal == 1) {
+               if (Actor.DirectionToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
                    currentDirection = Actor.DirectionToVector2Int(i);
                }
            }
