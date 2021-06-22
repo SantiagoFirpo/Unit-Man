@@ -116,7 +116,7 @@ namespace UnitMan.Source
 
         public void SetInvincible() {
             isInvincible = true;
-            invincibleTimer.Begin();
+            invincibleTimer.Start();
             AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.PowerPellet, 1, true);
             OnInvincibleChanged?.Invoke(isInvincible);
         }

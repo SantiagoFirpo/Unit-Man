@@ -12,10 +12,10 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     private readonly bool _autoStart;
     private readonly bool _oneTime;
 
-    public bool active;
+    public bool Active { get; private set;}
 
     private void Update(float deltaTime) {
-        if (!active) return;
+        if (!Active) return;
         if (currentTime < waitTime) {
             currentTime += Time.deltaTime;
         }
@@ -23,29 +23,29 @@ namespace UnitMan.Source.Utilities.TimeTracking {
             OnEnd?.Invoke();
             if (_oneTime) {
                 //Timer ended but is oneTime
-                active = false;
+                Active = false;
                 currentTime = Mathf.Round(currentTime);
             }
             else {
                 //Timer ended and reset
                 currentTime = 0f;
-                active = true;
+                Active = true;
             }
         }
 
     }
-    public void Begin() {
+    public void Start() {
         currentTime = 0f;
-        active = true;
+        Active = true;
     }
     public void Stop() {
         currentTime = 0f;
-        active = false;
+        Active = false;
     }
 
     private void Setup() {
         currentTime = 0f;
-        active = _autoStart;
+        Active = _autoStart;
     }
 
     public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool oneTime = true) {
