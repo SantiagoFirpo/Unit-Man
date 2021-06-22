@@ -6,7 +6,6 @@ using UnityEngine.Tilemaps;
 namespace UnitMan.Source.Utilities.Pathfinding
 {
     //TODO: refactor/organize this class
-    //TODO: remake grid, up tile row is causing an exception
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
     {
