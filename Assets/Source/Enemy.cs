@@ -10,6 +10,7 @@ using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
     public class Enemy : Actor {
+        //TODO: refactor/organize this class
        private Timer _pathFindingDelay;
        
        [SerializeField]
@@ -20,12 +21,20 @@ namespace UnitMan.Source {
        
        private Transform _playerTransform;
 
-       private Vector2Int _gridPosition;
+        Thread pathFindThread;
+
+       private Vector2Int OriginDirection {get {
+           return currentDirection * -1;
+       }}
 
        [SerializeField]
        protected float pathfindingIntervalSeconds = 4f;
        private PlayerController _playerController;
        private float _currentMoveSpeed;
+
+       private Vector2Int NextTile {get {
+           return gridPosition + currentDirection;
+       }}
        private float _slowMoveSpeed;
 
        private int _inactiveLayer;
@@ -98,7 +107,7 @@ namespace UnitMan.Source {
        }
 
        private void Start() {
-           _pathFindingDelay.Begin();
+           _pathFindingDelay.Start();
            _currentMoveSpeed = standardMoveSpeed;
            _slowMoveSpeed = standardMoveSpeed/2f;
        }
@@ -120,17 +129,38 @@ namespace UnitMan.Source {
            thread.Start();
        }
 
-       private void MultithreadedNextTurn(Vector3 initialPosition, Vector3 finalPosition) {
-           _directionQueue.Clear();
-           Direction idealDirection = GetBestDirections(initialPosition, finalPosition);
-           Direction[] neighborDirections = GetNeighborDirections(idealDirection);
-           Direction directionBuffer = idealDirection;
-           if (!possibleTurns[(int) idealDirection]) {
-               if (!possibleTurns[(int) neighborDirections[0]]) {
-                   directionBuffer = neighborDirections[1];
-               }
+        private const int DEFAULT_DISTANCE_MAX = 999;
+
+        private Direction MultithreadBestTurn(Vector2Int initialPosition, Vector2Int goalPosition) {
+           Direction bestTurn = Direction.Right;
+           Vector2Int originDirection = OriginDirection;
+           void ThreadStart() {
+               // _directionQueue.Clear();
+
+
+               bool[] possibleDirections = new bool[4] {true, true, true, true};
+               int[] neighborHeuristics = new int[4] {DEFAULT_DISTANCE_MAX,
+                                                                        DEFAULT_DISTANCE_MAX,
+                                                                        DEFAULT_DISTANCE_MAX,
+                                                                        DEFAULT_DISTANCE_MAX};
+                PathGrid.Instance.CheckPossibleTurns(initialPosition, possibleDirections);
+
+                for (int i = 0; i < possibleDirections.Length; i++) {
+                    if (!possibleDirections[i] || DirectionToVector2Int((Direction) i) == originDirection ) continue;
+                    neighborHeuristics[i] = PathGrid.TaxiCabDistance(initialPosition, goalPosition);
+                }
+
+                bestTurn = (Direction) FindSmallestNumberIndex(neighborHeuristics);
+
            }
-           _directionQueue.Enqueue( DirectionToVector2Int(directionBuffer));
+           //Toggle these two blocks to toggle multithreading:
+           
+           ThreadStart();
+           
+        //    pathFindThread = new Thread(ThreadStart);
+        //    pathFindThread.Start();
+
+           return bestTurn;
        }
 
        private Direction[] GetNeighborDirections(Direction idealDirection) {
@@ -138,40 +168,25 @@ namespace UnitMan.Source {
            return isVerticalDirection ? horizontalDirections : verticalDirections;
        }
 
-       private static Direction GetBestDirections(Vector3 initialPosition, Vector3 finalPosition) {
-           float offsetX = finalPosition.x - initialPosition.x;
-           float offsetY = finalPosition.y - initialPosition.y;
-
-           Queue<Direction> directionsBuffer = new Queue<Direction>();
-
-           if (Mathf.Abs(offsetX) > Mathf.Abs(offsetY)) {
-               return offsetY > 0f ? Direction.Up : Direction.Down;
-           }
-
-           return offsetX > 0f ? Direction.Right : Direction.Left;
-       }
-
        protected override void FixedUpdate() {
            base.FixedUpdate();
-           UpdateGridPosition();
+           bool[] nextTilePossibleTurns = new bool[4] {true, true, true, true};
+            PathGrid.Instance.CheckPossibleTurns(NextTile, nextTilePossibleTurns);
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
 
-           bool isInIntersection = _possibleTurnsTotal > 2;
-           if (_canPathfind && isInIntersection) {
-               _pathFindingDelay.Begin();
-               _canPathfind = false;
-               ComputePathToPlayer();
+           bool isIntersection =_possibleTurnsTotal > 2;
+           if (isIntersection || rigidBody.velocity == Vector2.zero) { //_canPathfind && 
+            //    _pathFindingDelay.Start();
+            //    _canPathfind = false;
+            //    // ComputePathToPlayer();
+                currentDirection = DirectionToVector2Int(MultithreadBestTurn(NextTile, _playerController.gridPosition));
            }
-
-           // if (_canPathfind && isInIntersection) {
-           //     MultithreadedNextTurn(_gridPosition, _currentTargetPosition);
-           // }
            
-           if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
-               // MoveThroughPath();
-               FollowPath();
-           }
-           if (rigidBody.velocity == Vector2.zero) { //else 
+        //    if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
+        //        // MoveThroughPath();
+        //        FollowPath();
+        //    }
+            else { //else 
                TurnToValidDirection();
            }
 
@@ -194,36 +209,32 @@ namespace UnitMan.Source {
        }
 
        private const float POSITION_CHECK_TOLERANCE = 0.07f; //_currentMoveSpeed * SPEED_TOLERANCE_CONVERSION;
-
-       private void UpdateGridPosition() {
-           _gridPosition = Vector2Int.RoundToInt(thisTransform.position);
-       }
         
-       private void MoveThroughPath() {
-           Vector2Int nextPosition = _positionQueue.Peek();
-           Vector2Int actualDirection = nextPosition - _gridPosition;
-           // Debug.Log();
+    //    private void MoveThroughPath() {
+    //        Vector2Int nextPosition = _positionQueue.Peek();
+    //        Vector2Int actualDirection = nextPosition - gridPosition;
+    //        // Debug.Log();
                
-           currentDirection = !IsCardinalDirection(actualDirection) ? currentDirection : actualDirection;
-           // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (PathGrid.VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
-               _positionQueue.Dequeue();
-           }
-       }
+    //        currentDirection = !IsCardinalDirection(actualDirection) ? currentDirection : actualDirection;
+    //        // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
+    //        if (PathGrid.VectorApproximately(thisTransform.position, nextPosition, _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) { // previous value: 0.05f
+    //            _positionQueue.Dequeue();
+    //        }
+    //    }
        
-       private void FollowPath() {
-           Vector2Int nextPosition = _positionQueue.Peek();
-           Vector2Int nextDirection = _directionQueue.Peek();
-           if (possibleTurns[VectorToInt(nextDirection)]) {
-               currentDirection = nextDirection;
-           }
-           // Debug.Log(_direction, thisGameObject);
-           // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
-           if (!PathGrid.VectorApproximately(thisTransform.position, nextPosition,
-               _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) return; // previous value: 0.05f
-           _positionQueue.Dequeue();
-           _directionQueue.Dequeue();
-       }
+    //    private void FollowPath() {
+    //        Vector2Int nextPosition = _positionQueue.Peek();
+    //        Vector2Int nextDirection = _directionQueue.Peek();
+    //        if (possibleTurns[VectorToInt(nextDirection)]) {
+    //            currentDirection = nextDirection;
+    //        }
+    //        // Debug.Log(_direction, thisGameObject);
+    //        // _transform.position = Vector2.MoveTowards(_transform.position, _gridPosition + _direction, FIXED_MOVE_SPEED);
+    //        if (!PathGrid.VectorApproximately(thisTransform.position, nextPosition,
+    //            _currentMoveSpeed * SPEED_TOLERANCE_CONVERSION)) return; // previous value: 0.05f
+    //        _positionQueue.Dequeue();
+    //        _directionQueue.Dequeue();
+    //    }
 
        private void OnCollisionEnter2D(Collision2D other) {
            if (!other.gameObject.CompareTag("Player")) return;
@@ -258,7 +269,7 @@ namespace UnitMan.Source {
        }
 
        private bool CanPathfind() {
-           return (!_pathFindingDelay.active) && _pathFindingDelay.currentTime == _pathFindingDelay.waitTime;
+           return (!_pathFindingDelay.Active) && _pathFindingDelay.currentTime == _pathFindingDelay.waitTime;
        }
 
        private void ComputePathToPlayer() {
@@ -294,9 +305,9 @@ namespace UnitMan.Source {
            Vector2Int originDirection = currentDirection * -1;
            int possibleTurnsTotal = 0;
            for (int i = 0; i <= 3; i++) {
-               if (!possibleTurns[i]) continue;
+               if (!possibleTurns[i] || VectorToInt(OriginDirection) == i) continue;
                possibleTurnsTotal++;
-               if (Actor.DirectionToVector2Int(i) != originDirection || possibleTurnsTotal == 1) {
+               if (possibleTurnsTotal == 1) {
                    currentDirection = Actor.DirectionToVector2Int(i);
                }
            }
@@ -326,7 +337,7 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = standardMoveSpeed;
-                   _pathFindingDelay.Begin();
+                   _pathFindingDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
                    // ComputePathToPlayer();
 
@@ -336,16 +347,16 @@ namespace UnitMan.Source {
                    _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = _slowMoveSpeed;
-                   _pathFindingDelay.active = false;
+                   _pathFindingDelay.Stop();
                    animator.SetBool(FleeingAnimator, true);
-                   ComputePathAwayFromPlayer();
+                //    ComputePathAwayFromPlayer();
                    break;
                }
                case State.Dead: {
                    thisGameObject.layer = _inactiveLayer;
                    _positionQueue.Clear();
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-                   _pathFindingDelay.active = false;
+                   _pathFindingDelay.Stop();
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
                    
@@ -356,6 +367,16 @@ namespace UnitMan.Source {
                }
            }
        }
+
+        private static int FindSmallestNumberIndex(int[] array) {
+            int currentSmallest = array[0];
+            for (int i = 1; i < array.Length; i++) {
+                if (currentSmallest > array[i])
+                    currentSmallest = array[i];
+            }
+
+            return Array.IndexOf(array, currentSmallest);
+        }
 
        protected override void OnDrawGizmos() {
            base.OnDrawGizmos();
