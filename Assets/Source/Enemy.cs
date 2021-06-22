@@ -69,7 +69,8 @@ namespace UnitMan.Source {
        private int _possibleTurnsTotal;
        private bool _canPathfind;
        private Vector3 _currentTargetPosition;
-       private const float MAX_RETREAT_SECONDS = 6f;
+        private bool isResolvingIntersection = false;
+        private const float MAX_RETREAT_SECONDS = 6f;
 
        public enum Quadrant
        {
@@ -170,23 +171,25 @@ namespace UnitMan.Source {
 
        protected override void FixedUpdate() {
            base.FixedUpdate();
-           bool[] nextTilePossibleTurns = new bool[4] {true, true, true, true};
-            PathGrid.Instance.CheckPossibleTurns(NextTile, nextTilePossibleTurns);
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
 
-           bool isIntersection =_possibleTurnsTotal > 2;
-           if (isIntersection || rigidBody.velocity == Vector2.zero) { //_canPathfind && 
+           bool isInIntersection =_possibleTurnsTotal > 2;
+           if (!isInIntersection && isResolvingIntersection) {
+               isResolvingIntersection = false;
+           }
+           if (isInIntersection && !isResolvingIntersection) { //_canPathfind && 
+            isResolvingIntersection = true;
             //    _pathFindingDelay.Start();
             //    _canPathfind = false;
             //    // ComputePathToPlayer();
-                currentDirection = DirectionToVector2Int(MultithreadBestTurn(NextTile, _playerController.gridPosition));
+                currentDirection = DirectionToVector2Int(MultithreadBestTurn(gridPosition, _playerController.gridPosition));
            }
            
         //    if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
         //        // MoveThroughPath();
         //        FollowPath();
         //    }
-            else { //else 
+            else if (rigidBody.velocity == Vector2.zero) { //else 
                TurnToValidDirection();
            }
 
