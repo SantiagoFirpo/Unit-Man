@@ -5,9 +5,21 @@ using UnityEngine.Tilemaps;
 
 namespace UnitMan.Source.Utilities.Pathfinding
 {
+    //TODO: refactor/organize this class
+    //TODO: remake grid, up tile row is causing an exception
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
     {
+        public static bool GetGridPosition(int x, int y) {
+            // Debug.Log($"{x}, {y}");
+            return newGrid[-y + 4, x+11];
+        }
+        public static void SetGridPosition(int x, int y, bool value) {
+            newGrid[-y + 4, x+11] = value;
+        }
+
+        private const int Y_SIZE = 26;
+        private const int X_SIZE = 23;
         public static Vector2Int Up = Vector2Int.up;
         public static Vector2Int Down = Vector2Int.down;
         public static Vector2Int Left = Vector2Int.left;
@@ -15,7 +27,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         public Tilemap walkableTilemap;
         public Tilemap wallTilemap;
-
+        private static bool[,] newGrid = new bool[Y_SIZE, X_SIZE];
         public readonly Dictionary<Vector2Int, bool> grid = new Dictionary<Vector2Int, bool>();
 
 
@@ -28,10 +40,14 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
             foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
                 grid.Add(position, true);
+                SetGridPosition(position.x, position.y, true);
+                
             }
 
             foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
+                SetGridPosition(position.x, position.y, false);
                 grid.Add(position, false);
+                SetGridPosition(position.x, position.y,false);
             }
             //bools are canWalk
            
@@ -79,16 +95,30 @@ namespace UnitMan.Source.Utilities.Pathfinding
                 }
             }
             
-            bool canTurnUp = grid[tilePosition + Up];
-            bool canTurnDown = grid[tilePosition + Down];
-            bool canTurnLeft = grid[tilePosition + Left];
-            bool canTurnRight = grid[tilePosition + Right];
+            bool canTurnUp = GetGridPosition(tilePosition.x, tilePosition.y + 1);
+            bool canTurnDown = GetGridPosition(tilePosition.x, tilePosition.y - 1);
+            bool canTurnLeft = GetGridPosition(tilePosition.x - 1, tilePosition.y);
+            bool canTurnRight = GetGridPosition(tilePosition.x + 1, tilePosition.y);
             if (otherTilePosition != tilePosition) {
-                canTurnUp = canTurnUp && grid[otherTilePosition + Up];
-                canTurnDown =  canTurnDown && grid[otherTilePosition + Down];
-                canTurnLeft = canTurnLeft && grid[otherTilePosition + Left];
-                canTurnRight = canTurnRight && grid[otherTilePosition + Right];
+                canTurnUp = canTurnUp && GetGridPosition(otherTilePosition.x, otherTilePosition.y + 1);
+                canTurnDown =  canTurnDown && GetGridPosition(otherTilePosition.x, otherTilePosition.y - 1);
+                canTurnLeft = canTurnLeft && GetGridPosition(otherTilePosition.x - 1, otherTilePosition.y);
+                canTurnRight = canTurnRight && GetGridPosition(otherTilePosition.x - 1, otherTilePosition.y);
             }
+            turns[(int) Actor.Direction.Up] = canTurnUp;
+            turns[(int) Actor.Direction.Down] = canTurnDown;
+            turns[(int) Actor.Direction.Left] = canTurnLeft;
+            turns[(int) Actor.Direction.Right] = canTurnRight;
+            
+        }
+
+        public void CheckPossibleTurns(Vector2Int position, bool[] turns) {
+        
+            bool canTurnUp = GetGridPosition(position.x, position.y + 1);
+            bool canTurnDown = GetGridPosition(position.x, position.y - 1);
+            bool canTurnLeft = GetGridPosition(position.x - 1, position.y);
+            bool canTurnRight = GetGridPosition(position.x + 1, position.y);
+           
             turns[(int) Actor.Direction.Up] = canTurnUp;
             turns[(int) Actor.Direction.Down] = canTurnDown;
             turns[(int) Actor.Direction.Left] = canTurnLeft;
@@ -112,6 +142,15 @@ namespace UnitMan.Source.Utilities.Pathfinding
         public static Vector2Int VectorToVector2Int(Vector3 vector) {
             return new Vector2Int(Mathf.RoundToInt(vector.x),
                                   Mathf.RoundToInt(vector.y));
+        }
+
+        private void OnDrawGizmos() {
+            for (int x = -11; x <= 11; x++) {
+                for (int y = -21; y <= 4; y++) {
+                    Gizmos.color = GetGridPosition(x, y) ? Color.green : Color.red;
+                    Gizmos.DrawSphere(new Vector3(x, y, 0f), 0.1f);
+                }
+            }
         }
     }
 }
