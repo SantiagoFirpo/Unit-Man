@@ -10,6 +10,7 @@ namespace UnitMan.Source {
                     typeof(Animator))]
     public abstract class Actor : MonoBehaviour, IInitializable
     {
+        //TODO: refactor/organize this class
         protected CircleCollider2D circleCollider;
         public Rigidbody2D rigidBody;
         protected Transform thisTransform;
@@ -48,6 +49,7 @@ namespace UnitMan.Source {
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         protected Animator animator;
+        public Vector2Int gridPosition;
 
         public enum Direction
         {
@@ -86,6 +88,11 @@ namespace UnitMan.Source {
         private void ResetPosition() {
             thisTransform.position = startPosition;
         }
+
+        private void UpdateGridPosition() {
+           gridPosition = Vector2Int.RoundToInt(thisTransform.position);
+       }
+
 
         public static int VectorToInt(Vector2 vector) {
             int index = -1;
@@ -131,6 +138,7 @@ namespace UnitMan.Source {
 
         protected virtual void FixedUpdate() {
             // CheckPossibleTurns();
+            UpdateGridPosition();
             PathGrid.Instance.CheckPossibleTurns(thisTransform.position, possibleTurns);
         }
         
