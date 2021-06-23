@@ -11,17 +11,18 @@ using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 namespace UnitMan.Source {
     public class Enemy : Actor {
         //TODO: refactor/organize this class
+        //TODO: use current behavior to change current target position
+        //TODO: fix Clyde
        private Timer _pathFindingDelay;
        
        [SerializeField]
        protected float standardMoveSpeed;
-       private Queue<Vector2Int> _positionQueue = new Queue<Vector2Int>();
        
        private readonly Timer _retreatTimer = new Timer(MAX_RETREAT_SECONDS);
        
        private Transform _playerTransform;
 
-        Thread pathFindThread;
+        // Thread pathFindThread;
 
        private Vector2Int OriginDirection {get {
            return currentDirection * -1;
@@ -79,22 +80,22 @@ namespace UnitMan.Source {
 
        protected override void Awake() {
            base.Awake();
-           _positionQueue.Clear();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
            startPosition = thisTransform.position;
            _hubPosition = new Vector3(2f, 0f, 0f);
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, true);
+           _currentTargetPosition = _playerTransform.position;
+           _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            _retreatTimer.OnEnd += ResetPositionAndState;
            // ComputePathToPlayer();
-           _pathFindingDelay.OnEnd += UpdateCanPathfind;
+           _pathFindingDelay.OnEnd += PollPlayerPosition;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
 
-       private void UpdateCanPathfind() {
-           _canPathfind = true;
+       private void PollPlayerPosition() {
+           _currentTargetPosition = _playerTransform.position;
        }
 
        private void ResetPositionAndState() {
@@ -113,22 +114,22 @@ namespace UnitMan.Source {
            _slowMoveSpeed = standardMoveSpeed/2f;
        }
 
-       private void MultithreadedPath(Vector3 initialPosition, Vector3 finalPosition) {
-           void ThreadStart() {
-               Queue<Vector2Int> path = AStar.ShortestPathBetween(
-                   Vector2Int.RoundToInt(initialPosition),
-                   Vector2Int.RoundToInt(finalPosition));
-               _positionQueue = path;
-               _directionQueue = PositionsToTurns(path.ToArray());
-           }
+    //    private void MultithreadedPath(Vector3 initialPosition, Vector3 finalPosition) {
+    //        void ThreadStart() {
+    //            Queue<Vector2Int> path = AStar.ShortestPathBetween(
+    //                Vector2Int.RoundToInt(initialPosition),
+    //                Vector2Int.RoundToInt(finalPosition));
+    //            _positionQueue = path;
+    //            _directionQueue = PositionsToTurns(path.ToArray());
+    //        }
             
-           //Toggle these two blocks to toggle multithreading:
+    //        //Toggle these two blocks to toggle multithreading:
            
-           // ThreadStart();
+    //        // ThreadStart();
            
-           Thread thread = new Thread(ThreadStart);
-           thread.Start();
-       }
+    //        Thread thread = new Thread(ThreadStart);
+    //        thread.Start();
+    //    }
 
         private const int DEFAULT_DISTANCE_MAX = 999;
 
@@ -137,18 +138,18 @@ namespace UnitMan.Source {
            Vector2Int originDirection = OriginDirection;
            void ThreadStart() {
                // _directionQueue.Clear();
+               bool[] viableTurns = (bool[]) possibleTurns.Clone();
+               int[] neighborHeuristics = new int[4] {
+                                                        DEFAULT_DISTANCE_MAX,
+                                                        DEFAULT_DISTANCE_MAX,
+                                                        DEFAULT_DISTANCE_MAX,
+                                                        DEFAULT_DISTANCE_MAX};
 
-
-               bool[] possibleDirections = new bool[4] {true, true, true, true};
-               int[] neighborHeuristics = new int[4] {DEFAULT_DISTANCE_MAX,
-                                                                        DEFAULT_DISTANCE_MAX,
-                                                                        DEFAULT_DISTANCE_MAX,
-                                                                        DEFAULT_DISTANCE_MAX};
-                PathGrid.Instance.CheckPossibleTurns(initialPosition, possibleDirections);
-
-                for (int i = 0; i < possibleDirections.Length; i++) {
-                    if (!possibleDirections[i] || DirectionToVector2Int((Direction) i) == originDirection ) continue;
-                    neighborHeuristics[i] = PathGrid.TaxiCabDistance(initialPosition, goalPosition);
+                for (int i = 0; i < viableTurns.Length; i++) {
+                    if (!viableTurns[i] || DirectionToVector2Int((Direction) i) == originDirection) {
+                        continue;
+                    }
+                    neighborHeuristics[i] = PathGrid.TaxiCabDistance(initialPosition + DirectionToVector2Int((Direction) i), goalPosition);
                 }
 
                 bestTurn = (Direction) FindSmallestNumberIndex(neighborHeuristics);
@@ -160,7 +161,7 @@ namespace UnitMan.Source {
            
         //    pathFindThread = new Thread(ThreadStart);
         //    pathFindThread.Start();
-
+            // Debug.Log(bestTurn);
            return bestTurn;
        }
 
@@ -177,12 +178,16 @@ namespace UnitMan.Source {
            if (!isInIntersection && isResolvingIntersection) {
                isResolvingIntersection = false;
            }
+           
            if (isInIntersection && !isResolvingIntersection) { //_canPathfind && 
             isResolvingIntersection = true;
             //    _pathFindingDelay.Start();
             //    _canPathfind = false;
             //    // ComputePathToPlayer();
-                currentDirection = DirectionToVector2Int(MultithreadBestTurn(gridPosition, _playerController.gridPosition));
+            if (PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f)) {
+                currentDirection = DirectionToVector2Int(
+                                MultithreadBestTurn(gridPosition, PathGrid.VectorToVector2Int(_currentTargetPosition)));
+            }
            }
            
         //    if (_directionQueue.Count > 0 && _positionQueue.Count > 0) {
@@ -193,7 +198,7 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (PathGrid.VectorApproximately(thisTransform.position, startPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
+           if (PathGrid.VectorApproximately(thisTransform.position, _hubPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
                SetState(State.Alive);
            }
 
@@ -275,17 +280,17 @@ namespace UnitMan.Source {
            return (!_pathFindingDelay.Active) && _pathFindingDelay.currentTime == _pathFindingDelay.waitTime;
        }
 
-       private void ComputePathToPlayer() {
-           MultithreadedPath(thisTransform.position, _playerTransform.position);
-           RemoveFirstPosition();
-       }
+    //    private void ComputePathToPlayer() {
+    //        MultithreadedPath(thisTransform.position, _playerTransform.position);
+    //        RemoveFirstPosition();
+    //    }
        
-       private void ComputePathToHub() {
-           MultithreadedPath(thisTransform.position, _hubPosition);
-           RemoveFirstPosition();
-       }
+    //    private void ComputePathToHub() {
+    //        MultithreadedPath(thisTransform.position, _hubPosition);
+    //        RemoveFirstPosition();
+    //    }
        
-       private void ComputePathAwayFromPlayer() {
+       private void SetTargetAwayFromPlayer() {
            Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
            Vector3 finalPosition = playerQuadrant switch {
                Quadrant.UpRight => _downLeftMap,
@@ -294,14 +299,7 @@ namespace UnitMan.Source {
                Quadrant.DownRight => _upLeftMap,
                _ => startPosition
            };
-           
-           MultithreadedPath(thisTransform.position, finalPosition);
-           RemoveFirstPosition();
-       }
-
-       private void RemoveFirstPosition() {
-           if (_positionQueue.Count == 0) return;
-           _positionQueue.Dequeue();
+                _currentTargetPosition = finalPosition;
        }
 
        private void TurnToValidDirection() {
@@ -328,7 +326,6 @@ namespace UnitMan.Source {
        }
 
        private void SetState(State targetState) {
-           _positionQueue.Clear();
            state = targetState;
            OnStateEntered();
        }
@@ -337,28 +334,26 @@ namespace UnitMan.Source {
            switch (state)
            {
                case State.Alive: {
-                   _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = standardMoveSpeed;
                    _pathFindingDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
-                   // ComputePathToPlayer();
+                   _currentTargetPosition = _playerTransform.position;
 
                    break;
                }
                case State.Fleeing: {
-                   _positionQueue.Clear();
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = _slowMoveSpeed;
+                   SetTargetAwayFromPlayer();
                    _pathFindingDelay.Stop();
                    animator.SetBool(FleeingAnimator, true);
-                //    ComputePathAwayFromPlayer();
                    break;
                }
                case State.Dead: {
                    thisGameObject.layer = _inactiveLayer;
-                   _positionQueue.Clear();
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
+                   _currentTargetPosition = _hubPosition;
                    _pathFindingDelay.Stop();
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
@@ -380,16 +375,5 @@ namespace UnitMan.Source {
 
             return Array.IndexOf(array, currentSmallest);
         }
-
-       protected override void OnDrawGizmos() {
-           base.OnDrawGizmos();
-           if (_positionQueue.Count == 0) return;
-           Vector2 previousPosition = _positionQueue.Peek();
-           foreach (Vector2Int position in _positionQueue) {
-               Gizmos.color = debugColor;
-               Gizmos.DrawLine(previousPosition, (Vector2) position);
-               previousPosition = position;
-           }
-       }
     }
 }
