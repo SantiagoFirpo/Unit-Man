@@ -4,7 +4,6 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     public class Timer
 {
     //Responsibility: Abstract model for finite timers inside other classes
-    public delegate void TimerChange();
     public event System.Action OnEnd;
     public readonly float waitTime;
     private readonly float _delay;
@@ -56,9 +55,9 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         TimerManager.OnFrameUpdate += Update;
         TimerManager.Initialized += Setup;
     }
-     ~Timer() {
-         TimerManager.OnFrameUpdate -= Update;
-         TimerManager.Initialized -= Setup;
-    }
+    //  ~Timer() {
+    //      TimerManager.OnFrameUpdate -= Update;
+    //      TimerManager.Initialized -= Setup;
+    // }
 }
 }
