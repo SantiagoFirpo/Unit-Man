@@ -28,7 +28,7 @@ namespace UnitMan.Source
         // Start is called before the first frame update
         protected override void Awake() {
             base.Awake();
-            startPosition = new Vector3(2f, -4f, 0f);
+            startPosition = thisTransform.position;
             _inputMaps = new InputMaps();
             _inputMaps.Player.Enable();
             _inputMaps.Player.Move.performed += OnMove;
