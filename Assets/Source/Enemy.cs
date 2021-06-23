@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
@@ -13,23 +10,59 @@ namespace UnitMan.Source {
         //TODO: refactor/organize this class
         //TODO: use current behavior to change current target position
         //TODO: fix Clyde
-       private Timer _pathFindingDelay;
-       
-       [SerializeField]
-       protected float standardMoveSpeed;
-       
+
+        [Header("Physics State")]
+        private int _possibleTurnsTotal;
+        private Vector2Int OriginDirection {get {
+            return currentDirection * -1;
+        }}
+
+        [Header("Physics Parameters")]
+
+        [SerializeField]
+        protected float standardMoveSpeed;
+
+        [Header("Pathfinding Parameters")]
+        public static readonly Direction[] horizontalDirections = new Direction[] {Direction.Left, Direction.Right};
+        public static readonly Direction[] verticalDirections = new Direction[] {Direction.Up, Direction.Down};
+
+        [SerializeField]
+        private Transform initialTargetTransform;
+
+
+        [Header("State Management")]
+        private Timer _pathFindingDelay;
        private readonly Timer _retreatTimer = new Timer(MAX_RETREAT_SECONDS);
        
+       [Header("Dependencies")]
+        private int _inactiveLayer;
+        private int _defaultLayer;
+
+        [SerializeField]
+        protected float pathfindingIntervalSeconds = 4f;
+
+        [SerializeField]
+        private Transform topLeft;
+        private Vector3 _topLeftMapBound;
+
+        [SerializeField]
+
+        private Transform topRight;
+        private Vector3 _topRightMapBound;
+
+        [SerializeField]
+
+        private Transform bottomLeft;
+        private Vector3 _bottomLeftMapBound;
+        
+        [SerializeField]
+        private Transform bottomRight;
+        private Vector3 _bottomRightMapBound;
+
+        [SerializeField]
        private Transform _playerTransform;
 
-        // Thread pathFindThread;
 
-       private Vector2Int OriginDirection {get {
-           return currentDirection * -1;
-       }}
-
-       [SerializeField]
-       protected float pathfindingIntervalSeconds = 4f;
        private PlayerController _playerController;
        private float _currentMoveSpeed;
 
@@ -38,37 +71,21 @@ namespace UnitMan.Source {
        }}
        private float _slowMoveSpeed;
 
-       private int _inactiveLayer;
-       private int _defaultLayer;
 
        public enum State
        {
            Alive, Fleeing, Dead
        }
        
-       public static readonly Direction[] horizontalDirections = new Direction[] {Direction.Left, Direction.Right};
-       public static readonly Direction[] verticalDirections = new Direction[] {Direction.Up, Direction.Down};
        
        public State state = State.Alive;
        
        private const float MOVE_SPEED_INACTIVE = 6f;
-       private const float SPEED_TOLERANCE_CONVERSION = 0.017f;
-
-       private readonly Vector3 _upRightMap = new Vector3(9f, 2f, 0f);
-       private readonly Vector3 _upLeftMap = new Vector3(-9f, 3f, 0f);
-       private readonly Vector3 _downLeftMap = new Vector3(-9f, -20f, 0f);
-       private readonly Vector3 _downRightMap = new Vector3(9f, -20f, 0f);
 
        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
-       private Vector3 _hubPosition;
        
        [SerializeField]
-       private Color debugColor;
-
-       private Queue<Vector2Int> _directionQueue = new Queue<Vector2Int>();
        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
-       private int _possibleTurnsTotal;
-       private bool _canPathfind;
        private Vector3 _currentTargetPosition;
         private bool isResolvingIntersection = false;
         private const float MAX_RETREAT_SECONDS = 6f;
@@ -80,16 +97,21 @@ namespace UnitMan.Source {
 
        protected override void Awake() {
            base.Awake();
+
+            _topLeftMapBound = topLeft.position;
+            _topRightMapBound = topRight.position;
+            _bottomLeftMapBound = bottomLeft.position;
+            _bottomRightMapBound = bottomRight.position;
+
+           _currentTargetPosition = initialTargetTransform.position;
+
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
-           startPosition = thisTransform.position;
-           _hubPosition = new Vector3(2f, 0f, 0f);
+
            _playerTransform = GameManager.Instance.player.transform;
            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _currentTargetPosition = _playerTransform.position;
            _pathFindingDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
            _retreatTimer.OnEnd += ResetPositionAndState;
-           // ComputePathToPlayer();
            _pathFindingDelay.OnEnd += PollPlayerPosition;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
@@ -198,7 +220,7 @@ namespace UnitMan.Source {
                TurnToValidDirection();
            }
 
-           if (PathGrid.VectorApproximately(thisTransform.position, _hubPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
+           if (PathGrid.VectorApproximately(thisTransform.position, startPosition, POSITION_CHECK_TOLERANCE)  && state == State.Dead) {
                SetState(State.Alive);
            }
 
@@ -293,11 +315,11 @@ namespace UnitMan.Source {
        private void SetTargetAwayFromPlayer() {
            Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
            Vector3 finalPosition = playerQuadrant switch {
-               Quadrant.UpRight => _downLeftMap,
-               Quadrant.UpLeft => _downRightMap,
-               Quadrant.DownLeft => _upRightMap,
-               Quadrant.DownRight => _upLeftMap,
-               _ => startPosition
+               Quadrant.UpRight => _bottomLeftMapBound,
+               Quadrant.UpLeft => _bottomRightMapBound,
+               Quadrant.DownLeft => _topRightMapBound,
+               Quadrant.DownRight => _topLeftMapBound,
+               _ => _bottomLeftMapBound
            };
                 _currentTargetPosition = finalPosition;
        }
@@ -353,7 +375,7 @@ namespace UnitMan.Source {
                case State.Dead: {
                    thisGameObject.layer = _inactiveLayer;
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-                   _currentTargetPosition = _hubPosition;
+                   _currentTargetPosition = startPosition;
                    _pathFindingDelay.Stop();
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
