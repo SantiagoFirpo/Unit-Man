@@ -13,7 +13,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
             // Debug.Log($"{x}, {y}");
             return newGrid[-y + 4, x+11];
         }
-        public static void SetGridPosition(int x, int y, bool value) {
+        private static void SetGridPosition(int x, int y, bool value) {
             newGrid[-y + 4, x+11] = value;
         }
 
