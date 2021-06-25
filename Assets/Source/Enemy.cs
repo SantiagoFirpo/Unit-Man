@@ -53,15 +53,15 @@ namespace UnitMan.Source {
         [SerializeField]
 
         private Transform bottomLeft;
-        private Vector3 _bottomLeftMapBound;
+        protected Vector3 _bottomLeftMapBound;
         
         [SerializeField]
         private Transform bottomRight;
         private Vector3 _bottomRightMapBound;
-        private Transform _playerTransform;
+        protected Transform playerTransform;
 
 
-       private PlayerController _playerController;
+       protected PlayerController playerController;
        private float _currentMoveSpeed;
 
        private Vector2Int NextTile => gridPosition + currentDirection;
@@ -84,8 +84,10 @@ namespace UnitMan.Source {
        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
        
        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
-       private Vector3 _currentTargetPosition;
+       protected Vector2Int currentTargetPosition;
         private const float MAX_RETREAT_SECONDS = 6f;
+        
+        protected const float CLYDE_MOVE_SPEED = 3.5f;
 
        public enum Quadrant
        {
@@ -114,8 +116,8 @@ namespace UnitMan.Source {
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
-           _playerTransform = GameManager.Instance.player.transform;
-           _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
+           playerTransform = GameManager.Instance.player.transform;
+           playerController = GameManager.Instance.player.GetComponent<PlayerController>();
            _playerPollDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
        }
 
@@ -126,11 +128,11 @@ namespace UnitMan.Source {
            _bottomLeftMapBound = bottomLeft.position;
            _bottomRightMapBound = bottomRight.position;
 
-           _currentTargetPosition = initialTargetTransform.position;
+           currentTargetPosition = PathGrid.VectorToVector2Int(initialTargetTransform.position);
        }
 
-       private void PollPlayerPosition() {
-           _currentTargetPosition = _playerTransform.position;
+       protected virtual void PollPlayerPosition() {
+           currentTargetPosition = playerController.gridPosition;
        }
 
        private void ResetPositionAndState() {
@@ -207,7 +209,7 @@ namespace UnitMan.Source {
                 if (_isInIntersection) {
                     currentDirection  = DirectionToVector2Int(
                                         GetBestTurn(gridPosition,
-                                                    PathGrid.VectorToVector2Int(_currentTargetPosition),
+                                                    currentTargetPosition,
                                                     possibleTurns,
                                                     (Direction) VectorToInt(OriginDirection)));
                     // Debug.Log(currentDirection);
@@ -311,7 +313,7 @@ namespace UnitMan.Source {
     //    }
        
        private void SetTargetAwayFromPlayer() {
-           Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
+           Quadrant playerQuadrant = GetQuadrant(playerTransform.position, _mapCentralPosition);
            Vector3 finalPosition = playerQuadrant switch {
                Quadrant.UpRight => _bottomLeftMapBound,
                Quadrant.UpLeft => _bottomRightMapBound,
@@ -319,7 +321,7 @@ namespace UnitMan.Source {
                Quadrant.DownRight => _topLeftMapBound,
                _ => _bottomLeftMapBound
            };
-                _currentTargetPosition = finalPosition;
+                currentTargetPosition = PathGrid.VectorToVector2Int(finalPosition);
        }
 
        private static Quadrant GetQuadrant(Vector2 position, Vector2 centralPosition) {
@@ -359,7 +361,7 @@ namespace UnitMan.Source {
                case State.Dead: {
                    thisGameObject.layer = _inactiveLayer;
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
-                   _currentTargetPosition = StartPosition;
+                   currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
                    _playerPollDelay.Stop();
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
