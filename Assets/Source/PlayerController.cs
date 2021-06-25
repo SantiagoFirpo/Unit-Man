@@ -13,6 +13,7 @@ namespace UnitMan.Source
         typeof(Animator))]
     public class PlayerController : Actor
     {
+        
         private const float MOVE_SPEED = 5f;
         private InputMaps _inputMaps;
 
@@ -93,19 +94,20 @@ namespace UnitMan.Source
 
         protected override void FixedUpdate() {
             base.FixedUpdate();
-            if (!IsCardinalDirection(_inputVector)) return;
-            int index = VectorToInt(_inputVector);
+            if (IsCardinalDirection(_inputVector))
+            {
+                int index = VectorToInt(_inputVector);
 
-            if (possibleTurns[index]) {
-                currentDirection = _inputVector;
+                if (possibleTurns[index] && IsInTileCenter)
+                {
+                    currentDirection = _inputVector;
+                }
             }
+            
                 
 
             motion = (Vector2) currentDirection * MOVE_SPEED;
-
-            // if (_rigidBody.velocity == Vector2.zero) {
-            //     _transform.position = Vector3Int.RoundToInt(_transform.position);
-            // }
+            
 
             rigidBody.velocity = motion;
         }
