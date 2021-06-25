@@ -102,6 +102,8 @@ namespace UnitMan.Source {
             ResolveDependencies();
             
             SubscribeToEvents();
+           
+            _currentMoveSpeed = standardMoveSpeed;
        }
 
        private void SubscribeToEvents()
