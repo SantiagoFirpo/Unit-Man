@@ -74,7 +74,6 @@ namespace UnitMan.Source {
        }
 
        private bool _isInIntersection;
-       private bool _isInTileCenter;
        private bool _pathResolved;
        
        public State state = State.Alive;
@@ -201,11 +200,12 @@ namespace UnitMan.Source {
            if (!rigidBody.simulated) return;
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
 
-           if (!_isInTileCenter && _pathResolved) _pathResolved = false;
+           bool isInTileCenter = IsInTileCenter;
+           
+           if (!isInTileCenter && _pathResolved) _pathResolved = false;
 
            _isInIntersection = _possibleTurnsTotal > 2;
-           _isInTileCenter = PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
-            if (_isInTileCenter && !_pathResolved) {
+           if (isInTileCenter && !_pathResolved) {
                 if (_isInIntersection) {
                     currentDirection  = DirectionToVector2Int(
                                         GetBestTurn(gridPosition,

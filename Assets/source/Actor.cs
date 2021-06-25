@@ -49,6 +49,8 @@ namespace UnitMan.Source {
         private Vector2 _almostDownLeft;
         private Vector2 _almostDownRight;
 
+        protected bool IsInTileCenter => PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
+        
         protected LayerMask wallLayer;
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
