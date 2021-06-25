@@ -13,7 +13,7 @@ namespace UnitMan.Source
             
         }
         
-        protected override void PollPlayerPosition()
+        protected override void PollChasePosition()
         {
             currentTargetPosition = blinkyController.gridPosition +
                                     (playerController.gridPosition - blinkyController.gridPosition) * 2;
