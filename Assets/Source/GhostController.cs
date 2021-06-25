@@ -110,8 +110,8 @@ namespace UnitMan.Source {
 
        private void SubscribeToEvents()
        {
-           _retreatTimer.OnEnd += ResetPositionAndState;
-           _playerPollDelay.OnEnd += PollPlayerPosition;
+           // _retreatTimer.OnEnd += ResetPositionAndState;
+           _chasePollDelay.OnEnd += PollChasePosition;
            PlayerController.OnInvincibleChanged += UpdateState;
        }
 
@@ -122,7 +122,7 @@ namespace UnitMan.Source {
 
            playerTransform = GameManager.Instance.player.transform;
            playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _playerPollDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _chasePollDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
        }
 
        private void GetMapMarkers()
@@ -149,8 +149,8 @@ namespace UnitMan.Source {
        }
 
        private void Start() {
-           _playerPollDelay.Start();
-           _currentMoveSpeed = standardMoveSpeed;
+           _chasePollDelay.Start();
+           
            _slowMoveSpeed = standardMoveSpeed/2f;
            
            _standardController = animator.runtimeAnimatorController;
@@ -158,11 +158,6 @@ namespace UnitMan.Source {
        
         private const int DEFAULT_DISTANCE_MAX = 999;
 
-        private readonly int[] _neighborHeuristics = new int[4] {
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX};
         private Direction GetBestTurn(Vector2Int initialPosition, Vector2Int goalPosition, bool[] viableTurns, Direction originDirection)
         {
             Direction bestTurn = Direction.Up;
@@ -228,9 +223,14 @@ namespace UnitMan.Source {
                     _pathResolved = true;
                 }
                 
-            }
+           }
 
-            motion = (Vector2) currentDirection * _currentMoveSpeed;
+           if (state == State.Eaten && PathGrid.VectorApproximately(StartPosition, gridPosition, 0.1f))
+           {
+               SetState(State.Alive);
+           }
+
+           motion = (Vector2) currentDirection * _currentMoveSpeed;
            rigidBody.velocity = motion;
        }
 
@@ -296,13 +296,13 @@ namespace UnitMan.Source {
            if (!other.gameObject.CompareTag("Player")) return;
            switch (state) {
                case State.Fleeing:
-                   SetState(State.Dead);
+                   SetState(State.Eaten);
                    GameManager.Instance.Freeze();
                    break;
                case State.Alive:
                    GameManager.Instance.Die();
                    break;
-               case State.Dead:
+               case State.Eaten:
                    break;
                default:
                    return;
@@ -354,7 +354,7 @@ namespace UnitMan.Source {
                case State.Alive: {
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = standardMoveSpeed;
-                   _playerPollDelay.Start();
+                   _chasePollDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
                    if (animator.runtimeAnimatorController != _standardController)
                    {
@@ -370,11 +370,11 @@ namespace UnitMan.Source {
                    thisGameObject.layer = _defaultLayer;
                    _currentMoveSpeed = _slowMoveSpeed;
                    SetTargetAwayFromPlayer();
-                   _playerPollDelay.Stop();
+                   _chasePollDelay.Stop();
                    animator.SetBool(FleeingAnimator, true);
                    break;
                }
-               case State.Dead: {
+               case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
                    currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
