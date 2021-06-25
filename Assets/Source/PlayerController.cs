@@ -1,5 +1,6 @@
 using System;
 using UnitMan.Source.Management;
+using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,7 +29,6 @@ namespace UnitMan.Source
         // Start is called before the first frame update
         protected override void Awake() {
             base.Awake();
-            startPosition = thisTransform.position;
             _inputMaps = new InputMaps();
             _inputMaps.Player.Enable();
             _inputMaps.Player.Move.performed += OnMove;
@@ -37,6 +37,7 @@ namespace UnitMan.Source
             // _playerInput.onActionTriggered += OnMove;
 
             invincibleTimer.OnEnd += DisableInvincibility;
+            currentDirection = PathGrid.Right;
         }
 
         protected override void Update() {
