@@ -16,6 +16,8 @@ namespace UnitMan.Source.Management
         
         public static event Action OnReset;
 
+        private const int TOTAL_PELLETS = 283;
+        
         public GameObject player;
 
         public GameObject[] sceneObjects;
@@ -57,7 +59,7 @@ namespace UnitMan.Source.Management
         }
 
         public void CheckIfGameIsWon() {
-            if (pelletsEaten < 282) return;
+            if (pelletsEaten < TOTAL_PELLETS) return;
             Debug.Log("You won!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
             foreach (Actor actor in FindObjectsOfType<Actor>()) {
