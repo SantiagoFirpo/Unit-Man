@@ -7,7 +7,7 @@ namespace UnitMan.Source
         [SerializeField]
         private GhostController blinkyController;
         public override void Initialize() {
-            standardMoveSpeed = 3.5f;
+            standardMoveSpeed = CLYDE_MOVE_SPEED;
             pathfindingIntervalSeconds = 3f;
             base.Initialize();
             

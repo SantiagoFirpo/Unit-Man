@@ -5,7 +5,7 @@ namespace UnitMan.Source
     public class ClydeController : GhostController
     {
         public override void Initialize() {
-            standardMoveSpeed = 2f;
+            standardMoveSpeed = CLYDE_MOVE_SPEED;
             pathfindingIntervalSeconds = 2f;
             base.Initialize();
             
