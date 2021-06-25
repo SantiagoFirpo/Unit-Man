@@ -9,12 +9,12 @@ namespace UnitMan.Source.Utilities.Pathfinding
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
     {
-        public static bool GetGridPosition(int x, int y) {
+        private bool GetGridPosition(int x, int y) {
             // Debug.Log($"{x}, {y}");
-            return newGrid[-y + 4, x+11];
+            return _newGrid[-y + 4][x+11];
         }
-        private static void SetGridPosition(int x, int y, bool value) {
-            newGrid[-y + 4, x+11] = value;
+        private void SetGridPosition(int x, int y, bool value) {
+            _newGrid[-y + 4][x+11] = value;
         }
 
         private const int Y_SIZE = 26;
@@ -26,7 +26,15 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         public Tilemap walkableTilemap;
         public Tilemap wallTilemap;
-        private static bool[,] newGrid = new bool[Y_SIZE, X_SIZE];
+
+        private readonly bool[][] _newGrid = new bool[Y_SIZE][]
+        {
+            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
+            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
+            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
+            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
+            new bool[X_SIZE], new bool[X_SIZE]
+        };
         public readonly Dictionary<Vector2Int, bool> grid = new Dictionary<Vector2Int, bool>();
 
 
@@ -38,16 +46,16 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
 
             foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
-                grid.Add(position, true);
+                // grid.Add(position, true);
                 SetGridPosition(position.x, position.y, true);
                 
             }
 
-            foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
-                SetGridPosition(position.x, position.y, false);
-                grid.Add(position, false);
-                SetGridPosition(position.x, position.y,false);
-            }
+            // foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
+            //     SetGridPosition(position.x, position.y, false);
+            //     // grid.Add(position, false);
+            //     SetGridPosition(position.x, position.y,false);
+            // }
             //bools are canWalk
            
         }
