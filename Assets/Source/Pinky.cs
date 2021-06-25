@@ -3,10 +3,16 @@
     public class Pinky : Enemy
     {
         public override void Initialize() {
-            standardMoveSpeed = 4.5f;
-            pathfindingIntervalSeconds = 10f;
+            
+            standardMoveSpeed = CLYDE_MOVE_SPEED;
+            pathfindingIntervalSeconds = 2f;
             base.Initialize();
             
+        }
+        
+        protected override void PollPlayerPosition()
+        {
+            currentTargetPosition = playerController.gridPosition + (playerController.currentDirection * 3);
         }
     }
 }
