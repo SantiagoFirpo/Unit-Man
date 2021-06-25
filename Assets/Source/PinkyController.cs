@@ -5,7 +5,7 @@
         public override void Initialize() {
             
             standardMoveSpeed = CLYDE_MOVE_SPEED;
-            pathfindingIntervalSeconds = 2f;
+            chasePollSeconds = 2f;
             base.Initialize();
             
         }

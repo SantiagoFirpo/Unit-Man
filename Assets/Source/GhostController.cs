@@ -42,7 +42,7 @@ namespace UnitMan.Source {
         private int _defaultLayer;
 
         [SerializeField]
-        protected float pathfindingIntervalSeconds = 4f;
+        protected float chasePollSeconds = 4f;
 
         [SerializeField]
         private Transform topLeft;
@@ -122,7 +122,7 @@ namespace UnitMan.Source {
 
            playerTransform = GameManager.Instance.player.transform;
            playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _chasePollDelay = new Timer(pathfindingIntervalSeconds, 0f, true, false);
+           _chasePollDelay = new Timer(0.2f, 0f, true, false); //old: chasePollSeconds as waitTime
        }
 
        private void GetMapMarkers()

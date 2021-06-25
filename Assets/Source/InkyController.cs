@@ -8,7 +8,7 @@ namespace UnitMan.Source
         private GhostController blinkyController;
         public override void Initialize() {
             standardMoveSpeed = CLYDE_MOVE_SPEED;
-            pathfindingIntervalSeconds = 3f;
+            chasePollSeconds = 3f;
             base.Initialize();
             
         }

@@ -9541,12 +9541,12 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   standardMoveSpeed: 4
   initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 4
+  chasePollSeconds: 4
   topLeft: {fileID: 2120878054}
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
-  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
+  eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
 --- !u!1 &708391100
 GameObject:
@@ -12545,12 +12545,12 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   standardMoveSpeed: 4
   initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 2
+  chasePollSeconds: 4
   topLeft: {fileID: 2120878054}
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
-  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
+  eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
   blinkyController: {fileID: 1965800675}
 --- !u!1001 &916945474
@@ -23338,12 +23338,12 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   standardMoveSpeed: 4.5
   initialTargetTransform: {fileID: 466489114}
-  pathfindingIntervalSeconds: 2
+  chasePollSeconds: 4
   topLeft: {fileID: 2120878054}
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
-  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
+  eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
 --- !u!58 &1965800676
 CircleCollider2D:
@@ -29268,10 +29268,10 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   standardMoveSpeed: 0
   initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 4
+  chasePollSeconds: 4
   topLeft: {fileID: 2120878054}
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
-  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
+  eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
