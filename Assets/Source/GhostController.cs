@@ -130,7 +130,7 @@ namespace UnitMan.Source {
            currentTargetPosition = PathGrid.VectorToVector2Int(initialTargetTransform.position);
        }
 
-       protected virtual void PollPlayerPosition() {
+       protected virtual void PollChasePosition() {
            currentTargetPosition = playerController.gridPosition;
        }
 

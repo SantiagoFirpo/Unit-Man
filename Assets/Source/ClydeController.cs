@@ -11,7 +11,7 @@ namespace UnitMan.Source
             
         }
         
-        protected override void PollPlayerPosition()
+        protected override void PollChasePosition()
         {
             currentTargetPosition =
                 PathGrid.TaxiCabDistance(gridPosition, playerController.gridPosition) > 8

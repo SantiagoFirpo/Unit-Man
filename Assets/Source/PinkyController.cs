@@ -10,7 +10,7 @@
             
         }
         
-        protected override void PollPlayerPosition()
+        protected override void PollChasePosition()
         {
             currentTargetPosition = playerController.gridPosition + (playerController.currentDirection * 3);
         }
