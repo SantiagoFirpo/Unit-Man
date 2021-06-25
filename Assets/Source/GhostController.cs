@@ -1,5 +1,6 @@
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
@@ -245,16 +246,12 @@ namespace UnitMan.Source {
               }
           }
       }
-
-      private static int GetTrueCount(bool[] boolArray) {
-           int result = 0;
-           foreach (bool item in boolArray) {
-               if (item) {
-                   result++;
-               }
-           }
-           return result;
-       }
+      private static readonly Func<bool,bool> IsElementTrue = element => element;  
+      
+      private static int GetTrueCount(IEnumerable<bool> boolArray)
+      {
+          return boolArray.Count(IsElementTrue);
+      }
 
         
     //    private void MoveThroughPath() {
