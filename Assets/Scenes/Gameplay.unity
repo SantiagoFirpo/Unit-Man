@@ -6922,6 +6922,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68b2aee70efe8e94094ac5dc132cfc1f, type: 3}
+--- !u!1 &466489113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 466489114}
+  m_Layer: 0
+  m_Name: Blinky Initial Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &466489114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466489113}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 23
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &468448063 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 385068253680773103, guid: f1fbc25b891c4e04ea36dd6fd86c7828, type: 3}
@@ -9332,7 +9362,6 @@ GameObject:
   - component: {fileID: 699165988}
   - component: {fileID: 699165987}
   - component: {fileID: 699165986}
-  - component: {fileID: 699165985}
   - component: {fileID: 699165991}
   - component: {fileID: 699165984}
   - component: {fileID: 699165990}
@@ -9362,31 +9391,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &699165985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 699165983}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d3eb2c9143d4657a09e08cc33cfe88e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidBody: {fileID: 0}
-  motion: {x: 0, y: 0}
-  currentDirection: {x: 0, y: 0}
-  possibleTurns: 00000000
-  gridPosition: {x: 0, y: 0}
-  standardMoveSpeed: 3.5
-  initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 5
-  topLeft: {fileID: 2120878054}
-  topRight: {fileID: 256339145}
-  bottomLeft: {fileID: 708391101}
-  bottomRight: {fileID: 1274926538}
-  state: 0
 --- !u!58 &699165986
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -9542,6 +9546,7 @@ MonoBehaviour:
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
+  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
 --- !u!1 &708391100
 GameObject:
@@ -12362,7 +12367,6 @@ GameObject:
   - component: {fileID: 914163336}
   - component: {fileID: 914163338}
   - component: {fileID: 914163337}
-  - component: {fileID: 914163332}
   - component: {fileID: 914163339}
   - component: {fileID: 914163333}
   m_Layer: 3
@@ -12372,31 +12376,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &914163332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 914163331}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d3eb2c9143d4657a09e08cc33cfe88e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidBody: {fileID: 0}
-  motion: {x: 0, y: 0}
-  currentDirection: {x: 0, y: 0}
-  possibleTurns: 00000000
-  gridPosition: {x: 0, y: 0}
-  standardMoveSpeed: 4
-  initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 3
-  topLeft: {fileID: 2120878054}
-  topRight: {fileID: 256339145}
-  bottomLeft: {fileID: 708391101}
-  bottomRight: {fileID: 1274926538}
-  state: 0
 --- !u!60 &914163333
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -12485,7 +12464,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914163331}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12571,6 +12550,7 @@ MonoBehaviour:
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
+  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
   blinkyController: {fileID: 1965800675}
 --- !u!1001 &916945474
@@ -15884,10 +15864,10 @@ MonoBehaviour:
   - {fileID: 8877664366791219919}
   actors:
   - {fileID: 2055087599}
-  - {fileID: 8877664366791219920}
-  - {fileID: 914163332}
-  - {fileID: 699165985}
   - {fileID: 1965800675}
+  - {fileID: 914163339}
+  - {fileID: 8877664366791219923}
+  - {fileID: 699165991}
   pelletsEaten: 0
   lives: 3
   readyText: {fileID: 816468464}
@@ -22799,7 +22779,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903407549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1, z: 0}
+  m_LocalPosition: {x: 2, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -23357,12 +23337,13 @@ MonoBehaviour:
   possibleTurns: 00000000
   gridPosition: {x: 0, y: 0}
   standardMoveSpeed: 4.5
-  initialTargetTransform: {fileID: 1903407550}
+  initialTargetTransform: {fileID: 466489114}
   pathfindingIntervalSeconds: 2
   topLeft: {fileID: 2120878054}
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
+  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
 --- !u!58 &1965800676
 CircleCollider2D:
@@ -23460,7 +23441,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1965800673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -29210,7 +29191,6 @@ GameObject:
   - component: {fileID: 8877664366791219914}
   - component: {fileID: 8877664366791219908}
   - component: {fileID: 8877664366791219910}
-  - component: {fileID: 8877664366791219920}
   - component: {fileID: 8877664366791219921}
   - component: {fileID: 8877664366791219922}
   - component: {fileID: 8877664366791219923}
@@ -29221,31 +29201,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8877664366791219920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8877664366791219919}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d3eb2c9143d4657a09e08cc33cfe88e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidBody: {fileID: 0}
-  motion: {x: 0, y: 0}
-  currentDirection: {x: 0, y: 0}
-  possibleTurns: 00000000
-  gridPosition: {x: 0, y: 0}
-  standardMoveSpeed: 4
-  initialTargetTransform: {fileID: 1903407550}
-  pathfindingIntervalSeconds: 3
-  topLeft: {fileID: 2120878054}
-  topRight: {fileID: 256339145}
-  bottomLeft: {fileID: 708391101}
-  bottomRight: {fileID: 1274926538}
-  state: 0
 --- !u!95 &8877664366791219921
 Animator:
   serializedVersion: 3
@@ -29318,4 +29273,5 @@ MonoBehaviour:
   topRight: {fileID: 256339145}
   bottomLeft: {fileID: 708391101}
   bottomRight: {fileID: 1274926538}
+  _eatenController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
