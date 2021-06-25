@@ -12,6 +12,8 @@ namespace UnitMan.Source {
     {
         //TODO: refactor/organize this class
         protected CircleCollider2D circleCollider;
+        
+        [HideInInspector]
         public Rigidbody2D rigidBody;
         protected Transform thisTransform;
         
@@ -51,6 +53,7 @@ namespace UnitMan.Source {
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         protected Animator animator;
+        
         public Vector2Int gridPosition;
 
         public enum Direction
@@ -109,6 +112,24 @@ namespace UnitMan.Source {
                 index = (int) Direction.Left;
             }
             else if (vector == Right) {
+                index = (int) Direction.Right;
+            }
+
+            return index;
+        }
+        
+        public static int VectorToInt(Vector2Int vector) {
+            int index = -1;
+            if (vector == PathGrid.Up) {
+                index = (int) Direction.Up;
+            }
+            else if (vector == PathGrid.Down) {
+                index = (int) Direction.Down;
+            }
+            else if (vector == PathGrid.Left) {
+                index = (int) Direction.Left;
+            }
+            else if (vector == PathGrid.Right) {
                 index = (int) Direction.Right;
             }
 
