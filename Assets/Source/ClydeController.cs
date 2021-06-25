@@ -2,7 +2,7 @@
 
 namespace UnitMan.Source
 {
-    public class Clyde : Enemy
+    public class ClydeController : GhostController
     {
         public override void Initialize() {
             standardMoveSpeed = 2f;

@@ -2,10 +2,10 @@
 
 namespace UnitMan.Source
 {
-    public class Inky : Enemy
+    public class InkyController : GhostController
     {
         [SerializeField]
-        private Enemy blinkyController;
+        private GhostController blinkyController;
         public override void Initialize() {
             standardMoveSpeed = 3.5f;
             pathfindingIntervalSeconds = 3f;

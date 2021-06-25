@@ -6,7 +6,7 @@ using UnityEngine;
 using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
 namespace UnitMan.Source {
-    public class Enemy : Actor {
+    public class GhostController : Actor {
         //TODO: refactor/organize this class
         //TODO: use current behavior to change current target position
         

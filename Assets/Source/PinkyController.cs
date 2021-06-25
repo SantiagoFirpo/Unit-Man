@@ -1,6 +1,6 @@
 ﻿namespace UnitMan.Source
 {
-    public class Pinky : Enemy
+    public class PinkyController : GhostController
     {
         public override void Initialize() {
             

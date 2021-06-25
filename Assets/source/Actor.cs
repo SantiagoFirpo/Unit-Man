@@ -28,7 +28,7 @@ namespace UnitMan.Source {
 
         [HideInInspector]
         public Vector2 motion = Vector2.zero;
-        protected Vector2Int currentDirection;
+        public Vector2Int currentDirection;
 
         private const float WALL_CHECK_DISTANCE = 0.8f;
         private const float ALMOST_ONE = 0.9f;
