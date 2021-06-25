@@ -22,7 +22,9 @@ namespace UnitMan.Source {
 
         protected GameObject thisGameObject;
 
-        protected Vector3 startPosition;
+        protected Vector3 StartPosition {get; private set;}
+
+        [HideInInspector]
         public Vector2 motion = Vector2.zero;
         protected Vector2Int currentDirection;
 
@@ -68,6 +70,7 @@ namespace UnitMan.Source {
             thisGameObject = gameObject;
             
             GameManager.OnReset += ResetPosition;
+            StartPosition = thisTransform.position;
 
             _almostUpLeft = _upLeft * ALMOST_ONE;
             _almostUpRight = _upRight * ALMOST_ONE;
@@ -86,10 +89,10 @@ namespace UnitMan.Source {
         }
 
         private void ResetPosition() {
-            thisTransform.position = startPosition;
+            thisTransform.position = StartPosition;
         }
 
-        private void UpdateGridPosition() {
+        protected void UpdateGridPosition() {
            gridPosition = Vector2Int.RoundToInt(thisTransform.position);
        }
 
