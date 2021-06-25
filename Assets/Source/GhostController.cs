@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
+using UnitMan.Source.Utilities.TimeTracking;
+using UnityEditor.Animations;
 using UnityEngine;
 using Timer = UnitMan.Source.Utilities.TimeTracking.Timer;
 
@@ -150,6 +152,8 @@ namespace UnitMan.Source {
            _playerPollDelay.Start();
            _currentMoveSpeed = standardMoveSpeed;
            _slowMoveSpeed = standardMoveSpeed/2f;
+           
+           _standardController = animator.runtimeAnimatorController;
        }
        
         private const int DEFAULT_DISTANCE_MAX = 999;
@@ -352,7 +356,14 @@ namespace UnitMan.Source {
                    _currentMoveSpeed = standardMoveSpeed;
                    _playerPollDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
-
+                   if (animator.runtimeAnimatorController != _standardController)
+                   {
+                       animator.runtimeAnimatorController = _standardController;
+                   }
+                   if (playerController.isInvincible)
+                   {
+                       AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
+                   }
                    break;
                }
                case State.Fleeing: {
@@ -367,7 +378,8 @@ namespace UnitMan.Source {
                    thisGameObject.layer = _inactiveLayer;
                    _currentMoveSpeed = MOVE_SPEED_INACTIVE;
                    currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
-                   _playerPollDelay.Stop();
+                   _chasePollDelay.Stop();
+                   animator.runtimeAnimatorController = eatenController;
                    // ComputePathToHub();
                    // thisTransform.position = startPosition;
                    
