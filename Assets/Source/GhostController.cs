@@ -230,21 +230,27 @@ namespace UnitMan.Source {
            rigidBody.velocity = motion;
        }
 
-      private void FollowPath() {
+      private void FollowPath()
+      {
+          void SetDirection(int i) => currentDirection = DirectionToVector2Int((Direction) i);
+
           Direction originDirection = (Direction) VectorToInt(OriginDirection);
-          if (_possibleTurnsTotal == 1) {
-              for (int i = 0; i < 4; i++)
-              {
-                  if (possibleTurns[i]) currentDirection = DirectionToVector2Int((Direction) i);
-              }
-              
-          }
-          else {
+          if (_possibleTurnsTotal > 1)
+          {
               for (int i = 0; i < 4; i++)
               {
                   if ((Direction) i == originDirection || !possibleTurns[i]) continue;
-
-                  currentDirection = DirectionToVector2Int((Direction) i);
+                  SetDirection(i);
+                  return;
+              }
+          }
+          else
+          {
+              for (int i = 0; i < 4; i++)
+              {
+                  if (!possibleTurns[i]) continue;
+                  SetDirection(i);
+                  return;
               }
           }
       }
