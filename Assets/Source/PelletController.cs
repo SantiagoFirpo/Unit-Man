@@ -6,7 +6,7 @@ namespace UnitMan.Source
     public class PelletController : MonoBehaviour
     {
         private GameObject _gameObject;
-        protected int scoreValue = 1;
+        protected int scoreValue = 10;
 
         protected virtual void Awake() {
             _gameObject = gameObject;

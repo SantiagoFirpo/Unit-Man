@@ -11,6 +11,10 @@ namespace UnitMan.Source {
         //TODO: refactor/organize this class
         
         //TODO: Blinky doesn't target initialTarget at start
+        
+        //TODO: add scatter state
+        
+        //TODO: wrong music playing
 
         public static readonly Direction[] HorizontalDirections = {Direction.Left, Direction.Right};
         public static readonly Direction[] VerticalDirections = {Direction.Up, Direction.Down};

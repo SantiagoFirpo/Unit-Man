@@ -13,6 +13,8 @@ namespace UnitMan.Source
         typeof(Animator))]
     public class PlayerController : Actor
     {
+        //TODO: screen wrap
+        //TODO: death animation
         
         private const float MOVE_SPEED = 5f;
         private InputMaps _inputMaps;

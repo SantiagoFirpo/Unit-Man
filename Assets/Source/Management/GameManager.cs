@@ -8,6 +8,7 @@ namespace UnitMan.Source.Management
 {
     public class GameManager : MonoBehaviour
     {
+        //TODO: remake level reset
         private const float FREEZE_SECONDS = 1f;
         private readonly Timer _pauseTimer = new Timer(FREEZE_SECONDS);
         public static GameManager Instance { get; private set; }

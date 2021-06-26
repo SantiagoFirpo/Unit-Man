@@ -11,7 +11,7 @@ namespace UnitMan
         private PlayerController _playerController;
         protected override void Awake() {
             base.Awake();
-            scoreValue = 100;
+            scoreValue = 50;
             _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
         }
 

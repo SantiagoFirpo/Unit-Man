@@ -10,6 +10,8 @@ namespace UnitMan
 {
     public class UIModel : MonoBehaviour
     {
+        //TODO: add score label
+        //TODO: add lives icons
         public static UIModel Instance
         {
             get;
