@@ -1,5 +1,4 @@
 using UnitMan.Source.Management;
-using UnitMan.Source.Utilities;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
@@ -7,15 +6,15 @@ namespace UnitMan.Source.Entities.Actors {
     [RequireComponent(typeof(CircleCollider2D),
                     typeof(Rigidbody2D),
                     typeof(Animator))]
+    
     [RequireComponent(typeof(SpriteRenderer))]
-    public abstract class Actor : MonoBehaviour, IInitializable
+    public abstract class Actor : MonoBehaviour
     {
         //TODO: refactor/organize this class
-        public Rigidbody2D Rigidbody => thisRigidbody;
 
         protected Rigidbody2D thisRigidbody;
 
-        protected Transform thisTransform;
+        private Transform _thisTransform;
 
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
@@ -29,7 +28,7 @@ namespace UnitMan.Source.Entities.Actors {
         public Vector2Int currentDirection;
         protected float currentMoveSpeed;
 
-        protected bool IsInTileCenter => PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
+        protected bool IsInTileCenter => PathGrid.VectorApproximately(_thisTransform.position, gridPosition, 0.1f);
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
@@ -65,11 +64,11 @@ namespace UnitMan.Source.Entities.Actors {
     public virtual void Initialize() {
             thisRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
-            thisTransform = transform;
+            _thisTransform = transform;
             thisGameObject = gameObject;
             
             SubscribeForEvents();
-            StartPosition = thisTransform.position;
+            StartPosition = _thisTransform.position;
         }
 
     private void SubscribeForEvents()
@@ -98,33 +97,14 @@ namespace UnitMan.Source.Entities.Actors {
         }
 
         private void ResetPosition() {
-            thisTransform.position = StartPosition;
+            _thisTransform.position = StartPosition;
         }
 
         protected void UpdateGridPosition() {
-           gridPosition = Vector2Int.RoundToInt(thisTransform.position);
+           gridPosition = Vector2Int.RoundToInt(_thisTransform.position);
        }
 
-
-        public static int VectorToInt(Vector2 vector) {
-            int index = -1;
-            if (vector == PathGrid.UpVector2) {
-                index = (int) Direction.Up;
-            }
-            else if (vector == PathGrid.DownVector2) {
-                index = (int) Direction.Down;
-            }
-            else if (vector == PathGrid.LeftVector2) {
-                index = (int) Direction.Left;
-            }
-            else if (vector == PathGrid.DownVector2) {
-                index = (int) Direction.Right;
-            }
-
-            return index;
-        }
-        
-        public static int VectorToInt(Vector2Int vector) {
+        protected static int VectorToInt(Vector2Int vector) {
             int index = -1;
             if (vector == PathGrid.upVector2Int) {
                 index = (int) Direction.Up;
@@ -149,8 +129,8 @@ namespace UnitMan.Source.Entities.Actors {
         protected static bool IsCardinalDirection(Vector2Int vector) {
             return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
         }
-        
-        public static Vector2Int DirectionToVector2Int(int enumDirection) {
+
+        protected static Vector2Int DirectionToVector2Int(int enumDirection) {
             return enumDirection switch {
                 (int) Direction.Up => Vector2Int.up,
                 (int) Direction.Down => Vector2Int.down,
@@ -165,8 +145,8 @@ namespace UnitMan.Source.Entities.Actors {
             motion = newMotion;
             thisRigidbody.velocity = motion;
         }
-        
-        public static Vector2Int DirectionToVector2Int(Direction enumDirection) {
+
+        protected static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
                 Direction.Up => PathGrid.upVector2Int,
                 Direction.Down => PathGrid.downVector2Int,
@@ -180,21 +160,21 @@ namespace UnitMan.Source.Entities.Actors {
             UpdateGridPosition();
             PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
             
-            if (PathGrid.VectorApproximately(thisTransform.position,
+            if (PathGrid.VectorApproximately(_thisTransform.position,
                                             SessionManagerSingle.Instance.rightWrap.position,
                                             0.1f)
                 && !_isWrapping)
             {
-                thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
+                _thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
                 _isWrapping = true;
             }
             
-            else if (PathGrid.VectorApproximately(thisTransform.position,
+            else if (PathGrid.VectorApproximately(_thisTransform.position,
                                                 SessionManagerSingle.Instance.leftWrap.position,
                                                 0.1f)
                      && !_isWrapping)
             {
-                thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
+                _thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
                 _isWrapping = true;
             }
 
@@ -205,7 +185,7 @@ namespace UnitMan.Source.Entities.Actors {
             }
         }
 
-        protected void UpdateAnimation() {
+        private void UpdateAnimation() {
             animator.SetInteger(DirectionXAnimator, currentDirection.x);
             animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }
