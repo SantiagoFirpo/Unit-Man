@@ -46,7 +46,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
             new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
             new bool[X_SIZE], new bool[X_SIZE]
         };
-        public readonly Dictionary<Vector2Int, bool> grid = new Dictionary<Vector2Int, bool>();
 
 
         public static PathGrid Instance { get; private set; }
