@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace UnitMan
 {
-    class AudioManager : MonoBehaviour
+    public sealed class AudioManagerSingle : MonoBehaviour
     {
-        public static AudioManager Instance {get; private set; }
+        public static AudioManagerSingle Instance {get; private set; }
         
         [SerializeField]
         private AudioSource track0;
@@ -40,14 +39,11 @@ namespace UnitMan
             Retreating
         }
 
-        protected virtual void Awake() {
-            if (Instance != null) {
-                Destroy(gameObject);
-            }
-            else {
-                Instance = this;
-            }
-            
+        private void Awake() {
+            if (Instance != null) Destroy(gameObject);
+
+            Instance = this;
+
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop) {
