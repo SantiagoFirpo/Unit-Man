@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnitMan.Source;
+using UnitMan.Source.Entities.Actors;
 using UnitMan.Source.Management;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace UnitMan
         protected override void Awake() {
             base.Awake();
             scoreValue = 50;
-            _playerController = GameManagerSingle.Instance.player.GetComponent<PlayerController>();
+            _playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
         }
 
 

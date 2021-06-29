@@ -1,4 +1,6 @@
-﻿namespace UnitMan.Source
+﻿using UnitMan.Source.Entities.Actors;
+
+namespace UnitMan.Source
 {
     public class PinkyController : GhostController
     {

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-namespace UnitMan.Source
+namespace UnitMan.Source.Entities.Actors
 {
     public class InkyController : GhostController
     {
         //TODO: set target to initialPosition first and then chase position when pellet threshold is achieved
+        
         [SerializeField]
         private GhostController blinkyController;
         public override void Initialize() {
