@@ -161,6 +161,11 @@ namespace UnitMan.Source.Utilities.Pathfinding
                                   Mathf.RoundToInt(vector.y));
         }
 
+        public static Vector3 Vector2ToVector3(Vector2Int vector)
+        {
+            return new Vector3(vector.x, vector.y, 0f);
+        }
+
         private void OnDrawGizmos() {
             for (int x = -11; x <= 11; x++) {
                 for (int y = -21; y <= 4; y++) {
