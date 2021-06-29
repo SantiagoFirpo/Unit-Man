@@ -55,7 +55,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
                 for (int neighborY = -1; neighborY <= 1; neighborY++) {
                     Vector2Int localNeighborPosition = new Vector2Int(neighborX, neighborY);
                     Vector2Int globalNeighborPosition = position + localNeighborPosition;
-                    bool isPositionValid = PathGrid.Instance.grid[globalNeighborPosition];
+                    bool isPositionValid = PathGrid.Instance.GetGridPosition(globalNeighborPosition);
                     bool isCardinal = Mathf.Abs(neighborX) != Mathf.Abs(neighborY);
                     if (!isCardinal || !isPositionValid) continue;
                     neighbors[i] = new PathNode(globalNeighborPosition, _startPosition, _endPosition);

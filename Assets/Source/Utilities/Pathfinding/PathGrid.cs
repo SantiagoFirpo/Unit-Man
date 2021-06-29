@@ -9,10 +9,14 @@ namespace UnitMan.Source.Utilities.Pathfinding
     [RequireComponent(typeof(Tilemap))]
     public class PathGrid : MonoBehaviour
     {
-        private bool GetGridPosition(int x, int y) {
+        public bool GetGridPosition(int x, int y) {
             // Debug.Log($"{x}, {y}");
             return _newGrid[-y + 4][x+11];
         }
+        
+        public bool GetGridPosition(Vector2Int vector) {
+            // Debug.Log($"{x}, {y}");
+            return _newGrid[-vector.y + 4][vector.x + 11];
         private void SetGridPosition(int x, int y, bool value) {
             _newGrid[-y + 4][x+11] = value;
         }
