@@ -1,28 +1,33 @@
 using System;
-using TMPro;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace UnitMan.Source.Management
 {
-    public class GameManager : MonoBehaviour
+    public class GameManagerSingle : MonoBehaviour
     {
         //TODO: remake level reset
         private const float FREEZE_SECONDS = 1f;
-        private readonly Timer _pauseTimer = new Timer(FREEZE_SECONDS);
-        public static GameManager Instance { get; private set; }
-        private readonly Timer _startupTimer = new Timer(4f, 0f, true);
+        private Timer _pauseTimer;
+        public static GameManagerSingle Instance { get; private set; }
+        private Timer _startupTimer;
+        
+        [HideInInspector]
         public PlayerController playerController;
         
         public static event Action OnReset;
+
+        public HUDModel hudModel;
 
         private const int TOTAL_PELLETS = 283;
         
         public GameObject player;
 
         public GameObject[] sceneObjects;
-        public Actor[] actors;
+        
+        [SerializeField]
+        private Actor[] _actors;
 
         public int pelletsEaten;
 
@@ -94,7 +99,7 @@ namespace UnitMan.Source.Management
             AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
         }
         private void Reset() {
-            OnReset?.Invoke();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
         }
 
         private static void GameOver() {

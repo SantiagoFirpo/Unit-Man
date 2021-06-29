@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace UnitMan
 {
-    class AudioManager : MonoSingleton
+    class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance {get; private set; }
         
