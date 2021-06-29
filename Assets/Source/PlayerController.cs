@@ -74,13 +74,9 @@ namespace UnitMan.Source
                     currentDirection = _inputVector;
                 }
             }
-            
-                
 
-            motion = (Vector2) currentDirection * MOVE_SPEED;
-            
 
-            rigidBody.velocity = motion;
+            UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
         }
         
 

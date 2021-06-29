@@ -241,10 +241,9 @@ namespace UnitMan.Source {
            {
                SetState(State.Alive);
            }
-
-           motion = (Vector2) currentDirection * _currentMoveSpeed;
-           rigidBody.velocity = motion;
-       }
+           
+           UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
+        }
         private void SetDirection(int directionNumber) => currentDirection = DirectionToVector2Int((Direction) directionNumber);
           private void FollowPath()
           {
