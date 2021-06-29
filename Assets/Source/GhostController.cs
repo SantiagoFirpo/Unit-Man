@@ -202,7 +202,7 @@ namespace UnitMan.Source {
            PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
            
            
-           if (!rigidBody.simulated) return;
+           if (!thisRigidbody.simulated) return;
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
 
            bool isInTileCenter = IsInTileCenter;
@@ -217,7 +217,6 @@ namespace UnitMan.Source {
                                                     currentTargetPosition,
                                                     possibleTurns,
                                                     (Direction) VectorToInt(OriginDirection)));
-                    // Debug.Log(currentDirection);
                     _pathResolved = true;
                     
                 }
@@ -259,32 +258,20 @@ namespace UnitMan.Source {
            switch (state) {
                case State.Fleeing:
                    SetState(State.Eaten);
-                   GameManager.Instance.Freeze();
+                   GameManagerSingle.Instance.Freeze();
                    break;
                case State.Alive:
-                   GameManager.Instance.Die();
+                   GameManagerSingle.Instance.Die();
                    break;
                case State.Eaten:
                    break;
                default:
                    return;
            }
-           // thisTransform.position = startPosition;
-       }
+          }
 
-
-       //    private void ComputePathToPlayer() {
-    //        MultithreadedPath(thisTransform.position, _playerTransform.position);
-    //        RemoveFirstPosition();
-    //    }
-       
-    //    private void ComputePathToHub() {
-    //        MultithreadedPath(thisTransform.position, _hubPosition);
-    //        RemoveFirstPosition();
-    //    }
-       
-       private void SetTargetAwayFromPlayer() {
-           Quadrant playerQuadrant = GetQuadrant(playerTransform.position, _mapCentralPosition);
+          private void SetTargetAwayFromPlayer() {
+           Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
            Vector3 finalPosition = playerQuadrant switch {
                Quadrant.UpRight => bottomLeftMapBound,
                Quadrant.UpLeft => _bottomRightMapBound,
@@ -315,7 +302,7 @@ namespace UnitMan.Source {
            {
                case State.Alive: {
                    thisGameObject.layer = _defaultLayer;
-                   _currentMoveSpeed = standardMoveSpeed;
+                   currentMoveSpeed = standardMoveSpeed;
                    _chasePollDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
                    if (animator.runtimeAnimatorController != _standardController)
@@ -324,13 +311,13 @@ namespace UnitMan.Source {
                    }
                    if (playerController.isInvincible)
                    {
-                       AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
+                       AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
                    }
                    break;
                }
                case State.Fleeing: {
                    thisGameObject.layer = _defaultLayer;
-                   _currentMoveSpeed = _slowMoveSpeed;
+                   currentMoveSpeed = _slowMoveSpeed;
                    SetTargetAwayFromPlayer();
                    _chasePollDelay.Stop();
                    animator.SetBool(FleeingAnimator, true);
@@ -338,13 +325,11 @@ namespace UnitMan.Source {
                }
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
-                   _currentMoveSpeed = MOVE_SPEED_INACTIVE;
+                   currentMoveSpeed = MOVE_SPEED_INACTIVE;
                    currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
                    _chasePollDelay.Stop();
                    animator.runtimeAnimatorController = eatenController;
-                   // ComputePathToHub();
-                   // thisTransform.position = startPosition;
-                   
+
                    break;
                }
                default: {
