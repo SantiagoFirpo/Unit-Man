@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnitMan.Source.Management;
+using UnitMan.Source.Utilities;
+using UnityEngine;
 
 namespace UnitMan
 {
@@ -13,13 +16,7 @@ namespace UnitMan
         [SerializeField]
         private AudioSource track2;
 
-        [SerializeField] private AudioClip munch;
-        [SerializeField] private AudioClip eatGhost;
-        [SerializeField] private AudioClip death;
-        [SerializeField] private AudioClip intermission;
-        [SerializeField] private AudioClip siren;
-        [SerializeField] private AudioClip powerPellet;
-        [SerializeField] private AudioClip retreating;
+        [SerializeField] private AudioCollection _audioCollection;
 
 
         public bool IsTrackPlaying(int trackNumber) {
@@ -36,14 +33,27 @@ namespace UnitMan
         {
             Munch, EatGhost, Death, Intermission, Siren,
             PowerPellet,
-            Retreating
+            Retreating, IntroMusic
         }
 
         private void Awake() {
             if (Instance != null) Destroy(gameObject);
 
             Instance = this;
+            SessionManagerSingle.OnReset += Reset;
 
+        }
+
+        private void Reset()
+        {
+            track0.Stop();
+            track1.Stop();
+            track2.Stop();
+        }
+
+        private void OnDisable()
+        {
+            SessionManagerSingle.OnReset -= Reset;
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop) {
@@ -54,13 +64,14 @@ namespace UnitMan
                 _ => track0
             };
             source.clip = effectType switch {
-                AudioEffectType.Munch => munch,
-                AudioEffectType.EatGhost => eatGhost,
-                AudioEffectType.Death => death,
-                AudioEffectType.Intermission => intermission,
-                AudioEffectType.Siren => siren,
-                AudioEffectType.PowerPellet => powerPellet,
-                AudioEffectType.Retreating => retreating,
+                AudioEffectType.Munch => _audioCollection.munch,
+                AudioEffectType.EatGhost => _audioCollection.eatGhost,
+                AudioEffectType.Death => _audioCollection.death,
+                AudioEffectType.Intermission => _audioCollection.intermission,
+                AudioEffectType.Siren => _audioCollection.siren,
+                AudioEffectType.PowerPellet => _audioCollection.powerPellet,
+                AudioEffectType.Retreating => _audioCollection.retreating,
+                AudioEffectType.IntroMusic => _audioCollection.introMusic,
                 _ => source.clip
             };
             source.Play();
