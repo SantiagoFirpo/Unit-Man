@@ -11,16 +11,13 @@ namespace UnitMan.Source {
     {
         //TODO: refactor/organize this class
         protected CircleCollider2D circleCollider;
-        
-        [HideInInspector]
 
         public Rigidbody2D Rigidbody => thisRigidbody;
 
         protected Rigidbody2D thisRigidbody;
+
         protected Transform thisTransform;
-        
-        private static readonly Vector2 Vector2Zero = Vector2.zero;
-        
+
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
 
@@ -41,22 +38,12 @@ namespace UnitMan.Source {
         private readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
         private readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
 
-        public static readonly Vector2 Up = Vector2.up;
-        public static readonly Vector2 Down = Vector2.down;
-        public static readonly Vector2 Left = Vector2.left;
-        public static readonly Vector2 Right = Vector2.right;
-
-        private Vector2 _almostUpLeft;
-        private Vector2 _almostUpRight;
-        private Vector2 _almostDownLeft;
-        private Vector2 _almostDownRight;
-
         protected bool IsInTileCenter => PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
-        
-        protected LayerMask wallLayer;
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
-        protected Animator animator;
+        
+        [HideInInspector]
+        public Animator animator;
         
         public Vector2Int gridPosition;
 
@@ -78,13 +65,6 @@ namespace UnitMan.Source {
             
             GameManager.OnReset += ResetPosition;
             StartPosition = thisTransform.position;
-
-            _almostUpLeft = _upLeft * ALMOST_ONE;
-            _almostUpRight = _upRight * ALMOST_ONE;
-            _almostDownLeft = _downLeft * ALMOST_ONE;
-            _almostDownRight = _downRight * ALMOST_ONE;
-
-            wallLayer = LayerMask.GetMask("Wall");
         }
 
         protected virtual void Update() {
