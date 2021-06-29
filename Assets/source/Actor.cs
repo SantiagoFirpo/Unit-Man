@@ -124,6 +124,10 @@ namespace UnitMan.Source {
             return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
         }
         
+        protected static bool IsCardinalDirection(Vector2Int vector) {
+            return Mathf.Abs(vector.x) - Mathf.Abs(vector.y) != 0f;
+        }
+        
         public static Vector2Int DirectionToVector2Int(int enumDirection) {
             return enumDirection switch {
                 (int) Direction.Up => Vector2Int.up,
