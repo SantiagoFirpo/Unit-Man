@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace UnitMan
+namespace Input
 {
     public class @InputMaps : IInputActionCollection, IDisposable
     {
