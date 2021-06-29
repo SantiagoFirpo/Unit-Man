@@ -52,7 +52,7 @@ namespace UnitMan.Source {
             Up, Down, Left, Right
         }
 
-    protected virtual void Awake() {
+    protected void Awake() {
             Initialize();
         }
 
@@ -63,7 +63,7 @@ namespace UnitMan.Source {
             thisTransform = transform;
             thisGameObject = gameObject;
             
-            GameManager.OnReset += ResetPosition;
+            GameManagerSingle.OnReset += ResetPosition;
             StartPosition = thisTransform.position;
         }
 
@@ -71,8 +71,14 @@ namespace UnitMan.Source {
             UpdateAnimation();
         }
 
-        private void OnDisable() {
-            GameManager.OnReset -= ResetPosition;
+        private void OnDisable()
+        {
+            UnsubscribeFromEvents();
+        }
+
+        protected virtual void UnsubscribeFromEvents()
+        {
+            GameManagerSingle.OnReset -= ResetPosition;
         }
 
         private void ResetPosition() {
