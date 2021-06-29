@@ -16,9 +16,6 @@ namespace UnitMan.Source {
         
         //TODO: wrong music playing
 
-        public static readonly Direction[] HorizontalDirections = {Direction.Left, Direction.Right};
-        public static readonly Direction[] VerticalDirections = {Direction.Up, Direction.Down};
-
         [Header("Physics State")]
         private int _possibleTurnsTotal;
         private Vector2Int OriginDirection => currentDirection * -1;
@@ -39,9 +36,6 @@ namespace UnitMan.Source {
         
         [SerializeField]
         private Transform initialTargetTransform;
-        
-        [SerializeField]
-        protected float chasePollSeconds = 4f;
 
         [SerializeField]
         private Transform topLeft;
@@ -62,13 +56,10 @@ namespace UnitMan.Source {
         private Vector3 _bottomRightMapBound;
         
         
-        
         [Header("State Management")]
 
         private Timer _chasePollDelay;
 
-        private float _currentMoveSpeed;
-        
         public enum State {
             Alive, Fleeing, Eaten
         }
