@@ -3,15 +3,14 @@ using UnitMan.Source.Utilities;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
-namespace UnitMan.Source {
+namespace UnitMan.Source.Entities.Actors {
     [RequireComponent(typeof(CircleCollider2D),
                     typeof(Rigidbody2D),
                     typeof(Animator))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public abstract class Actor : MonoBehaviour, IInitializable
     {
         //TODO: refactor/organize this class
-        protected CircleCollider2D circleCollider;
-
         public Rigidbody2D Rigidbody => thisRigidbody;
 
         protected Rigidbody2D thisRigidbody;
@@ -29,15 +28,6 @@ namespace UnitMan.Source {
         public Vector2 motion = Vector2.zero;
         public Vector2Int currentDirection;
         protected float currentMoveSpeed;
-
-        private const float WALL_CHECK_DISTANCE = 0.8f;
-        private const float ALMOST_ONE = 0.9f;
-
-        private readonly Vector2 _upLeft = new Vector2(-0.5f, 0.5f);
-        private readonly Vector2 _upRight = new Vector2(0.5f, 0.5f);
-
-        private readonly Vector2 _downLeft = new Vector2(-0.5f, -0.5f);
-        private readonly Vector2 _downRight = new Vector2(0.5f, -0.5f);
 
         protected bool IsInTileCenter => PathGrid.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
 
@@ -58,18 +48,40 @@ namespace UnitMan.Source {
             Initialize();
         }
 
-        public virtual void Initialize() {
-            circleCollider = GetComponent<CircleCollider2D>();
+    protected abstract void Reset();
+
+    protected virtual void Freeze()
+    {
+        animator.enabled = false;
+        thisRigidbody.simulated = false;
+    }
+
+    protected virtual void Unfreeze()
+    {
+        animator.enabled = true;
+        thisRigidbody.simulated = true;
+    }
+
+    public virtual void Initialize() {
             thisRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             thisTransform = transform;
             thisGameObject = gameObject;
             
-            GameManagerSingle.OnReset += ResetPosition;
+            SubscribeForEvents();
             StartPosition = thisTransform.position;
         }
 
-        protected virtual void Update() {
+    private void SubscribeForEvents()
+    {
+        SessionManagerSingle.OnReset += ResetPosition;
+        SessionManagerSingle.OnFreeze += Freeze;
+        SessionManagerSingle.OnUnfreeze += Unfreeze;
+    }
+
+    protected virtual void Update()
+    {
+        if (!thisRigidbody.simulated) return;
             UpdateAnimation();
         }
 
@@ -80,7 +92,9 @@ namespace UnitMan.Source {
 
         protected virtual void UnsubscribeFromEvents()
         {
-            GameManagerSingle.OnReset -= ResetPosition;
+            SessionManagerSingle.OnReset -= ResetPosition;
+            SessionManagerSingle.OnFreeze -= Freeze;
+            SessionManagerSingle.OnUnfreeze -= Unfreeze;
         }
 
         private void ResetPosition() {
@@ -112,16 +126,16 @@ namespace UnitMan.Source {
         
         public static int VectorToInt(Vector2Int vector) {
             int index = -1;
-            if (vector == PathGrid.UpVector2Int) {
+            if (vector == PathGrid.upVector2Int) {
                 index = (int) Direction.Up;
             }
-            else if (vector == PathGrid.DownVector2Int) {
+            else if (vector == PathGrid.downVector2Int) {
                 index = (int) Direction.Down;
             }
-            else if (vector == PathGrid.LeftVector2Int) {
+            else if (vector == PathGrid.leftVector2Int) {
                 index = (int) Direction.Left;
             }
-            else if (vector == PathGrid.RightVector2Int) {
+            else if (vector == PathGrid.rightVector2Int) {
                 index = (int) Direction.Right;
             }
 
@@ -154,10 +168,10 @@ namespace UnitMan.Source {
         
         public static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
-                Direction.Up => PathGrid.UpVector2Int,
-                Direction.Down => PathGrid.DownVector2Int,
-                Direction.Left => PathGrid.LeftVector2Int,
-                Direction.Right => PathGrid.RightVector2Int,
+                Direction.Up => PathGrid.upVector2Int,
+                Direction.Down => PathGrid.downVector2Int,
+                Direction.Left => PathGrid.leftVector2Int,
+                Direction.Right => PathGrid.rightVector2Int,
                 _ => Vector2Int.zero
             };
         }
@@ -190,24 +204,8 @@ namespace UnitMan.Source {
                 _isWrapping = false;
             }
         }
-        
-        protected virtual void OnDrawGizmos() {
-            Vector3 position = transform.position;
-            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.up * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.down * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) _downLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upLeft * ALMOST_ONE, Vector2.left * WALL_CHECK_DISTANCE, Color.green);
-            
-            Debug.DrawRay(position + (Vector3) _downRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
-            Debug.DrawRay(position + (Vector3) _upRight * ALMOST_ONE, Vector2.right * WALL_CHECK_DISTANCE, Color.green);
-        }
 
         protected void UpdateAnimation() {
-            animator.enabled = thisRigidbody.velocity != Vector2.zero;
             animator.SetInteger(DirectionXAnimator, currentDirection.x);
             animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }

@@ -6,7 +6,7 @@ using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 
-namespace UnitMan.Source {
+namespace UnitMan.Source.Entities.Actors {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
         
@@ -76,9 +76,9 @@ namespace UnitMan.Source {
         //Components
         
         [SerializeField]
-        private RuntimeAnimatorController eatenController;
+        private RuntimeAnimatorController eatenAnimController;
        
-        private RuntimeAnimatorController _standardController;
+        private RuntimeAnimatorController _standardAnimController;
         
        // private Vector2Int NextTile => gridPosition + currentDirection;
 
@@ -86,7 +86,7 @@ namespace UnitMan.Source {
        
        public State state = State.Alive;
        
-       private const float MOVE_SPEED_INACTIVE = 6f;
+       private const float RETREAT_MOVE_SPEED = 10f;
 
        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
        
@@ -106,7 +106,13 @@ namespace UnitMan.Source {
            UpRight, UpLeft, DownLeft, DownRight
        }
 
-       public override void Initialize() {
+        protected override void Unfreeze()
+        {
+            base.Unfreeze();
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
+        }
+
+        public override void Initialize() {
            base.Initialize();
 
             GetMapMarkers();
@@ -115,14 +121,17 @@ namespace UnitMan.Source {
             
             SubscribeToEvents();
            
+            
+            TargetInitialPosition();
             currentMoveSpeed = standardMoveSpeed;
-       }
+        }
 
        private void SubscribeToEvents()
        {
            // _retreatTimer.OnEnd += ResetPositionAndState;
            _chasePollDelay.OnEnd += PollChasePosition;
            PlayerController.OnInvincibleChanged += UpdateState;
+           SessionManagerSingle.OnReset += Reset;
        }
 
        private void ResolveDependencies()
@@ -130,8 +139,8 @@ namespace UnitMan.Source {
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
-           _playerTransform = GameManagerSingle.Instance.player.transform;
-           playerController = GameManagerSingle.Instance.player.GetComponent<PlayerController>();
+           _playerTransform = SessionManagerSingle.Instance.player.transform;
+           playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
            _chasePollDelay = new Timer(PlayerController.PLAYER_STEP_TIME, true, false); //old: chasePollSeconds as waitTime
        }
 
@@ -142,6 +151,10 @@ namespace UnitMan.Source {
            bottomLeftMapBound = bottomLeft.position;
            _bottomRightMapBound = bottomRight.position;
 
+       }
+
+       private void TargetInitialPosition()
+       {
            currentTargetPosition = PathGrid.VectorToVector2Int(initialTargetTransform.position);
        }
 
@@ -156,7 +169,7 @@ namespace UnitMan.Source {
            
            _slowMoveSpeed = standardMoveSpeed/2f;
            
-           _standardController = animator.runtimeAnimatorController;
+           _standardAnimController = animator.runtimeAnimatorController;
        }
        
         private const int DEFAULT_DISTANCE_MAX = 999;
@@ -258,10 +271,13 @@ namespace UnitMan.Source {
            switch (state) {
                case State.Fleeing:
                    SetState(State.Eaten);
-                   GameManagerSingle.Instance.Freeze();
+                   animator.runtimeAnimatorController = eatenAnimController;
+                   AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
+                   SessionManagerSingle.Instance.Freeze();
+                   
                    break;
                case State.Alive:
-                   GameManagerSingle.Instance.Die();
+                   SessionManagerSingle.Instance.Die();
                    break;
                case State.Eaten:
                    break;
@@ -305,9 +321,9 @@ namespace UnitMan.Source {
                    currentMoveSpeed = standardMoveSpeed;
                    _chasePollDelay.Start();
                    animator.SetBool(FleeingAnimator, false);
-                   if (animator.runtimeAnimatorController != _standardController)
+                   if (animator.runtimeAnimatorController != _standardAnimController)
                    {
-                       animator.runtimeAnimatorController = _standardController;
+                       animator.runtimeAnimatorController = _standardAnimController;
                    }
                    if (playerController.isInvincible)
                    {
@@ -325,10 +341,10 @@ namespace UnitMan.Source {
                }
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
-                   currentMoveSpeed = MOVE_SPEED_INACTIVE;
+                   currentMoveSpeed = RETREAT_MOVE_SPEED;
                    currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
                    _chasePollDelay.Stop();
-                   animator.runtimeAnimatorController = eatenController;
+                   animator.runtimeAnimatorController = eatenAnimController;
 
                    break;
                }
@@ -348,11 +364,16 @@ namespace UnitMan.Source {
             return Array.IndexOf(array, currentSmallest);
         }
 
-        protected override void OnDrawGizmos()
+        protected void OnDrawGizmos()
         {
-            base.OnDrawGizmos();
             Gizmos.color = debugColor;
             Gizmos.DrawSphere(PathGrid.Vector2ToVector3(currentTargetPosition), 0.3f);
+        }
+
+        protected override void Reset()
+        {
+            state = State.Alive;
+            TargetInitialPosition();
         }
     }
 }
