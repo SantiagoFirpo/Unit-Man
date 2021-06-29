@@ -6,7 +6,6 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     //Responsibility: Abstract model for finite timers inside other classes
     public event System.Action OnEnd;
     public readonly float waitTime;
-    private readonly float _delay;
     public float currentTime;
     private readonly bool _autoStart;
     private readonly bool _oneTime;
@@ -49,7 +48,6 @@ namespace UnitMan.Source.Utilities.TimeTracking {
 
     public Timer(float waitTime, bool autoStart, bool oneTime, float delay = 0)  { // prev was waitTime = 1, autoStart = false, oneTime = true
         this.waitTime = waitTime;
-        _delay = delay;
         _autoStart = autoStart;
         _oneTime = oneTime;
         TimerManager.OnFrameUpdate += Update;
