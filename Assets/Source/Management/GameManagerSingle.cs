@@ -76,9 +76,8 @@ namespace UnitMan.Source.Management
 
         public void Die() {
             Debug.Log("Died!");
-            lives--;
-            UIModel.Instance.LoseLife();
-            if (lives < 0) {
+            SessionDataModel.Instance.LoseLife();
+            if (SessionDataModel.Instance.lives < 0) {
                 GameOver();
             }
             else {
