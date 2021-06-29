@@ -13,7 +13,10 @@ namespace UnitMan.Source {
         protected CircleCollider2D circleCollider;
         
         [HideInInspector]
-        public Rigidbody2D rigidBody;
+
+        public Rigidbody2D Rigidbody => thisRigidbody;
+
+        protected Rigidbody2D thisRigidbody;
         protected Transform thisTransform;
         
         private static readonly Vector2 Vector2Zero = Vector2.zero;
@@ -68,7 +71,7 @@ namespace UnitMan.Source {
 
         public virtual void Initialize() {
             circleCollider = GetComponent<CircleCollider2D>();
-            rigidBody = GetComponent<Rigidbody2D>();
+            thisRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             thisTransform = transform;
             thisGameObject = gameObject;
@@ -183,7 +186,7 @@ namespace UnitMan.Source {
         }
 
         protected void UpdateAnimation() {
-            animator.enabled = rigidBody.velocity != Vector2.zero;
+            animator.enabled = thisRigidbody.velocity != Vector2.zero;
             animator.SetInteger(DirectionXAnimator, currentDirection.x);
             animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }
