@@ -70,7 +70,7 @@ namespace UnitMan.Source {
         
         private int _inactiveLayer;
         private int _defaultLayer;
-        protected Transform playerTransform;
+        private Transform _playerTransform;
         protected PlayerController playerController;
         
         //Components
@@ -101,13 +101,13 @@ namespace UnitMan.Source {
             DEFAULT_DISTANCE_MAX,
             DEFAULT_DISTANCE_MAX};
 
-       public enum Quadrant
+        private enum Quadrant
        {
            UpRight, UpLeft, DownLeft, DownRight
        }
 
-       protected override void Awake() {
-           base.Awake();
+       public override void Initialize() {
+           base.Initialize();
 
             GetMapMarkers();
 
