@@ -89,7 +89,7 @@ namespace UnitMan.Source.Management
         
         public void Freeze() {
             playerController.invincibleTimer.Stop();
-            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.EatGhost, 1, false);
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
             SetPause(true);
             _pauseTimer.Start();
         }
@@ -97,10 +97,10 @@ namespace UnitMan.Source.Management
         private void UnpauseFreeze() {
             playerController.invincibleTimer.Start();
             Instance.SetPause(false);
-            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Retreating, 1, true);
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
         }
         private void Reset() {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+            OnReset?.Invoke();
         }
 
         private static void GameOver() {
