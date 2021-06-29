@@ -25,8 +25,8 @@ namespace UnitMan.Source
         }
 
         protected virtual void UpdatePlayerState() {
-            GameManagerSingle.Instance.pelletsEaten++;
-            GameManagerSingle.Instance.CheckIfGameIsWon();
+            SessionManagerSingle.Instance.pelletsEaten++;
+            SessionManagerSingle.Instance.CheckIfGameIsWon();
         }
     }
 }

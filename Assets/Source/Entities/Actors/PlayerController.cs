@@ -6,11 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Vector2Int;
 
-namespace UnitMan.Source
+namespace UnitMan.Source.Entities.Actors
 {
-    [RequireComponent(typeof(PlayerInput),
-        typeof(SpriteRenderer),
-        typeof(Animator))]
+    [RequireComponent(typeof(PlayerInput))]
     public class PlayerController : Actor
     {
         //TODO: screen wrap
@@ -20,43 +18,68 @@ namespace UnitMan.Source
         public const float PLAYER_STEP_TIME = 0.2f;
         private InputMaps _inputMaps;
 
-        private PlayerInput _playerInput;
         private Vector2Int _inputVector;
 
         public bool isInvincible;
-        public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
+        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
+
+        private bool _frozen;
+
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
-        
+
+        protected override void Reset()
+        { }
+
         public override void Initialize()
         {
             base.Initialize();
             _inputMaps = new InputMaps();
+            
+            SubscribeForEvents();
+
+            currentDirection = PathGrid.rightVector2Int;
+            currentMoveSpeed = MOVE_SPEED;
+        }
+
+        private void SubscribeForEvents()
+        {
             _inputMaps.Player.Enable();
             _inputMaps.Player.Move.performed += OnMove;
-            _playerInput = GetComponent<PlayerInput>();
-
-            invincibleTimer.OnEnd += DisableInvincibility;
-            currentDirection = PathGrid.RightVector2Int;
-            currentMoveSpeed = MOVE_SPEED;
+            
+            _invincibleTimer.OnEnd += DisableInvincibility;
         }
 
         protected override void Update()
         {
+            // if (!thisRigidbody.simulated) return;
             base.Update();
+            animator.enabled = thisRigidbody.velocity != PathGrid.zero && !_frozen;
             if (isInvincible)
             {
-                SessionDataModel.Instance.UpdateInvincibleTime(invincibleTimer.currentTime);
+                SessionDataModel.Instance.UpdateInvincibleTime(_invincibleTimer.currentTime);
             }
         }
-        
+
+        protected override void Freeze()
+        {
+            base.Freeze();
+            _invincibleTimer.Stop();
+            _frozen = true;
+        }
+
+        protected override void Unfreeze()
+        {
+            base.Unfreeze();
+            _invincibleTimer.Start();
+            _frozen = false;
+        }
 
         protected override void UnsubscribeFromEvents()
         {
             base.UnsubscribeFromEvents();
-            _playerInput.onActionTriggered -= OnMove;
-            invincibleTimer.OnEnd -= DisableInvincibility;
-            
+            _invincibleTimer.OnEnd -= DisableInvincibility;
+            _inputMaps.Player.Move.performed -= OnMove;
             _inputMaps.Player.Disable();
         }
 
@@ -92,7 +115,7 @@ namespace UnitMan.Source
         public void SetInvincible()
         {
             isInvincible = true;
-            invincibleTimer.Start();
+            _invincibleTimer.Start();
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.PowerPellet, 1, true);
             OnInvincibleChanged?.Invoke(isInvincible);
         }
