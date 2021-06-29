@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnitMan.Source;
 using UnityEngine;
@@ -8,11 +5,11 @@ using UnityEngine.UI;
 
 namespace UnitMan
 {
-    public class UIModel : MonoBehaviour
+    public class SessionDataModel : MonoBehaviour
     {
         //TODO: add score label
         //TODO: add lives icons
-        public static UIModel Instance
+        public static SessionDataModel Instance
         {
             get;
             private set;
@@ -24,7 +21,7 @@ namespace UnitMan
         }
 
         public void LoseLife() {
-            _lives--;
+            lives--;
             UpdateLivesLabel();
         }
 
@@ -33,8 +30,13 @@ namespace UnitMan
             UpdateInvincibleUI(normalizedInvincibleTimer);
         }
 
+        public void IncrementScore(int delta)
+        {
+            _score += delta;
+        }
+
         private void UpdateLivesLabel() {
-            _livesLabel.text = $"Lives: {_lives}";
+            _livesLabel.text = $"Lives: {lives}";
             // _scoreLabel.text = $"Score: {_score}";
         }
 
@@ -43,7 +45,7 @@ namespace UnitMan
         }
 
         // Start is called before the first frame update
-        private int _lives = 3;
+        public int lives = 3;
         private int _score;
 
         [SerializeField]
