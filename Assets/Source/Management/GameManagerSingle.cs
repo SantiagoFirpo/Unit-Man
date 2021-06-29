@@ -18,20 +18,15 @@ namespace UnitMan.Source.Management
         
         public static event Action OnReset;
 
-        public HUDModel hudModel;
-
         private const int TOTAL_PELLETS = 284;
         
         public GameObject player;
 
-        public GameObject[] sceneObjects;
-        
         [SerializeField]
-        private Actor[] _actors;
+        private Actor[] actors;
 
         public int pelletsEaten;
 
-        public int lives = 3;
 
         [SerializeField]
         private GameObject readyText;
