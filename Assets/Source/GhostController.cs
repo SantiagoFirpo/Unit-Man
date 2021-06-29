@@ -249,7 +249,9 @@ namespace UnitMan.Source {
       
       
           private static readonly Func<bool,bool> IsElementTrue = element => element;
-          
+          [SerializeField] private Color debugColor;
+
+
           private static int GetTrueCount(IEnumerable<bool> boolArray) => boolArray.Count(IsElementTrue);
 
           private void OnCollisionEnter2D(Collision2D other) {
@@ -359,6 +361,13 @@ namespace UnitMan.Source {
             }
 
             return Array.IndexOf(array, currentSmallest);
+        }
+
+        protected override void OnDrawGizmos()
+        {
+            base.OnDrawGizmos();
+            Gizmos.color = debugColor;
+            Gizmos.DrawSphere(PathGrid.Vector2ToVector3(currentTargetPosition), 0.3f);
         }
     }
 }
