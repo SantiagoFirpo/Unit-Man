@@ -50,37 +50,6 @@ namespace UnitMan.Source
             }
         }
 
-        // protected override void UpdateAnimation() {
-        //     if (rigidBody.velocity == Vector2.zero) {
-        //         _animator.enabled = false;
-        //         return;
-        //     }
-        //     _animator.enabled = true;
-        //     Vector3 currentRotation = thisTransform.eulerAngles;
-        //     if (currentDirection == Up) {
-        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
-        //             currentRotation.y,
-        //             90f);
-        //     }
-        //     else if (currentDirection == Down) {
-        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
-        //             currentRotation.y,
-        //             -90f);
-        //     }
-        //     else if (currentDirection == Left) {
-        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
-        //             currentRotation.y, 180f);
-        //     }
-        //     else if (currentDirection == Right) {
-        //         thisTransform.eulerAngles = new Vector3(currentRotation.x,
-        //             currentRotation.y,
-        //             0f);
-        //     }
-        //     // _spriteRenderer.flipX = _currentDirection.x < 0;
-        //     // thisTransform.eulerAngles = new Vector3(currentRotation.x,
-        //     //                                         currentRotation.y,
-        //     //                                         _currentDirection.y < 0 ? -90f : 90f);
-        // }
 
         private void OnDisable() {
             _playerInput.onActionTriggered -= OnMove;
