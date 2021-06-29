@@ -4,11 +4,11 @@ namespace UnitMan.Source
 {
     public class InkyController : GhostController
     {
+        //TODO: set target to initialPosition first and then chase position when pellet threshold is achieved
         [SerializeField]
         private GhostController blinkyController;
         public override void Initialize() {
             standardMoveSpeed = CLYDE_MOVE_SPEED;
-            chasePollSeconds = 3f;
             base.Initialize();
             
         }

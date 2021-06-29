@@ -4,11 +4,11 @@ namespace UnitMan.Source
 {
     public class ClydeController : GhostController
     {
+        //TODO: set target to initialPosition first and then chase position when pellet threshold is achieved
         public override void Initialize() {
             standardMoveSpeed = CLYDE_MOVE_SPEED;
-            chasePollSeconds = 2f;
             base.Initialize();
-            
+            currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
         }
         
         protected override void PollChasePosition()
