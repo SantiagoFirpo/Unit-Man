@@ -17,13 +17,14 @@ namespace UnitMan.Source
         //TODO: death animation
 
         private const float MOVE_SPEED = 5f;
+        public const float PLAYER_STEP_TIME = 0.2f;
         private InputMaps _inputMaps;
 
         private PlayerInput _playerInput;
         private Vector2Int _inputVector;
 
         public bool isInvincible;
-        public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS);
+        public readonly Timer invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
         
