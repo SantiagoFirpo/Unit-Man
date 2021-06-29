@@ -27,18 +27,21 @@ namespace UnitMan.Source.Management
 
         public int pelletsEaten;
 
-
         [SerializeField]
         private GameObject readyText;
 
         // Start is called before the first frame update
-        private void Awake() {
+        private void Awake()
+        {
+            _pauseTimer = new Timer(FREEZE_SECONDS, true, true);
+            _startupTimer = new Timer(4f, true, true);
+            actors = FindObjectsOfType<Actor>();
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
             playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
             _pauseTimer.OnEnd += UnpauseFreeze;
-
+            
             // foreach (GameObject sceneObject in sceneObjects) {
             //     if (sceneObject.activeSelf) {
             //         sceneObject.SetActive(false);
@@ -48,14 +51,17 @@ namespace UnitMan.Source.Management
         }
 
         private void StartLevel() {
+            Debug.Log("StartingLevel!");
             SetPause(false);
             readyText.SetActive(false);
-            AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Siren, 1, true);
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
         }
 
         public void SetPause(bool paused) {
-            foreach (Actor actor in actors) {
-                actor.rigidBody.simulated = !paused;
+            foreach (Actor actor in actors)
+            {
+                actor.Rigidbody.simulated = !paused;
+                actor.animator.enabled = !paused;
             }
         }
 
