@@ -115,7 +115,7 @@ namespace UnitMan.Source {
             
             SubscribeToEvents();
            
-            _currentMoveSpeed = standardMoveSpeed;
+            currentMoveSpeed = standardMoveSpeed;
        }
 
        private void SubscribeToEvents()
@@ -130,9 +130,9 @@ namespace UnitMan.Source {
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
-           playerTransform = GameManager.Instance.player.transform;
-           playerController = GameManager.Instance.player.GetComponent<PlayerController>();
-           _chasePollDelay = new Timer(0.2f, 0f, true, false); //old: chasePollSeconds as waitTime
+           _playerTransform = GameManagerSingle.Instance.player.transform;
+           playerController = GameManagerSingle.Instance.player.GetComponent<PlayerController>();
+           _chasePollDelay = new Timer(PlayerController.PLAYER_STEP_TIME, true, false); //old: chasePollSeconds as waitTime
        }
 
        private void GetMapMarkers()
