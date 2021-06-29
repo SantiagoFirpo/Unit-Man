@@ -86,16 +86,16 @@ namespace UnitMan.Source {
 
         public static int VectorToInt(Vector2 vector) {
             int index = -1;
-            if (vector == Up) {
+            if (vector == PathGrid.UpVector2) {
                 index = (int) Direction.Up;
             }
-            else if (vector == Down) {
+            else if (vector == PathGrid.DownVector2) {
                 index = (int) Direction.Down;
             }
-            else if (vector == Left) {
+            else if (vector == PathGrid.LeftVector2) {
                 index = (int) Direction.Left;
             }
-            else if (vector == Right) {
+            else if (vector == PathGrid.DownVector2) {
                 index = (int) Direction.Right;
             }
 
@@ -104,16 +104,16 @@ namespace UnitMan.Source {
         
         public static int VectorToInt(Vector2Int vector) {
             int index = -1;
-            if (vector == PathGrid.Up) {
+            if (vector == PathGrid.UpVector2Int) {
                 index = (int) Direction.Up;
             }
-            else if (vector == PathGrid.Down) {
+            else if (vector == PathGrid.DownVector2Int) {
                 index = (int) Direction.Down;
             }
-            else if (vector == PathGrid.Left) {
+            else if (vector == PathGrid.LeftVector2Int) {
                 index = (int) Direction.Left;
             }
-            else if (vector == PathGrid.Right) {
+            else if (vector == PathGrid.RightVector2Int) {
                 index = (int) Direction.Right;
             }
 
@@ -134,20 +134,25 @@ namespace UnitMan.Source {
             };
         }
         
+        protected void UpdateMotion(Vector2 newMotion)
+        {
+            motion = newMotion;
+            thisRigidbody.velocity = motion;
+        }
+        
         public static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
-                Direction.Up => PathGrid.Up,
-                Direction.Down => PathGrid.Down,
-                Direction.Left => PathGrid.Left,
-                Direction.Right => PathGrid.Right,
+                Direction.Up => PathGrid.UpVector2Int,
+                Direction.Down => PathGrid.DownVector2Int,
+                Direction.Left => PathGrid.LeftVector2Int,
+                Direction.Right => PathGrid.RightVector2Int,
                 _ => Vector2Int.zero
             };
         }
 
         protected virtual void FixedUpdate() {
-            // CheckPossibleTurns();
             UpdateGridPosition();
-            PathGrid.Instance.CheckPossibleTurns(thisTransform.position, possibleTurns);
+            PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
         }
         
         protected virtual void OnDrawGizmos() {
