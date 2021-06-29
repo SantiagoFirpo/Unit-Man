@@ -47,7 +47,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         Active = _autoStart;
     }
 
-    public Timer(float waitTime = 1, float delay = 0, bool autoStart = false, bool oneTime = true) {
+    public Timer(float waitTime, bool autoStart, bool oneTime, float delay = 0) {
         this.waitTime = waitTime;
         _delay = delay;
         _autoStart = autoStart;
