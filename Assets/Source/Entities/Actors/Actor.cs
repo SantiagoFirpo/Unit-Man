@@ -47,6 +47,7 @@ namespace UnitMan.Source {
         public Animator animator;
         
         public Vector2Int gridPosition;
+        private bool _isWrapping;
 
         public enum Direction
         {
@@ -164,6 +165,30 @@ namespace UnitMan.Source {
         protected virtual void FixedUpdate() {
             UpdateGridPosition();
             PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
+            
+            if (PathGrid.VectorApproximately(thisTransform.position,
+                                            SessionManagerSingle.Instance.rightWrap.position,
+                                            0.1f)
+                && !_isWrapping)
+            {
+                thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
+                _isWrapping = true;
+            }
+            
+            else if (PathGrid.VectorApproximately(thisTransform.position,
+                                                SessionManagerSingle.Instance.leftWrap.position,
+                                                0.1f)
+                     && !_isWrapping)
+            {
+                thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
+                _isWrapping = true;
+            }
+
+            else //if (PathGrid.TaxiCabDistanceVector3(thisTransform.position, leftWrap.position) > 1f
+                //         && PathGrid.TaxiCabDistanceVector3(thisTransform.position, rightWrap.position) > 1f)
+            {
+                _isWrapping = false;
+            }
         }
         
         protected virtual void OnDrawGizmos() {
