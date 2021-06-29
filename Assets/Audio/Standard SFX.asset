@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60cf4c82ef1b4267b78ca2c120b3b6e3, type: 3}
+  m_Name: Standard SFX
+  m_EditorClassIdentifier: 
+  munch: {fileID: 8300000, guid: f9f52ac366d48dc4e8d581395fd35850, type: 3}
+  eatGhost: {fileID: 8300000, guid: 95c1f919440e9a94e88705ae27ee2780, type: 3}
+  death: {fileID: 8300000, guid: 379bffca65f8eb9479bfdca53e46ca02, type: 3}
+  intermission: {fileID: 8300000, guid: b764fb7d6c53d2f49bc43bc48ffdc73f, type: 3}
+  siren: {fileID: 8300000, guid: dc6d2398fc1e83e4eafbc09f32b46ec6, type: 3}
+  powerPellet: {fileID: 8300000, guid: b9a8282970d10f64e8e055e1342dac77, type: 3}
+  retreating: {fileID: 8300000, guid: 93e9751b011108643a175ffac1be2f32, type: 3}
+  introMusic: {fileID: 8300000, guid: bfb55d0c4a076094196db858ce40a61a, type: 3}
