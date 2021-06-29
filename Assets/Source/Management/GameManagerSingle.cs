@@ -20,7 +20,7 @@ namespace UnitMan.Source.Management
 
         public HUDModel hudModel;
 
-        private const int TOTAL_PELLETS = 283;
+        private const int TOTAL_PELLETS = 284;
         
         public GameObject player;
 
