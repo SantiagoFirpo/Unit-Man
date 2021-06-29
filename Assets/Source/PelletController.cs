@@ -16,17 +16,17 @@ namespace UnitMan.Source
             if (!other.CompareTag("Player")) return;
             _gameObject.SetActive(false);
             UpdatePlayerState();
-            ScoreManager.Instance.score += scoreValue;
+            SessionDataModel.Instance.IncrementScore(scoreValue);
             // if (!AudioManager.Instance.IsTrackPlaying(0)) {
-                AudioManager.Instance.PlayClip(AudioManager.AudioEffectType.Munch, 0, false);
+                AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Munch, 0, false);
             // }
             
             
         }
 
         protected virtual void UpdatePlayerState() {
-            GameManager.Instance.pelletsEaten++;
-            GameManager.Instance.CheckIfGameIsWon();
+            GameManagerSingle.Instance.pelletsEaten++;
+            GameManagerSingle.Instance.CheckIfGameIsWon();
         }
     }
 }

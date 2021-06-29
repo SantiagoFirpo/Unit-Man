@@ -12,7 +12,7 @@ namespace UnitMan
         protected override void Awake() {
             base.Awake();
             scoreValue = 50;
-            _playerController = GameManager.Instance.player.GetComponent<PlayerController>();
+            _playerController = GameManagerSingle.Instance.player.GetComponent<PlayerController>();
         }
 
 
