@@ -17,16 +17,23 @@ namespace UnitMan.Source.Utilities.Pathfinding
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
             return _newGrid[-vector.y + 4][vector.x + 11];
+        }
         private void SetGridPosition(int x, int y, bool value) {
             _newGrid[-y + 4][x+11] = value;
         }
 
         private const int Y_SIZE = 26;
         private const int X_SIZE = 23;
-        public static Vector2Int Up = Vector2Int.up;
-        public static Vector2Int Down = Vector2Int.down;
-        public static Vector2Int Left = Vector2Int.left;
-        public static Vector2Int Right = Vector2Int.right;
+        public static Vector2Int UpVector2Int = Vector2Int.up;
+        public static Vector2Int DownVector2Int = Vector2Int.down;
+        public static Vector2Int LeftVector2Int = Vector2Int.left;
+        public static Vector2Int RightVector2Int = Vector2Int.right;
+        
+        public static readonly Vector2 UpVector2 = Vector2.up;
+        public static readonly Vector2 DownVector2 = Vector2.down;
+        public static readonly Vector2 LeftVector2 = Vector2.left;
+        public static readonly Vector2 RightVector2 = Vector2.right;
+        
 
         public Tilemap walkableTilemap;
         public Tilemap wallTilemap;
@@ -90,19 +97,19 @@ namespace UnitMan.Source.Utilities.Pathfinding
             if (isBetweenHorizontal) {
                 bool isRight = offsetX > 0f;
                 if (isRight) {
-                    otherTilePosition = tilePosition + Right;
+                    otherTilePosition = tilePosition + RightVector2Int;
                 }
                 else {
-                    otherTilePosition = tilePosition + Left;
+                    otherTilePosition = tilePosition + LeftVector2Int;
                 }
             }
             else if (isBetweenVertical) {
                 bool isUp = offsetY > 0f;
                 if (isUp) {
-                    otherTilePosition = tilePosition + Up;
+                    otherTilePosition = tilePosition + UpVector2Int;
                 }
                 else {
-                    otherTilePosition = tilePosition + Down;
+                    otherTilePosition = tilePosition + DownVector2Int;
                 }
             }
             
