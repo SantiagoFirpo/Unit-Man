@@ -10,8 +10,9 @@ namespace UnitMan.Source.Entities.Actors {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
         
-        
         //TODO: add scatter state
+        
+        //TODO: add pellet threshold
         
 
         [Header("Physics State")]
@@ -19,21 +20,21 @@ namespace UnitMan.Source.Entities.Actors {
         private Vector2Int OriginDirection => currentDirection * -1;
 
         [Header("Physics Parameters")]
-
-        [SerializeField]
-        protected float standardMoveSpeed;
+        
+        protected const float INKY_BLINKY_PINKY_MOVE_SPEED = 3.5f;
+        protected float standardMoveSpeed = 4.5f;
         private float _slowMoveSpeed;
+        private const float RETREAT_MOVE_SPEED = 10f;
 
-        [Header("Pathfinding State")]
+
+
+        [Header("Map Parameters")]
         
-        private bool _isInIntersection;
-        private bool _pathResolved;
-
-
-        [Header("Pathfinding Parameters")]
         
+        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
         [SerializeField]
-        private Transform initialTargetTransform;
+        private Transform hubMarker;
+        private Vector3 _hubPosition;
 
         [SerializeField]
         private Transform topLeft;
@@ -53,14 +54,45 @@ namespace UnitMan.Source.Entities.Actors {
         private Transform bottomRight;
         private Vector3 _bottomRightMapBound;
 
+        [Header("Pathfinding Parameters")]
 
-        [Header("State Management")] private Timer _initialTargetChaseTime;
-        private Timer _chasePollDelay;
+        [SerializeField]
+        private Transform initialTargetTransform;
+        private Vector2Int _initialTargetPosition;
+        private enum Quadrant
+       {
+           UpRight, UpLeft, DownLeft, DownRight
+       }
+        
+        [Header("Pathfinding State")]
+        
+        private bool _isInIntersection;
+        private bool _pathResolved;
+        
+        private readonly int[] _neighborHeuristics = {
+            DEFAULT_DISTANCE_MAX,
+            DEFAULT_DISTANCE_MAX,
+            DEFAULT_DISTANCE_MAX,
+            DEFAULT_DISTANCE_MAX};
+        
+        protected Vector2Int currentTargetPosition;
+        
+        
+        [Header("State Management")]
+        
+        private Timer _initialTargetChaseTime;
+        private Timer _chasePollTimer;
 
         public enum State {
             Alive, Fleeing, Eaten
         }
+        public State state = State.Alive;
+
+        [Header("State Parameters")]
        
+        protected int pelletThreshold = 0;
+        
+        
         [Header("Dependencies")]
         
         //Other GameObjects/Components
@@ -72,73 +104,29 @@ namespace UnitMan.Source.Entities.Actors {
         
         //Components
         
+        [Header("Animation Parameters")]
+        
         [SerializeField]
         private RuntimeAnimatorController eatenAnimController;
-       
         private RuntimeAnimatorController _standardAnimController;
+        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
         
-
-
-       
-       public State state = State.Alive;
-       
-       private const float RETREAT_MOVE_SPEED = 10f;
-
-       private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
-       
-       private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
-       protected Vector2Int currentTargetPosition;
-
-       protected const float CLYDE_MOVE_SPEED = 3.5f;
-        
-        private readonly int[] _neighborHeuristics = {
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX,
-            DEFAULT_DISTANCE_MAX};
-
-        private enum Quadrant
-       {
-           UpRight, UpLeft, DownLeft, DownRight
-       }
-
-        protected override void Unfreeze()
-        {
-            base.Unfreeze();
-            _chasePollDelay.Start();
-            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
-        }
-
         public override void Initialize() {
            base.Initialize();
             
-           _initialTargetChaseTime = new Timer(8f, true, false);
+           _initialTargetChaseTime = new Timer(8f, true, true);
            
-            GetMapMarkers();
-
             ResolveDependencies();
             
             SubscribeToEvents();
-           
             
             TargetInitialPosition();
+            
             currentMoveSpeed = standardMoveSpeed;
+            _slowMoveSpeed = standardMoveSpeed/2f;
+           
+            _standardAnimController = animator.runtimeAnimatorController;
         }
-
-       private void SubscribeToEvents()
-       {
-           // _retreatTimer.OnEnd += ResetPositionAndState;
-           _initialTargetChaseTime.OnEnd += StartChasePoll;
-           _chasePollDelay.OnEnd += PollChasePosition;
-           PlayerController.OnInvincibleChanged += UpdateState;
-           SessionManagerSingle.OnReset += Reset;
-       }
-
-       private void StartChasePoll()
-       {
-           _chasePollDelay.Start();
-       }
-
        private void ResolveDependencies()
        {
            _inactiveLayer = LayerMask.NameToLayer("Dead");
@@ -146,38 +134,122 @@ namespace UnitMan.Source.Entities.Actors {
 
            _playerTransform = SessionManagerSingle.Instance.player.transform;
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
-           _chasePollDelay = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
+           _chasePollTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
+           ResolveMapMarkers();
        }
-
-       private void GetMapMarkers()
+       private void ResolveMapMarkers()
        {
            _topLeftMapBound = topLeft.position;
            _topRightMapBound = topRight.position;
            bottomLeftMapBound = bottomLeft.position;
            _bottomRightMapBound = bottomRight.position;
-
+           _hubPosition = hubMarker.position;
+           
+           _initialTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
        }
-
+       private void SubscribeToEvents()
+       {
+           // _retreatTimer.OnEnd += ResetPositionAndState;
+           _initialTargetChaseTime.OnEnd += StartChasePollTimer;
+           _chasePollTimer.OnEnd += PollChasePosition;
+           PlayerController.OnInvincibleChanged += UpdateState;
+           SessionManagerSingle.OnReset += Reset;
+           PelletController.OnPelletEaten += PollThreshold;
+       }
        private void TargetInitialPosition()
        {
-           currentTargetPosition = PathGrid.VectorToVector2Int(initialTargetTransform.position);
+           currentTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
        }
-
+       private void PollThreshold()
+       {
+           if (!IsCenteredAt(_hubPosition) || SessionDataModel.Instance.pelletsEaten != pelletThreshold) return;
+           if (!_chasePollTimer.Active) return;
+           StartChasePollTimer();
+       }
+       private void StartChasePollTimer()
+       {
+           _chasePollTimer.Start();
+       }
+       private void StopChasePollTimer()
+       {
+           _chasePollTimer.Stop();
+       }
+       
        protected virtual void PollChasePosition() => currentTargetPosition = playerController.gridPosition;
-
-       private void UpdateState(bool isInvincible) {
+       
+        protected override void Unfreeze()
+        {
+            base.Unfreeze();
+            if (currentTargetPosition
+                != _initialTargetPosition && state == State.Alive)
+            {
+                StartChasePollTimer();
+            }
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
+        }
+        
+       private void UpdateState(bool isInvincible)
+       {
+           if (state == State.Eaten) return;
            SetState(isInvincible ? State.Fleeing : State.Alive);
        }
-
-       private void Start() {
-           
-           _slowMoveSpeed = standardMoveSpeed/2f;
-           
-           _standardAnimController = animator.runtimeAnimatorController;
-       }
+       
        
         private const int DEFAULT_DISTANCE_MAX = 999;
 
+
+        protected override void FixedUpdate() {
+            if (!thisRigidbody.simulated) return;
+           UpdateGridPosition();
+           UpdatePossibleTurns();
+           _possibleTurnsTotal = GetTrueCount(possibleTurns);
+
+           bool isInTileCenter = IsInTileCenter;
+           
+           if (!isInTileCenter && _pathResolved) _pathResolved = false;
+
+           
+           _isInIntersection = _possibleTurnsTotal > 2;
+           
+           if (isInTileCenter && !_pathResolved)
+           {
+               ResolvePath();
+           }
+
+           if (state == State.Eaten && IsCenteredAt(_hubPosition))
+           {
+               SetState(State.Alive);
+           }
+           
+           UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
+        }
+        
+        
+        
+        private void UpdatePossibleTurns()
+        {
+            LevelGridController.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
+        }
+
+        private void ResolvePath()
+        {
+            if (_isInIntersection)
+            {
+                currentDirection = DirectionToVector2Int(
+                    GetBestTurn(gridPosition,
+                        currentTargetPosition,
+                        possibleTurns,
+                        (Direction) VectorToInt(OriginDirection)));
+                _pathResolved = true;
+            }
+            else
+            {
+                FollowPath();
+                _pathResolved = true;
+            }
+        }
+        
+        
         private Direction GetBestTurn(Vector2Int initialPosition, Vector2Int goalPosition, bool[] viableTurns, Direction originDirection)
         {
             Direction bestTurn;
@@ -194,7 +266,7 @@ namespace UnitMan.Source.Entities.Actors {
                                             && (Direction) i != originDirection;
                                             // && DirectionToVector2Int(i) != currentDirection;
                     if (isDirectionValid) {
-                        _neighborHeuristics[i] = PathGrid.TaxiCabDistance(
+                        _neighborHeuristics[i] = LevelGridController.TaxiCabDistance(
                                                                         initialPosition + DirectionToVector2Int(i),
                                                                         goalPosition);
                     }
@@ -212,45 +284,15 @@ namespace UnitMan.Source.Entities.Actors {
            // pathFindThread.Start();
            return bestTurn;
        }
-
-        protected override void FixedUpdate() {
-           // base.FixedUpdate();
-           UpdateGridPosition();
-           PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
-           
-           
-           if (!thisRigidbody.simulated) return;
-           _possibleTurnsTotal = GetTrueCount(possibleTurns);
-
-           bool isInTileCenter = IsInTileCenter;
-           
-           if (!isInTileCenter && _pathResolved) _pathResolved = false;
-
-           _isInIntersection = _possibleTurnsTotal > 2;
-           if (isInTileCenter && !_pathResolved) {
-                if (_isInIntersection) {
-                    currentDirection  = DirectionToVector2Int(
-                                        GetBestTurn(gridPosition,
-                                                    currentTargetPosition,
-                                                    possibleTurns,
-                                                    (Direction) VectorToInt(OriginDirection)));
-                    _pathResolved = true;
-                    
-                }
-                else {
-                    FollowPath();
-                    _pathResolved = true;
-                }
-                
-           }
-
-           if (state == State.Eaten && PathGrid.VectorApproximately(StartPosition, gridPosition, 0.1f))
-           {
-               SetState(State.Alive);
-           }
-           
-           UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
+        
+        private bool IsCenteredAt(Vector3 position)
+        {
+            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
         }
+        
+
+        
+
         private void SetDirection(int directionNumber) => currentDirection = DirectionToVector2Int((Direction) directionNumber);
           private void FollowPath()
           {
@@ -265,7 +307,10 @@ namespace UnitMan.Source.Entities.Actors {
       
       
           private static readonly Func<bool,bool> IsElementTrue = element => element;
-          [SerializeField] private Color debugColor;
+          [SerializeField]
+          private Color debugColor;
+          
+
 
 
           private static int GetTrueCount(IEnumerable<bool> boolArray) => boolArray.Count(IsElementTrue);
@@ -299,7 +344,7 @@ namespace UnitMan.Source.Entities.Actors {
                Quadrant.DownRight => _topLeftMapBound,
                _ => bottomLeftMapBound
            };
-                currentTargetPosition = PathGrid.VectorToVector2Int(finalPosition);
+                currentTargetPosition = LevelGridController.VectorToVector2Int(finalPosition);
        }
 
        private static Quadrant GetQuadrant(Vector2 position, Vector2 centralPosition) {
@@ -323,7 +368,7 @@ namespace UnitMan.Source.Entities.Actors {
                case State.Alive: {
                    thisGameObject.layer = _defaultLayer;
                    currentMoveSpeed = standardMoveSpeed;
-                   _chasePollDelay.Start();
+                   StartChasePollTimer();
                    animator.SetBool(FleeingAnimator, false);
                    if (animator.runtimeAnimatorController != _standardAnimController)
                    {
@@ -339,15 +384,15 @@ namespace UnitMan.Source.Entities.Actors {
                    thisGameObject.layer = _defaultLayer;
                    currentMoveSpeed = _slowMoveSpeed;
                    SetTargetAwayFromPlayer();
-                   _chasePollDelay.Stop();
+                   StopChasePollTimer();
                    animator.SetBool(FleeingAnimator, true);
                    break;
                }
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
                    currentMoveSpeed = RETREAT_MOVE_SPEED;
-                   currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
-                   _chasePollDelay.Stop();
+                   currentTargetPosition = LevelGridController.VectorToVector2Int(_hubPosition);
+                   StopChasePollTimer();
                    animator.runtimeAnimatorController = eatenAnimController;
 
                    break;
@@ -371,7 +416,7 @@ namespace UnitMan.Source.Entities.Actors {
         protected void OnDrawGizmos()
         {
             Gizmos.color = debugColor;
-            Gizmos.DrawSphere(PathGrid.Vector2ToVector3(currentTargetPosition), 0.3f);
+            Gizmos.DrawSphere(LevelGridController.Vector2ToVector3(currentTargetPosition), 0.3f);
         }
 
         protected override void Reset()
@@ -383,7 +428,7 @@ namespace UnitMan.Source.Entities.Actors {
         protected override void Freeze()
         {
             base.Freeze();
-            _chasePollDelay.Stop();
+            StopChasePollTimer();
             if (state == State.Eaten) animator.enabled = true;
         }
     }
