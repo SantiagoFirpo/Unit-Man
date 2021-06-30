@@ -10,11 +10,9 @@ namespace UnitMan.Source.Entities.Actors {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
         
-        //TODO: Blinky doesn't target initialTarget at start
         
         //TODO: add scatter state
         
-        //TODO: wrong music playing
 
         [Header("Physics State")]
         private int _possibleTurnsTotal;
@@ -54,10 +52,9 @@ namespace UnitMan.Source.Entities.Actors {
         [SerializeField]
         private Transform bottomRight;
         private Vector3 _bottomRightMapBound;
-        
-        
-        [Header("State Management")]
 
+
+        [Header("State Management")] private Timer _initialTargetChaseTime;
         private Timer _chasePollDelay;
 
         public enum State {
@@ -80,7 +77,6 @@ namespace UnitMan.Source.Entities.Actors {
        
         private RuntimeAnimatorController _standardAnimController;
         
-       // private Vector2Int NextTile => gridPosition + currentDirection;
 
 
        
@@ -95,7 +91,7 @@ namespace UnitMan.Source.Entities.Actors {
 
        protected const float CLYDE_MOVE_SPEED = 3.5f;
         
-        private readonly int[] _neighborHeuristics = new int[] {
+        private readonly int[] _neighborHeuristics = {
             DEFAULT_DISTANCE_MAX,
             DEFAULT_DISTANCE_MAX,
             DEFAULT_DISTANCE_MAX,
@@ -109,12 +105,15 @@ namespace UnitMan.Source.Entities.Actors {
         protected override void Unfreeze()
         {
             base.Unfreeze();
+            _chasePollDelay.Start();
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
         }
 
         public override void Initialize() {
            base.Initialize();
-
+            
+           _initialTargetChaseTime = new Timer(8f, true, false);
+           
             GetMapMarkers();
 
             ResolveDependencies();
@@ -129,9 +128,15 @@ namespace UnitMan.Source.Entities.Actors {
        private void SubscribeToEvents()
        {
            // _retreatTimer.OnEnd += ResetPositionAndState;
+           _initialTargetChaseTime.OnEnd += StartChasePoll;
            _chasePollDelay.OnEnd += PollChasePosition;
            PlayerController.OnInvincibleChanged += UpdateState;
            SessionManagerSingle.OnReset += Reset;
+       }
+
+       private void StartChasePoll()
+       {
+           _chasePollDelay.Start();
        }
 
        private void ResolveDependencies()
@@ -141,7 +146,7 @@ namespace UnitMan.Source.Entities.Actors {
 
            _playerTransform = SessionManagerSingle.Instance.player.transform;
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
-           _chasePollDelay = new Timer(PlayerController.PLAYER_STEP_TIME, true, false); //old: chasePollSeconds as waitTime
+           _chasePollDelay = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
        }
 
        private void GetMapMarkers()
@@ -165,7 +170,6 @@ namespace UnitMan.Source.Entities.Actors {
        }
 
        private void Start() {
-           _chasePollDelay.Start();
            
            _slowMoveSpeed = standardMoveSpeed/2f;
            
@@ -372,8 +376,15 @@ namespace UnitMan.Source.Entities.Actors {
 
         protected override void Reset()
         {
-            state = State.Alive;
+            SetState(State.Alive);
             TargetInitialPosition();
+        }
+
+        protected override void Freeze()
+        {
+            base.Freeze();
+            _chasePollDelay.Stop();
+            if (state == State.Eaten) animator.enabled = true;
         }
     }
 }
