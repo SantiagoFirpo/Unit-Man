@@ -8,7 +8,6 @@ namespace UnitMan.Source.Management
 {
     public class SessionManagerSingle : MonoBehaviour
     {
-        //TODO: remake level reset
 
         
         private const float FREEZE_SECONDS = 1f;
@@ -28,8 +27,6 @@ namespace UnitMan.Source.Management
         private const int TOTAL_PELLETS = 284;
         
         public GameObject player;
-
-        public int pelletsEaten;
 
         [SerializeField]
         private GameObject readyText;
@@ -55,12 +52,13 @@ namespace UnitMan.Source.Management
         private void StartLevel() {
             Debug.Log("StartingLevel!");
             OnUnfreeze?.Invoke();
+            OnReset?.Invoke();
             readyText.SetActive(false);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
         }
 
         public void CheckIfGameIsWon() {
-            if (pelletsEaten < TOTAL_PELLETS) return;
+            if (SessionDataModel.Instance.pelletsEaten < TOTAL_PELLETS) return;
             Debug.Log("You won!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
             foreach (Actor actor in FindObjectsOfType<Actor>()) {

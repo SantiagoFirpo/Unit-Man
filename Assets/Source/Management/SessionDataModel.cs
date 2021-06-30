@@ -46,6 +46,7 @@ namespace UnitMan
         }
 
         // Start is called before the first frame update
+        public int pelletsEaten;
         public int lives = 3;
         private int _score;
 
