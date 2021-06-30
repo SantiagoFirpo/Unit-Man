@@ -11,7 +11,6 @@ namespace UnitMan.Source.Entities.Actors
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerController : Actor
     {
-        //TODO: screen wrap
         //TODO: death animation
 
         private const float MOVE_SPEED = 5f;
