@@ -8,7 +8,8 @@ namespace UnitMan.Source.Entities.Actors
         public override void Initialize() {
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
-            currentTargetPosition = PathGrid.VectorToVector2Int(StartPosition);
+            pelletThreshold = 60;
+            currentTargetPosition = LevelGridController.VectorToVector2Int(StartPosition);
         }
         
         protected override void PollChasePosition()

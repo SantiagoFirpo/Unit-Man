@@ -11,7 +11,8 @@ namespace UnitMan.Source.Entities.Actors
         public override void Initialize() {
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
-            
+            pelletThreshold = 30;
+
         }
         
         protected override void PollChasePosition()
