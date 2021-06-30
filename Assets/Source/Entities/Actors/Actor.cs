@@ -47,7 +47,7 @@ namespace UnitMan.Source.Entities.Actors {
             Initialize();
         }
 
-    protected abstract void Reset();
+    protected abstract void ResetActor();
 
     protected virtual void Freeze()
     {
