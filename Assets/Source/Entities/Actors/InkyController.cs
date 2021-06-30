@@ -9,7 +9,7 @@ namespace UnitMan.Source.Entities.Actors
         [SerializeField]
         private GhostController blinkyController;
         public override void Initialize() {
-            standardMoveSpeed = CLYDE_MOVE_SPEED;
+            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
             
         }

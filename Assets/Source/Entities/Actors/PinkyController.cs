@@ -6,7 +6,7 @@ namespace UnitMan.Source
     {
         public override void Initialize()
         {
-            standardMoveSpeed = CLYDE_MOVE_SPEED;
+            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
         }
 
