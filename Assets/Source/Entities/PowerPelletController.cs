@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnitMan.Source;
 using UnitMan.Source.Entities.Actors;
 using UnitMan.Source.Management;
-using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.Entities
 {
     public class PowerPelletController : PelletController
     {
@@ -17,7 +13,7 @@ namespace UnitMan
         }
 
 
-        protected override void UpdatePlayerState() { 
+        protected override void UpdateSessionState() { 
             _playerController.SetInvincible();
         }
     }
