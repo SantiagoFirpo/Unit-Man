@@ -12782,7 +12782,7 @@ GameObject:
   m_Layer: 0
   m_Name: Blinky Initial Target
   m_TagString: Untagged
-  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
@@ -30853,6 +30853,36 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68b2aee70efe8e94094ac5dc132cfc1f, type: 3}
+--- !u!1 &1204526361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1204526362}
+  m_Layer: 0
+  m_Name: HubMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1204526362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204526361}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 26
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1206533628
 Transform:
   m_ObjectHideFlags: 0
@@ -32558,6 +32588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b1da22203b1fc4a87bf68f63fc8195, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pelletsEaten: 0
   lives: 3
   _livesLabel: {fileID: 164071301}
   _scoreLabel: {fileID: 0}
@@ -47646,7 +47677,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 385068253680773103, guid: f1fbc25b891c4e04ea36dd6fd86c7828, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 58.496365
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 385068253680773103, guid: f1fbc25b891c4e04ea36dd6fd86c7828, type: 3}
       propertyPath: m_LocalRotation.w
@@ -47686,7 +47717,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 412111033}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.672241, y: 0.654192, z: 58.496365}
+  m_LocalPosition: {x: 5.672241, y: 0.654192, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 1964290591}
@@ -49570,7 +49601,7 @@ GameObject:
   m_Layer: 0
   m_Name: Initial Target
   m_TagString: Untagged
-  m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
@@ -60370,6 +60401,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 256339145}
     - target: {fileID: 4894149964428276191, guid: 7c31a040e1c90ae4799e693611842c88, type: 3}
+      propertyPath: hubMarker
+      value: 
+      objectReference: {fileID: 1204526362}
+    - target: {fileID: 4894149964428276191, guid: 7c31a040e1c90ae4799e693611842c88, type: 3}
       propertyPath: bottomLeft
       value: 
       objectReference: {fileID: 708391101}
@@ -60540,6 +60575,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 256339145}
     - target: {fileID: 5740050409853212792, guid: bac126e64df22ba47a4b2c7a5cbe2c3b, type: 3}
+      propertyPath: hubMarker
+      value: 
+      objectReference: {fileID: 1204526362}
+    - target: {fileID: 5740050409853212792, guid: bac126e64df22ba47a4b2c7a5cbe2c3b, type: 3}
       propertyPath: bottomLeft
       value: 
       objectReference: {fileID: 708391101}
@@ -60682,6 +60721,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 256339145}
     - target: {fileID: 5977149411128850938, guid: 3c6b18dde2e7988408ee373f75488c9d, type: 3}
+      propertyPath: hubMarker
+      value: 
+      objectReference: {fileID: 1204526362}
+    - target: {fileID: 5977149411128850938, guid: 3c6b18dde2e7988408ee373f75488c9d, type: 3}
       propertyPath: bottomLeft
       value: 
       objectReference: {fileID: 708391101}
@@ -60758,6 +60801,10 @@ PrefabInstance:
       propertyPath: topRight
       value: 
       objectReference: {fileID: 256339145}
+    - target: {fileID: 7384678430228816732, guid: 77f8af6b8866e44468f830dc4c630815, type: 3}
+      propertyPath: hubMarker
+      value: 
+      objectReference: {fileID: 1204526362}
     - target: {fileID: 7384678430228816732, guid: 77f8af6b8866e44468f830dc4c630815, type: 3}
       propertyPath: bottomLeft
       value: 
