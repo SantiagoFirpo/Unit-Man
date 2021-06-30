@@ -27,7 +27,7 @@ namespace UnitMan.Source.Entities.Actors
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
-        protected override void Reset()
+        protected override void ResetActor()
         { }
 
         public override void Initialize()

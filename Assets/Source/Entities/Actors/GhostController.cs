@@ -59,6 +59,11 @@ namespace UnitMan.Source.Entities.Actors {
         [SerializeField]
         private Transform initialTargetTransform;
         private Vector2Int _initialTargetPosition;
+        
+        [SerializeField]
+        private Transform scatterTarget;
+        private Vector2Int _scatterTargetPosition;
+        
         private enum Quadrant
        {
            UpRight, UpLeft, DownLeft, DownRight
@@ -82,15 +87,22 @@ namespace UnitMan.Source.Entities.Actors {
         
         private Timer _initialTargetChaseTime;
         private Timer _chasePollTimer;
+        
+        private Timer _chaseDurationTimer;
+        private Timer _scatterDurationTimer;
 
         public enum State {
-            Alive, Fleeing, Eaten
+            Chase, Fleeing, Eaten,
+            Scatter
         }
-        public State state = State.Alive;
+        public State state = State.Scatter;
+        public State previousState = State.Chase;
 
         [Header("State Parameters")]
        
         protected int pelletThreshold = 0;
+        private const float CHASE_DURATION_SECONDS = 20f; //original: 20f
+        private const float SCATTER_DURATION_SECONDS = 7f;
         
         
         [Header("Dependencies")]
@@ -111,12 +123,18 @@ namespace UnitMan.Source.Entities.Actors {
         private RuntimeAnimatorController _standardAnimController;
         private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
         
+        [Header("Debug Parameters")]
+        [SerializeField]
+        private Color debugColor;
+        
+        [Header("Utilities")]
+        private static readonly Func<bool,bool> IsElementTrue = element => element;
+        
+
         public override void Initialize() {
            base.Initialize();
-            
-           _initialTargetChaseTime = new Timer(8f, true, true);
-           
-            ResolveDependencies();
+
+           ResolveDependencies();
             
             SubscribeToEvents();
             
@@ -135,6 +153,9 @@ namespace UnitMan.Source.Entities.Actors {
            _playerTransform = SessionManagerSingle.Instance.player.transform;
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
            _chasePollTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
+           _initialTargetChaseTime = new Timer(8f, true, true);
+           _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
+           _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
            ResolveMapMarkers();
        }
        private void ResolveMapMarkers()
@@ -144,6 +165,7 @@ namespace UnitMan.Source.Entities.Actors {
            bottomLeftMapBound = bottomLeft.position;
            _bottomRightMapBound = bottomRight.position;
            _hubPosition = hubMarker.position;
+           _scatterTargetPosition = LevelGridController.VectorToVector2Int(scatterTarget.position);
            
            _initialTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
        }
@@ -153,9 +175,25 @@ namespace UnitMan.Source.Entities.Actors {
            _initialTargetChaseTime.OnEnd += StartChasePollTimer;
            _chasePollTimer.OnEnd += PollChasePosition;
            PlayerController.OnInvincibleChanged += UpdateState;
-           SessionManagerSingle.OnReset += Reset;
+           SessionManagerSingle.OnReset += ResetActor;
            PelletController.OnPelletEaten += PollThreshold;
+
+           _chaseDurationTimer.OnEnd += SetStateToScatter;
+           _scatterDurationTimer.OnEnd += SetStateToChase;
        }
+
+       private void SetStateToChase()
+       {
+           if (SessionManagerSingle.Instance.playerController.isInvincible && !IsCenteredAt(_hubPosition)) return;
+           SetState(State.Chase);
+       }
+
+       private void SetStateToScatter()
+       {
+           if (state != State.Chase) return;
+           SetState(State.Scatter);
+       }
+
        private void TargetInitialPosition()
        {
            currentTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
@@ -163,7 +201,8 @@ namespace UnitMan.Source.Entities.Actors {
        private void PollThreshold()
        {
            if (!IsCenteredAt(_hubPosition) || SessionDataModel.Instance.pelletsEaten != pelletThreshold) return;
-           if (!_chasePollTimer.Active) return;
+           if (_chasePollTimer.Active) return;
+           Debug.Log("Starting Chase Poll Timer!");
            StartChasePollTimer();
        }
        private void StartChasePollTimer()
@@ -181,7 +220,7 @@ namespace UnitMan.Source.Entities.Actors {
         {
             base.Unfreeze();
             if (currentTargetPosition
-                != _initialTargetPosition && state == State.Alive)
+                != _initialTargetPosition && state == State.Chase)
             {
                 StartChasePollTimer();
             }
@@ -191,7 +230,7 @@ namespace UnitMan.Source.Entities.Actors {
        private void UpdateState(bool isInvincible)
        {
            if (state == State.Eaten) return;
-           SetState(isInvincible ? State.Fleeing : State.Alive);
+           SetState(isInvincible ? State.Fleeing : State.Chase);
        }
        
        
@@ -216,16 +255,20 @@ namespace UnitMan.Source.Entities.Actors {
                ResolvePath();
            }
 
-           if (state == State.Eaten && IsCenteredAt(_hubPosition))
-           {
-               SetState(State.Alive);
-           }
+           CheckIfCameToHub();
            
            UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
         }
-        
-        
-        
+
+        private void CheckIfCameToHub()
+        {
+            if (state == State.Eaten && IsCenteredAt(_hubPosition))
+            {
+                SetStateToChase();
+            }
+        }
+
+
         private void UpdatePossibleTurns()
         {
             LevelGridController.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
@@ -250,7 +293,10 @@ namespace UnitMan.Source.Entities.Actors {
         }
         
         
-        private Direction GetBestTurn(Vector2Int initialPosition, Vector2Int goalPosition, bool[] viableTurns, Direction originDirection)
+        private Direction GetBestTurn(Vector2Int initialPosition,
+                                    Vector2Int goalPosition,
+                                    bool[] viableTurns,
+                                    Direction originDirection)
         {
             Direction bestTurn;
             for (int i = 0; i < 4; i++)
@@ -304,13 +350,8 @@ namespace UnitMan.Source.Entities.Actors {
                   return;
               }
           }
-      
-      
-          private static readonly Func<bool,bool> IsElementTrue = element => element;
-          [SerializeField]
-          private Color debugColor;
           
-
+          
 
 
           private static int GetTrueCount(IEnumerable<bool> boolArray) => boolArray.Count(IsElementTrue);
@@ -322,13 +363,18 @@ namespace UnitMan.Source.Entities.Actors {
                    SetState(State.Eaten);
                    animator.runtimeAnimatorController = eatenAnimController;
                    AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
+                   
+                   SessionManagerSingle.Instance. freezeTimer.Start();
                    SessionManagerSingle.Instance.Freeze();
                    
                    break;
-               case State.Alive:
+               case State.Chase:
                    SessionManagerSingle.Instance.Die();
                    break;
                case State.Eaten:
+                   break;
+               case State.Scatter:
+                   SessionManagerSingle.Instance.Die();
                    break;
                default:
                    return;
@@ -357,18 +403,27 @@ namespace UnitMan.Source.Entities.Actors {
            return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
        }
 
-       private void SetState(State targetState) {
+       private void SetState(State targetState)
+       {
+           if (state == targetState) return;
+           previousState = state;
            state = targetState;
+           // OnStateExit();
            OnStateEntered();
+       }
+
+       private void OnStateExit()
+       {
+           throw new NotImplementedException();
        }
 
        private void OnStateEntered() {
            switch (state)
            {
-               case State.Alive: {
-                   thisGameObject.layer = _defaultLayer;
-                   currentMoveSpeed = standardMoveSpeed;
+               case State.Chase: {
+                   EnableCollisionsWithPlayer();
                    StartChasePollTimer();
+                   StartChaseDuration();
                    animator.SetBool(FleeingAnimator, false);
                    if (animator.runtimeAnimatorController != _standardAnimController)
                    {
@@ -397,13 +452,29 @@ namespace UnitMan.Source.Entities.Actors {
 
                    break;
                }
+               case State.Scatter:
+                   _scatterDurationTimer.Start();
+                   _chasePollTimer.Stop();
+                   currentTargetPosition = _scatterTargetPosition;
+                   break;
                default: {
                    return;
                }
            }
        }
 
-        private static int FindSmallestNumberIndex(int[] array) {
+       private void StartChaseDuration()
+       {
+           _chaseDurationTimer.Start();
+       }
+
+       private void EnableCollisionsWithPlayer()
+       {
+           thisGameObject.layer = _defaultLayer;
+           currentMoveSpeed = standardMoveSpeed;
+       }
+
+       private static int FindSmallestNumberIndex(int[] array) {
             int currentSmallest = array[0];
             for (int i = 1; i < array.Length; i++) {
                 if (currentSmallest > array[i])
@@ -419,9 +490,9 @@ namespace UnitMan.Source.Entities.Actors {
             Gizmos.DrawSphere(LevelGridController.Vector2ToVector3(currentTargetPosition), 0.3f);
         }
 
-        protected override void Reset()
+        protected override void ResetActor()
         {
-            SetState(State.Alive);
+            SetStateToChase();
             TargetInitialPosition();
         }
 

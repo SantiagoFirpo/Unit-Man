@@ -29,7 +29,7 @@ namespace UnitMan.Source.Entities
 
         protected virtual void UpdateSessionState() {
             SessionDataModel.Instance.pelletsEaten++;
-            SessionManagerSingle.Instance.CheckIfGameIsWon();
+            SessionManagerSingle.CheckIfGameIsWon();
             OnPelletEaten?.Invoke();
         }
     }

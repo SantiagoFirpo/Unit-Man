@@ -11,10 +11,11 @@ namespace UnitMan.Source.Management
 
         
         private const float FREEZE_SECONDS = 1f;
-        private Timer _freezeTimer;
+        public Timer freezeTimer;
         public static SessionManagerSingle Instance { get; private set; }
         private const float STARTUP_TIME_SECONDS = 4f;
         private Timer _startupTimer;
+        private readonly Timer _deathAnimationTimer = new Timer(1.488f, false, true);
         
         [HideInInspector]
         public PlayerController playerController;
@@ -24,40 +25,57 @@ namespace UnitMan.Source.Management
         
         public static event Action OnReset;
 
-        private const int TOTAL_PELLETS = 284;
+        private const int TOTAL_PELLETS = 283;
         
         public GameObject player;
 
         [SerializeField]
         private GameObject readyText;
 
+        private static readonly int OnDeath = Animator.StringToHash("OnDeath");
+        private bool frozen = true;
+
+
         // Start is called before the first frame update
         private void Awake()
         {
             _startupTimer = new Timer(STARTUP_TIME_SECONDS, true, true);
-            _freezeTimer = new Timer(FREEZE_SECONDS, false, true);
+            freezeTimer = new Timer(FREEZE_SECONDS, false, true);
+            
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
             playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
-            _freezeTimer.OnEnd += UnpauseFreeze;
+            freezeTimer.OnEnd += Unfreeze;;
+            _deathAnimationTimer.OnEnd += DeathAnimationTimerOnOnEnd;
+        }
+
+        private void DeathAnimationTimerOnOnEnd()
+        {
+            SessionDataModel.Instance.LoseLife();
+            if (SessionDataModel.Instance.lives < 0) {
+                GameOver();
+            }
+            else {
+                ResetSession();
+            }
         }
 
         private void Start()
         {
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
-            OnFreeze?.Invoke();
+            Freeze();
         }
 
         private void StartLevel() {
             Debug.Log("StartingLevel!");
-            OnUnfreeze?.Invoke();
+            Unfreeze();
             OnReset?.Invoke();
             readyText.SetActive(false);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
         }
 
-        public void CheckIfGameIsWon() {
+        public static void CheckIfGameIsWon() {
             if (SessionDataModel.Instance.pelletsEaten < TOTAL_PELLETS) return;
             Debug.Log("You won!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
@@ -68,27 +86,30 @@ namespace UnitMan.Source.Management
 
         public void Die() {
             Debug.Log("Died!");
-            SessionDataModel.Instance.LoseLife();
-            if (SessionDataModel.Instance.lives < 0) {
-                GameOver();
-            }
-            else {
-                Reset();
-            }
+            playerController.animator.SetTrigger(OnDeath);
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Death, 1, false);
+            Freeze();
+            playerController.animator.enabled = true;
+            _deathAnimationTimer.Start();
         }
         
         
-        public void Freeze() {
+        public void Freeze()
+        {
+            if (frozen) return;
             OnFreeze?.Invoke();
-            _freezeTimer.Start();
+            frozen = true;
         }
-
-        private void UnpauseFreeze() {
+        
+        public void Unfreeze()
+        {
+            if (!frozen) return;
             OnUnfreeze?.Invoke();
+            frozen = false;
         }
-        private void Reset() {
+        private void ResetSession() {
             OnReset?.Invoke();
-            OnFreeze?.Invoke();
+            Freeze();
             _startupTimer.Start();
             readyText.SetActive(true);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
