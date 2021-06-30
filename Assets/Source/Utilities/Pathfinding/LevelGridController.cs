@@ -7,7 +7,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 {
     //TODO: refactor/organize this class
     [RequireComponent(typeof(Tilemap))]
-    public class PathGrid : MonoBehaviour
+    public class LevelGridController : MonoBehaviour
     {
         public bool GetGridPosition(int x, int y) {
             // Debug.Log($"{x}, {y}");
@@ -49,7 +49,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         };
 
 
-        public static PathGrid Instance { get; private set; }
+        public static LevelGridController Instance { get; private set; }
         // Start is called before the first frame update
 
         private void Awake() {

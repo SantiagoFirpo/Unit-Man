@@ -53,7 +53,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
             foreach (PathNode neighbor in neighborNodes) {
                 if (neighbor == null || neighbor.searched) continue;
                 int tentativeCost = currentNode.costFromStart +
-                                    PathGrid.TaxiCabDistance(neighbor.position, currentNode.position);
+                                    LevelGridController.TaxiCabDistance(neighbor.position, currentNode.position);
                 if (tentativeCost >= neighbor.costFromStart) continue;
                 neighbor.previousNode = currentNode;
                 neighbor.costFromStart = tentativeCost;

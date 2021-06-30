@@ -22,14 +22,14 @@ namespace UnitMan.Source.Utilities.Pathfinding
             this.position = position;
             _startPosition = startPosition;
             _endPosition = endPosition;
-            distanceToEndHeuristic = PathGrid.TaxiCabDistance(this.position, _endPosition);
+            distanceToEndHeuristic = LevelGridController.TaxiCabDistance(this.position, _endPosition);
         }
 
         public void Reconstruct(Vector2Int position, Vector2Int startPosition, Vector2Int endPosition) {
             this.position = position;
             _startPosition = startPosition;
             _endPosition = endPosition;
-            distanceToEndHeuristic = PathGrid.TaxiCabDistance(this.position, _endPosition);
+            distanceToEndHeuristic = LevelGridController.TaxiCabDistance(this.position, _endPosition);
         }
 
         public Vector2Int[] GetNeighborPositions() {
@@ -55,7 +55,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
                 for (int neighborY = -1; neighborY <= 1; neighborY++) {
                     Vector2Int localNeighborPosition = new Vector2Int(neighborX, neighborY);
                     Vector2Int globalNeighborPosition = position + localNeighborPosition;
-                    bool isPositionValid = PathGrid.Instance.GetGridPosition(globalNeighborPosition);
+                    bool isPositionValid = LevelGridController.Instance.GetGridPosition(globalNeighborPosition);
                     bool isCardinal = Mathf.Abs(neighborX) != Mathf.Abs(neighborY);
                     if (!isCardinal || !isPositionValid) continue;
                     neighbors[i] = new PathNode(globalNeighborPosition, _startPosition, _endPosition);

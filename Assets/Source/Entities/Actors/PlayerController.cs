@@ -37,7 +37,7 @@ namespace UnitMan.Source.Entities.Actors
             
             SubscribeForEvents();
 
-            currentDirection = PathGrid.rightVector2Int;
+            currentDirection = LevelGridController.rightVector2Int;
             currentMoveSpeed = MOVE_SPEED;
         }
 
@@ -53,7 +53,7 @@ namespace UnitMan.Source.Entities.Actors
         {
             // if (!thisRigidbody.simulated) return;
             base.Update();
-            animator.enabled = thisRigidbody.velocity != PathGrid.zero && !_frozen;
+            animator.enabled = thisRigidbody.velocity != LevelGridController.zero && !_frozen;
             if (isInvincible)
             {
                 SessionDataModel.Instance.UpdateInvincibleTime(_invincibleTimer.currentTime);
