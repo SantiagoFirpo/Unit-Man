@@ -14,7 +14,7 @@ namespace UnitMan.Source.Entities.Actors {
 
         protected Rigidbody2D thisRigidbody;
 
-        private Transform _thisTransform;
+        protected Transform thisTransform;
 
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
@@ -28,7 +28,7 @@ namespace UnitMan.Source.Entities.Actors {
         public Vector2Int currentDirection;
         protected float currentMoveSpeed;
 
-        protected bool IsInTileCenter => PathGrid.VectorApproximately(_thisTransform.position, gridPosition, 0.1f);
+        protected bool IsInTileCenter => LevelGridController.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
@@ -64,11 +64,11 @@ namespace UnitMan.Source.Entities.Actors {
     public virtual void Initialize() {
             thisRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
-            _thisTransform = transform;
+            thisTransform = transform;
             thisGameObject = gameObject;
             
             SubscribeForEvents();
-            StartPosition = _thisTransform.position;
+            StartPosition = thisTransform.position;
         }
 
     private void SubscribeForEvents()
@@ -97,25 +97,25 @@ namespace UnitMan.Source.Entities.Actors {
         }
 
         private void ResetPosition() {
-            _thisTransform.position = StartPosition;
+            thisTransform.position = StartPosition;
         }
 
         protected void UpdateGridPosition() {
-           gridPosition = Vector2Int.RoundToInt(_thisTransform.position);
+           gridPosition = Vector2Int.RoundToInt(thisTransform.position);
        }
 
         protected static int VectorToInt(Vector2Int vector) {
             int index = -1;
-            if (vector == PathGrid.upVector2Int) {
+            if (vector == LevelGridController.upVector2Int) {
                 index = (int) Direction.Up;
             }
-            else if (vector == PathGrid.downVector2Int) {
+            else if (vector == LevelGridController.downVector2Int) {
                 index = (int) Direction.Down;
             }
-            else if (vector == PathGrid.leftVector2Int) {
+            else if (vector == LevelGridController.leftVector2Int) {
                 index = (int) Direction.Left;
             }
-            else if (vector == PathGrid.rightVector2Int) {
+            else if (vector == LevelGridController.rightVector2Int) {
                 index = (int) Direction.Right;
             }
 
@@ -148,33 +148,33 @@ namespace UnitMan.Source.Entities.Actors {
 
         protected static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
-                Direction.Up => PathGrid.upVector2Int,
-                Direction.Down => PathGrid.downVector2Int,
-                Direction.Left => PathGrid.leftVector2Int,
-                Direction.Right => PathGrid.rightVector2Int,
+                Direction.Up => LevelGridController.upVector2Int,
+                Direction.Down => LevelGridController.downVector2Int,
+                Direction.Left => LevelGridController.leftVector2Int,
+                Direction.Right => LevelGridController.rightVector2Int,
                 _ => Vector2Int.zero
             };
         }
 
         protected virtual void FixedUpdate() {
             UpdateGridPosition();
-            PathGrid.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
+            LevelGridController.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
             
-            if (PathGrid.VectorApproximately(_thisTransform.position,
+            if (LevelGridController.VectorApproximately(thisTransform.position,
                                             SessionManagerSingle.Instance.rightWrap.position,
                                             0.1f)
                 && !_isWrapping)
             {
-                _thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
+                thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
                 _isWrapping = true;
             }
             
-            else if (PathGrid.VectorApproximately(_thisTransform.position,
+            else if (LevelGridController.VectorApproximately(thisTransform.position,
                                                 SessionManagerSingle.Instance.leftWrap.position,
                                                 0.1f)
                      && !_isWrapping)
             {
-                _thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
+                thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
                 _isWrapping = true;
             }
 
