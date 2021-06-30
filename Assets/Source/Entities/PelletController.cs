@@ -1,12 +1,15 @@
+using System;
 using UnitMan.Source.Management;
 using UnityEngine;
 
-namespace UnitMan.Source
+namespace UnitMan.Source.Entities
 {
     public class PelletController : MonoBehaviour
     {
         private GameObject _gameObject;
         protected int scoreValue = 10;
+
+        public static event Action OnPelletEaten;
 
         protected virtual void Awake() {
             _gameObject = gameObject;
@@ -15,7 +18,7 @@ namespace UnitMan.Source
         private void OnTriggerEnter2D(Collider2D other) {
             if (!other.CompareTag("Player")) return;
             _gameObject.SetActive(false);
-            UpdatePlayerState();
+            UpdateSessionState();
             SessionDataModel.Instance.IncrementScore(scoreValue);
             // if (!AudioManager.Instance.IsTrackPlaying(0)) {
                 AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Munch, 0, false);
@@ -24,9 +27,10 @@ namespace UnitMan.Source
             
         }
 
-        protected virtual void UpdatePlayerState() {
-            SessionManagerSingle.Instance.pelletsEaten++;
+        protected virtual void UpdateSessionState() {
+            SessionDataModel.Instance.pelletsEaten++;
             SessionManagerSingle.Instance.CheckIfGameIsWon();
+            OnPelletEaten?.Invoke();
         }
     }
 }
