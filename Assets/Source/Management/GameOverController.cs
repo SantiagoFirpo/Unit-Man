@@ -2,7 +2,7 @@ using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnitMan
+namespace UnitMan.Source.Management
 {
     public class GameOverController : MonoBehaviour
     {

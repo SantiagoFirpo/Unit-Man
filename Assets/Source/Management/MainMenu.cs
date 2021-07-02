@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnitMan.Source;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace UnitMan
+namespace UnitMan.Source.Management
 {
     public class MainMenu : MonoBehaviour
     {
