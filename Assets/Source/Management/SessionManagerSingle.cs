@@ -13,9 +13,9 @@ namespace UnitMan.Source.Management
         private const float FREEZE_SECONDS = 1f;
         public Timer freezeTimer;
         public static SessionManagerSingle Instance { get; private set; }
-        private const float STARTUP_TIME_SECONDS = 4f;
+        private const float STARTUP_TIME_SECONDS = 4.5f;
         private Timer _startupTimer;
-        private readonly Timer _deathAnimationTimer = new Timer(1.488f, false, true);
+        private readonly Timer _deathAnimationTimer = new Timer(1.5f, false, true);
         
         [HideInInspector]
         public PlayerController playerController;
@@ -33,7 +33,7 @@ namespace UnitMan.Source.Management
         private GameObject readyText;
 
         private static readonly int OnDeath = Animator.StringToHash("OnDeath");
-        private bool frozen = true;
+        private bool _frozen = true;
 
 
         // Start is called before the first frame update
@@ -96,16 +96,16 @@ namespace UnitMan.Source.Management
         
         public void Freeze()
         {
-            if (frozen) return;
+            if (_frozen) return;
             OnFreeze?.Invoke();
-            frozen = true;
+            _frozen = true;
         }
         
         public void Unfreeze()
         {
-            if (!frozen) return;
+            if (!_frozen) return;
             OnUnfreeze?.Invoke();
-            frozen = false;
+            _frozen = false;
         }
         private void ResetSession() {
             OnReset?.Invoke();
@@ -117,7 +117,7 @@ namespace UnitMan.Source.Management
 
         private static void GameOver() {
             Debug.Log("Game Over!");
-            SceneManager.LoadScene("Game Over");
+            SceneManager.LoadScene("Game Over", LoadSceneMode.Single);
         }
 
         public static event Action OnFreeze;
