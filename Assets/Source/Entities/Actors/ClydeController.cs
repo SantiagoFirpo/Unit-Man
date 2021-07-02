@@ -9,10 +9,15 @@ namespace UnitMan.Source.Entities.Actors
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
             pelletThreshold = 60;
-            currentTargetPosition = LevelGridController.VectorToVector2Int(StartPosition);
         }
         
-        protected override void PollChasePosition()
+        protected override void ResetActor()
+        {
+            base.ResetActor();
+            SetState(State.Resting);
+        }
+        
+        protected override void PollChaseTarget()
         {
             currentTargetPosition =
                 LevelGridController.TaxiCabDistance(gridPosition, playerController.gridPosition) > 8

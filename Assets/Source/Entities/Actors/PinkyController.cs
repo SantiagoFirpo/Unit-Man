@@ -1,6 +1,4 @@
-﻿using UnitMan.Source.Entities.Actors;
-
-namespace UnitMan.Source
+﻿namespace UnitMan.Source.Entities.Actors
 {
     public class PinkyController : GhostController
     {
@@ -10,7 +8,13 @@ namespace UnitMan.Source
             base.Initialize();
         }
 
-        protected override void PollChasePosition()
+        protected override void ResetActor()
+        {
+            base.ResetActor();
+            SetState(State.Resting);
+        }
+
+        protected override void PollChaseTarget()
         {
             currentTargetPosition = playerController.gridPosition + (playerController.currentDirection * 3);
         }
