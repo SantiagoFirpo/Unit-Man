@@ -32,7 +32,7 @@ namespace UnitMan
         public enum AudioEffectType
         {
             Munch, EatGhost, Death, Intermission, Siren,
-            PowerPellet,
+            Fleeing,
             Retreating, IntroMusic
         }
 
@@ -69,7 +69,7 @@ namespace UnitMan
                 AudioEffectType.Death => _audioCollection.death,
                 AudioEffectType.Intermission => _audioCollection.intermission,
                 AudioEffectType.Siren => _audioCollection.siren,
-                AudioEffectType.PowerPellet => _audioCollection.powerPellet,
+                AudioEffectType.Fleeing => _audioCollection.powerPellet,
                 AudioEffectType.Retreating => _audioCollection.retreating,
                 AudioEffectType.IntroMusic => _audioCollection.introMusic,
                 _ => source.clip
