@@ -14,7 +14,8 @@ namespace UnitMan.Source.Management
             _returnTimer.OnEnd += ReturnToMainScreen;
         }
 
-        private static void ReturnToMainScreen() {
+        private void ReturnToMainScreen() {
+            _returnTimer.Stop();
             SceneManager.LoadScene("Main Menu");
         }
     }
