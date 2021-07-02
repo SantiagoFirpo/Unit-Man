@@ -46,7 +46,7 @@ namespace UnitMan.Source.Management
             Instance = this;
             playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
-            freezeTimer.OnEnd += Unfreeze;;
+            freezeTimer.OnEnd += Unfreeze;
             _deathAnimationTimer.OnEnd += DeathAnimationTimerOnOnEnd;
         }
 
