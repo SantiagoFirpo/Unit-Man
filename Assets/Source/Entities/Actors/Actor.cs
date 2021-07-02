@@ -45,6 +45,8 @@ namespace UnitMan.Source.Entities.Actors {
 
     protected void Awake() {
             Initialize();
+            ResetActor();
+            Freeze();
         }
 
     protected abstract void ResetActor();
@@ -67,9 +69,10 @@ namespace UnitMan.Source.Entities.Actors {
             thisTransform = transform;
             thisGameObject = gameObject;
             
+            
             SubscribeForEvents();
             StartPosition = thisTransform.position;
-        }
+    }
 
     private void SubscribeForEvents()
     {
