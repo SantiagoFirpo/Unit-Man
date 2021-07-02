@@ -54,10 +54,6 @@ namespace UnitMan.Source.Entities.Actors
             // if (!thisRigidbody.simulated) return;
             base.Update();
             animator.enabled = thisRigidbody.velocity != LevelGridController.zero && !_frozen;
-            if (isInvincible)
-            {
-                SessionDataModel.Instance.UpdateInvincibleTime(_invincibleTimer.currentTime);
-            }
         }
 
         protected override void Freeze()
@@ -108,14 +104,14 @@ namespace UnitMan.Source.Entities.Actors
         
         private void OnMove(InputAction.CallbackContext context)
         {
-            _inputVector = RoundToInt(context.ReadValue<Vector2>());
+            _inputVector = Vector2Int.RoundToInt(context.ReadValue<Vector2>());
         }
 
         public void SetInvincible()
         {
             isInvincible = true;
             _invincibleTimer.Start();
-            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.PowerPellet, 1, true);
+            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
             OnInvincibleChanged?.Invoke(isInvincible);
         }
     }
