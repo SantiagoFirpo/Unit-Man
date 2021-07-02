@@ -24,7 +24,7 @@ namespace UnitMan.Source.Entities.Actors {
         protected const float INKY_BLINKY_PINKY_MOVE_SPEED = 3.5f;
         protected float standardMoveSpeed = 4.5f;
         private float _slowMoveSpeed;
-        private const float RETREAT_MOVE_SPEED = 10f;
+        private const float RETREAT_MOVE_SPEED = 8f;
 
 
 
