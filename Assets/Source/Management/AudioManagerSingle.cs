@@ -8,25 +8,14 @@ namespace UnitMan
     public sealed class AudioManagerSingle : MonoBehaviour
     {
         public static AudioManagerSingle Instance {get; private set; }
-        
-        [SerializeField]
-        private AudioSource track0;
-        [SerializeField]
-        private AudioSource track1;
-        [SerializeField]
-        private AudioSource track2;
+
+        private AudioSource[] _tracks;
 
         [SerializeField] private AudioCollection _audioCollection;
 
 
         public bool IsTrackPlaying(int trackNumber) {
-            AudioSource source = trackNumber switch {
-                0 => track0,
-                1 => track1,
-                2 => track2,
-                _ => track0
-            };
-            return source.isPlaying;
+            return _tracks[trackNumber].isPlaying;
         }
 
         public enum AudioEffectType
@@ -42,13 +31,16 @@ namespace UnitMan
             Instance = this;
             SessionManagerSingle.OnReset += Reset;
 
+            _tracks = GetComponentsInChildren<AudioSource>();
+
         }
 
         private void Reset()
         {
-            track0.Stop();
-            track1.Stop();
-            track2.Stop();
+            foreach (AudioSource track in _tracks)
+            {
+                track.Stop();
+            }
         }
 
         private void OnDisable()
@@ -56,13 +48,10 @@ namespace UnitMan
             SessionManagerSingle.OnReset -= Reset;
         }
 
-        public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop) {
-            AudioSource source = trackNumber switch {
-                0 => track0,
-                1 => track1,
-                2 => track2,
-                _ => track0
-            };
+        public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop)
+        {
+            AudioSource source = _tracks[trackNumber];
+        
             source.clip = effectType switch {
                 AudioEffectType.Munch => _audioCollection.munch,
                 AudioEffectType.EatGhost => _audioCollection.eatGhost,
