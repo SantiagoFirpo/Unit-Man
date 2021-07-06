@@ -19,6 +19,7 @@ MonoBehaviour:
   bottomRightMapPosition: {x: 12, y: -22}
   hubExitMarker: {x: 1, y: 2}
   restingTargetPosition: {x: 2, y: -1}
-  mapWidth: 23
-  mapHeight: 26
+  mapDimensions: {x: 23, y: 26}
+  mapCentralPosition: {x: 0, y: 17}
   originPositionGlobal: {x: -11, y: 4}
+  pelletCount: 283

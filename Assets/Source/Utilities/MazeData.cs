@@ -14,8 +14,9 @@ namespace UnitMan.Source.Utilities
         public Vector2Int hubExitMarker;
         public Vector2Int restingTargetPosition;
 
-        public int mapWidth;
-        public int mapHeight;
+        public Vector2Int mapDimensions;
+
+        [HideInInspector] public Vector2Int mapCentralPosition;
 
         public Vector2Int originPositionGlobal;
     }
