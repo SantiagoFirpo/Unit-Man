@@ -149,6 +149,13 @@ namespace UnitMan.Source.Entities.Actors {
             thisRigidbody.velocity = motion;
         }
 
+        protected void UpdateMotion(float x, float y)
+        {
+            motion.x = x;
+            motion.y = y;
+            thisRigidbody.velocity = motion;
+        }
+
         protected static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
                 Direction.Up => LevelGridController.upVector2Int,
