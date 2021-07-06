@@ -9,21 +9,19 @@ namespace UnitMan.Source.Utilities.Pathfinding
     [RequireComponent(typeof(Tilemap))]
     public class LevelGridController : MonoBehaviour
     {
+        public MazeData mazeData;
         public bool GetGridPosition(int x, int y) {
             // Debug.Log($"{x}, {y}");
-            return _newGrid[-y + 4][x+11];
+            return _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x];
         }
         
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
-            return _newGrid[-vector.y + 4][vector.x + 11];
+            return _grid[-vector.y + 4][vector.x + 11];
         }
         private void SetGridPosition(int x, int y, bool value) {
-            _newGrid[-y + 4][x+11] = value;
+            _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x] = value;
         }
-
-        private const int Y_SIZE = 26;
-        private const int X_SIZE = 23;
 
         public static Vector2 zero = Vector2.zero;
         public static Vector2Int upVector2Int = Vector2Int.up;
@@ -39,20 +37,17 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         public Tilemap walkableTilemap;
 
-        private readonly bool[][] _newGrid = new bool[Y_SIZE][]
-        {
-            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
-            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
-            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
-            new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE], new bool[X_SIZE],
-            new bool[X_SIZE], new bool[X_SIZE]
-        };
+        private bool[][] _grid;
 
 
         public static LevelGridController Instance { get; private set; }
         // Start is called before the first frame update
 
-        private void Awake() {
+        private void Awake()
+        {
+            InitializeGrid();
+            mazeData.CalculateBounds();
+
             Instance = this;
 
 
@@ -69,6 +64,18 @@ namespace UnitMan.Source.Utilities.Pathfinding
             // }
             //bools are canWalk
            
+        }
+
+        private void InitializeGrid()
+        {
+            _grid = new bool[mazeData.mapDimensions.y][];
+            
+            int mazeDataMapWidth = mazeData.mapDimensions.x;
+            for (int i = 0; i < _grid.Length; i++)
+            {
+                
+                _grid[i] = new bool[mazeDataMapWidth];
+            }
         }
 
         private static Vector2Int[] GetAllTilePositions(Tilemap tilemap) {
@@ -128,6 +135,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         }
 
         private void OnDrawGizmos() {
+            InitializeGrid();
             for (int x = -11; x <= 11; x++) {
                 for (int y = -21; y <= 4; y++) {
                     Gizmos.color = GetGridPosition(x, y) ? Color.green : Color.red;
