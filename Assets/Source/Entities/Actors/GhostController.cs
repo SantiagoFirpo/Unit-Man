@@ -34,7 +34,7 @@ namespace UnitMan.Source.Entities.Actors {
         private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
         [SerializeField]
         private Transform hubMarker;
-        private Vector3 _hubPosition;
+        protected Vector3 hubPosition;
 
         [SerializeField]
         private Transform topLeft;
@@ -57,7 +57,7 @@ namespace UnitMan.Source.Entities.Actors {
         [Header("Pathfinding Parameters")]
 
         [SerializeField]
-        private Transform initialTargetTransform;
+        private Transform hubExitMarker;
         private Vector2Int _initialTargetPosition;
         
         [SerializeField]
@@ -85,22 +85,24 @@ namespace UnitMan.Source.Entities.Actors {
         
         [Header("State Management")]
         
-        private Timer _initialTargetChaseTime;
-        private Timer _chasePollTimer;
+        private Timer _hubExitTimer;
+        private Timer _chasePollStepTimer;
         
         private Timer _chaseDurationTimer;
         private Timer _scatterDurationTimer;
 
         public enum State {
-            Chase, Fleeing, Eaten,
-            Scatter
+            Resting, ExitingHub,
+            Chase, Scatter, Fleeing, Eaten,
+            
         }
-        public State state = State.Scatter;
-        public State previousState = State.Chase;
+
+        public State state; //DO NOT ASSIGN DIRECTLY, USE SetState(State.TargetState)
+        public State previousState;
 
         [Header("State Parameters")]
        
-        protected int pelletThreshold = 0;
+        protected int pelletThreshold = -1;
         private const float CHASE_DURATION_SECONDS = 20f; //original: 20f
         private const float SCATTER_DURATION_SECONDS = 7f;
         
@@ -129,7 +131,19 @@ namespace UnitMan.Source.Entities.Actors {
         
         [Header("Utilities")]
         private static readonly Func<bool,bool> IsElementTrue = element => element;
-        
+
+        private readonly Timer _fleeingDurationTimer = new Timer(FLEEING_TIME_SECONDS, false, false);
+        private static readonly int OnNearEndAnimTrigger = Animator.StringToHash("OnNearEnd");
+        private static readonly int OnFleeEndAnimTrigger = Animator.StringToHash("OnFleeEnd");
+
+        [SerializeField]
+        private Transform restingMarker;
+        private Vector3 _restingTarget;
+        private static int _eatenGhostsTotal;
+        private static int _fleeingGhostsTotal;
+
+        private const float FLEEING_TIME_SECONDS = 10f;
+
 
         public override void Initialize() {
            base.Initialize();
@@ -137,11 +151,10 @@ namespace UnitMan.Source.Entities.Actors {
            ResolveDependencies();
             
             SubscribeToEvents();
-            
-            TargetInitialPosition();
-            
+
             currentMoveSpeed = standardMoveSpeed;
             _slowMoveSpeed = standardMoveSpeed/2f;
+            pelletThreshold = 1;
            
             _standardAnimController = animator.runtimeAnimatorController;
         }
@@ -152,8 +165,8 @@ namespace UnitMan.Source.Entities.Actors {
 
            _playerTransform = SessionManagerSingle.Instance.player.transform;
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
-           _chasePollTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
-           _initialTargetChaseTime = new Timer(8f, true, true);
+           _chasePollStepTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
+           _hubExitTimer = new Timer(6f, false, true);
            _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
            _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
            ResolveMapMarkers();
@@ -164,17 +177,21 @@ namespace UnitMan.Source.Entities.Actors {
            _topRightMapBound = topRight.position;
            bottomLeftMapBound = bottomLeft.position;
            _bottomRightMapBound = bottomRight.position;
-           _hubPosition = hubMarker.position;
+           hubPosition = hubMarker.position;
+           _restingTarget = restingMarker.position;
+           
+           
            _scatterTargetPosition = LevelGridController.VectorToVector2Int(scatterTarget.position);
            
-           _initialTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
+           _initialTargetPosition = LevelGridController.VectorToVector2Int(hubExitMarker.position);
        }
        private void SubscribeToEvents()
        {
            // _retreatTimer.OnEnd += ResetPositionAndState;
-           _initialTargetChaseTime.OnEnd += StartChasePollTimer;
-           _chasePollTimer.OnEnd += PollChasePosition;
-           PlayerController.OnInvincibleChanged += UpdateState;
+           _hubExitTimer.OnEnd += SetStateToChase;
+           _chasePollStepTimer.OnEnd += PollChaseTarget;
+           _fleeingDurationTimer.OnEnd += SetStateToChase;
+           PowerPelletController.OnPowerPelletCollected += SetStateToFleeing;
            SessionManagerSingle.OnReset += ResetActor;
            PelletController.OnPelletEaten += PollThreshold;
 
@@ -184,7 +201,6 @@ namespace UnitMan.Source.Entities.Actors {
 
        private void SetStateToChase()
        {
-           if (SessionManagerSingle.Instance.playerController.isInvincible && !IsCenteredAt(_hubPosition)) return;
            SetState(State.Chase);
        }
 
@@ -194,43 +210,43 @@ namespace UnitMan.Source.Entities.Actors {
            SetState(State.Scatter);
        }
 
-       private void TargetInitialPosition()
+       private void TargetHubExit()
        {
-           currentTargetPosition = LevelGridController.VectorToVector2Int(initialTargetTransform.position);
+           currentTargetPosition = LevelGridController.VectorToVector2Int(hubExitMarker.position);
        }
        private void PollThreshold()
        {
-           if (!IsCenteredAt(_hubPosition) || SessionDataModel.Instance.pelletsEaten != pelletThreshold) return;
-           if (_chasePollTimer.Active) return;
-           Debug.Log("Starting Chase Poll Timer!");
-           StartChasePollTimer();
+           if (SessionDataModel.Instance.pelletsEaten >= pelletThreshold && state == State.Resting)
+               SetState(State.ExitingHub);
        }
-       private void StartChasePollTimer()
+       private void StartChasePollStepTimer()
        {
-           _chasePollTimer.Start();
+           _chasePollStepTimer.Start();
        }
        private void StopChasePollTimer()
        {
-           _chasePollTimer.Stop();
+           _chasePollStepTimer.Stop();
        }
        
-       protected virtual void PollChasePosition() => currentTargetPosition = playerController.gridPosition;
+       protected virtual void PollChaseTarget() => currentTargetPosition = playerController.gridPosition;
        
         protected override void Unfreeze()
         {
             base.Unfreeze();
             if (currentTargetPosition
-                != _initialTargetPosition && state == State.Chase)
+                != _initialTargetPosition && state == State.Chase
+                                          && pelletThreshold >= SessionDataModel.Instance.pelletsEaten)
             {
-                StartChasePollTimer();
+                StartChasePollStepTimer();
             }
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
         }
         
-       private void UpdateState(bool isInvincible)
+       private void SetStateToFleeing()
        {
            if (state == State.Eaten) return;
-           SetState(isInvincible ? State.Fleeing : State.Chase);
+           SetState(State.Fleeing);
+           _fleeingDurationTimer.Start();
        }
        
        
@@ -255,16 +271,33 @@ namespace UnitMan.Source.Entities.Actors {
                ResolvePath();
            }
 
-           CheckIfCameToHub();
-           
+           StateStep();
+
            UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
         }
 
-        private void CheckIfCameToHub()
+        private void StateStep()
         {
-            if (state == State.Eaten && IsCenteredAt(_hubPosition))
+            switch (state)
             {
-                SetStateToChase();
+                case State.ExitingHub:
+                    if (IsCenteredAt(hubExitMarker.position))
+                    {
+                        SetState(State.Chase);
+                    }
+                    break;
+                case State.Fleeing:
+                    if (_fleeingDurationTimer.currentTime > 0.7f * FLEEING_TIME_SECONDS)
+                    {
+                        animator.SetTrigger(OnNearEndAnimTrigger);
+                    }
+                    break;
+                case State.Eaten:
+                    if (IsCenteredAt(hubPosition))
+                    {
+                        SetStateToChase();
+                    }
+                    break;
             }
         }
 
@@ -278,6 +311,10 @@ namespace UnitMan.Source.Entities.Actors {
         {
             if (_isInIntersection)
             {
+                if (state == State.Resting)
+                {
+                    possibleTurns[(int) Direction.Up] = false;
+                }
                 currentDirection = DirectionToVector2Int(
                     GetBestTurn(gridPosition,
                         currentTargetPosition,
@@ -356,29 +393,13 @@ namespace UnitMan.Source.Entities.Actors {
 
           private static int GetTrueCount(IEnumerable<bool> boolArray) => boolArray.Count(IsElementTrue);
 
-          private void OnCollisionEnter2D(Collision2D other) {
-           if (!other.gameObject.CompareTag("Player")) return;
-           switch (state) {
-               case State.Fleeing:
-                   SetState(State.Eaten);
-                   animator.runtimeAnimatorController = eatenAnimController;
-                   AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
-                   
-                   SessionManagerSingle.Instance. freezeTimer.Start();
-                   SessionManagerSingle.Instance.Freeze();
-                   
-                   break;
-               case State.Chase:
-                   SessionManagerSingle.Instance.Die();
-                   break;
-               case State.Eaten:
-                   break;
-               case State.Scatter:
-                   SessionManagerSingle.Instance.Die();
-                   break;
-               default:
-                   return;
-           }
+          private void OnCollisionEnter2D(Collision2D other)
+          {
+              if (!other.gameObject.CompareTag("Player")) return;
+              if (state == State.Fleeing)
+                  SetState(State.Eaten);
+              else
+                  SessionManagerSingle.Instance.Die();
           }
 
           private void SetTargetAwayFromPlayer() {
@@ -403,27 +424,74 @@ namespace UnitMan.Source.Entities.Actors {
            return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
        }
 
-       private void SetState(State targetState)
+       protected void SetState(State targetState)
        {
            if (state == targetState) return;
            previousState = state;
            state = targetState;
-           // OnStateExit();
+           OnStateExit();
            OnStateEntered();
        }
 
        private void OnStateExit()
        {
-           throw new NotImplementedException();
+           switch (previousState)
+           {
+               case State.Resting:
+                   PelletController.OnPelletEaten -= PollThreshold;
+                   break;
+               case State.ExitingHub:
+                   _hubExitTimer.Stop();
+                   break;
+               case State.Chase:
+                   StopChasePollTimer();
+                   break;
+               case State.Scatter:
+                   _scatterDurationTimer.Stop();
+                   break;
+               case State.Fleeing:
+                   _fleeingDurationTimer.Stop();
+                   currentMoveSpeed = standardMoveSpeed;
+                   animator.SetTrigger(OnFleeEndAnimTrigger);
+
+                   _fleeingGhostsTotal--;
+                   break;
+               case State.Eaten:
+                   EnableCollisionsWithPlayer();
+                   currentMoveSpeed = standardMoveSpeed;
+                   animator.runtimeAnimatorController = _standardAnimController;
+                   _eatenGhostsTotal--;
+                   if (_eatenGhostsTotal == 0)
+                   {
+                       AudioManagerSingle.Instance.PlayClip(
+                           _fleeingGhostsTotal == 0
+                               ? AudioManagerSingle.AudioEffectType.Siren
+                               : AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
+                   }
+                   break;
+               default:
+                   throw new ArgumentOutOfRangeException();
+           }
        }
 
        private void OnStateEntered() {
+           // Debug.Log($"Entered state {state}", thisGameObject);
            switch (state)
            {
+               case State.Resting:
+                   currentTargetPosition = LevelGridController.VectorToVector2Int(_restingTarget);
+                   PelletController.OnPelletEaten += PollThreshold;
+                   break;
+               case State.ExitingHub:
+                   TargetHubExit();
+                   _hubExitTimer.Start();
+                   break;
                case State.Chase: {
-                   EnableCollisionsWithPlayer();
-                   StartChasePollTimer();
-                   StartChaseDuration();
+
+                   StartChasePollStepTimer();
+                       StartChaseDuration();
+                   
+                   
                    animator.SetBool(FleeingAnimator, false);
                    if (animator.runtimeAnimatorController != _standardAnimController)
                    {
@@ -435,28 +503,38 @@ namespace UnitMan.Source.Entities.Actors {
                    }
                    break;
                }
+
+               case State.Scatter:
+               {
+                   currentTargetPosition = _scatterTargetPosition;
+                   _scatterDurationTimer.Start();
+                   break;
+               }
+                   
+               
+               
                case State.Fleeing: {
                    thisGameObject.layer = _defaultLayer;
                    currentMoveSpeed = _slowMoveSpeed;
                    SetTargetAwayFromPlayer();
-                   StopChasePollTimer();
                    animator.SetBool(FleeingAnimator, true);
+
+                   _fleeingGhostsTotal++;
                    break;
                }
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
                    currentMoveSpeed = RETREAT_MOVE_SPEED;
-                   currentTargetPosition = LevelGridController.VectorToVector2Int(_hubPosition);
-                   StopChasePollTimer();
+                   currentTargetPosition = LevelGridController.VectorToVector2Int(hubPosition);
                    animator.runtimeAnimatorController = eatenAnimController;
+                   _eatenGhostsTotal++;
+                   AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
+                   
+                   SessionManagerSingle.Instance. freezeTimer.Start();
+                   SessionManagerSingle.Instance.Freeze();
 
                    break;
                }
-               case State.Scatter:
-                   _scatterDurationTimer.Start();
-                   _chasePollTimer.Stop();
-                   currentTargetPosition = _scatterTargetPosition;
-                   break;
                default: {
                    return;
                }
@@ -471,7 +549,6 @@ namespace UnitMan.Source.Entities.Actors {
        private void EnableCollisionsWithPlayer()
        {
            thisGameObject.layer = _defaultLayer;
-           currentMoveSpeed = standardMoveSpeed;
        }
 
        private static int FindSmallestNumberIndex(int[] array) {
@@ -487,13 +564,14 @@ namespace UnitMan.Source.Entities.Actors {
         protected void OnDrawGizmos()
         {
             Gizmos.color = debugColor;
-            Gizmos.DrawSphere(LevelGridController.Vector2ToVector3(currentTargetPosition), 0.3f);
+            Gizmos.DrawSphere(new Vector3(currentTargetPosition.x, currentTargetPosition.y), 0.3f);
         }
 
         protected override void ResetActor()
         {
-            SetStateToChase();
-            TargetInitialPosition();
+            SetState(State.ExitingHub);
+            if (_possibleTurnsTotal == 1) FollowPath();
+            _eatenGhostsTotal = 0;
         }
 
         protected override void Freeze()
