@@ -1,4 +1,6 @@
-﻿namespace UnitMan.Source.Entities.Actors
+﻿using UnitMan.Source.Utilities.Pathfinding;
+
+namespace UnitMan.Source.Entities.Actors
 {
     public class PinkyController : GhostController
     {
@@ -6,6 +8,7 @@
         {
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
+            _scatterTargetPosition = LevelGridController.Instance.mazeData.topLeftMapPosition;
         }
 
         protected override void ResetActor()

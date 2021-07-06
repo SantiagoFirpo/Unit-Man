@@ -9,6 +9,7 @@ namespace UnitMan.Source.Entities.Actors
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
             pelletThreshold = 60;
+            _scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
         }
         
         protected override void ResetActor()
@@ -22,7 +23,7 @@ namespace UnitMan.Source.Entities.Actors
             currentTargetPosition =
                 LevelGridController.TaxiCabDistance(gridPosition, playerController.gridPosition) > 8
                     ? playerController.gridPosition //is further than 8 tiles away from pacman, target him
-                    : LevelGridController.VectorToVector2Int(bottomLeftMapBound); //is closer than 8 tiles away from pacman,
+                    : bottomLeftMapBound; //is closer than 8 tiles away from pacman,
                                                                         //go to bottom left corner
         }
     }
