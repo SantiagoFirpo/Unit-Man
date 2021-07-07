@@ -17,7 +17,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
-            return _grid[-vector.y + 4][vector.x + 11];
+            return _grid[-vector.y + mazeData.originPositionGlobal.y][vector.x - mazeData.originPositionGlobal.x];
         }
         private void SetGridPosition(int x, int y, bool value) {
             _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x] = value;
@@ -45,17 +45,10 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private void Awake()
         {
-            InitializeGrid();
-            mazeData.CalculateBounds();
-
+            Debug.Log("Grid should be initializing now");
             Instance = this;
-
-
-            foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
-                // grid.Add(position, true);
-                SetGridPosition(position.x, position.y, true);
-                
-            }
+            mazeData.CalculateBounds();
+            InitializeGrid();
 
             // foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
             //     SetGridPosition(position.x, position.y, false);
@@ -76,6 +69,12 @@ namespace UnitMan.Source.Utilities.Pathfinding
                 
                 _grid[i] = new bool[mazeDataMapWidth];
             }
+            
+            foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
+                // grid.Add(position, true);
+                SetGridPosition(position.x, position.y, true);
+            }
+            
         }
 
         private static Vector2Int[] GetAllTilePositions(Tilemap tilemap) {
