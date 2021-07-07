@@ -1,5 +1,6 @@
 using System;
 using UnitMan.Source.Entities.Actors;
+using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,12 +26,9 @@ namespace UnitMan.Source.Management
         
         public static event Action OnReset;
 
-        private const int TOTAL_PELLETS = 283;
-        
         public GameObject player;
-
-        [SerializeField]
-        private GameObject readyText;
+        
+        private GameObject _readyText;
 
         private static readonly int OnDeath = Animator.StringToHash("OnDeath");
         private bool _frozen = true;
@@ -44,11 +42,8 @@ namespace UnitMan.Source.Management
             
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
-            playerController = player.GetComponent<PlayerController>();
-            _startupTimer.OnEnd += StartLevel;
-            freezeTimer.OnEnd += Unfreeze;
-            _deathAnimationTimer.OnEnd += DeathAnimationTimerOnOnEnd;
         }
+        
 
         private void DeathAnimationTimerOnOnEnd()
         {
@@ -63,20 +58,24 @@ namespace UnitMan.Source.Management
 
         private void Start()
         {
+            playerController = player.GetComponent<PlayerController>();
+            _startupTimer.OnEnd += StartLevel;
+            freezeTimer.OnEnd += Unfreeze;
+            _deathAnimationTimer.OnEnd += DeathAnimationTimerOnOnEnd;
+            _readyText = GameObject.Find("Ready!");
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
-            Freeze();
+            Freeze(FreezeType.GameStart);
         }
 
         private void StartLevel() {
             Debug.Log("StartingLevel!");
             Unfreeze();
             OnReset?.Invoke();
-            readyText.SetActive(false);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
         }
 
         public static void CheckIfGameIsWon() {
-            if (SessionDataModel.Instance.pelletsEaten < TOTAL_PELLETS) return;
+            if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.mazeData.pelletCount) return;
             Debug.Log("You won!");
             SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
             foreach (Actor actor in FindObjectsOfType<Actor>()) {
@@ -86,18 +85,18 @@ namespace UnitMan.Source.Management
 
         public void Die() {
             Debug.Log("Died!");
-            playerController.animator.SetTrigger(OnDeath);
+            
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Death, 1, false);
-            Freeze();
-            playerController.animator.enabled = true;
+            Freeze(FreezeType.Death);
+            playerController.animator.SetTrigger(OnDeath);
             _deathAnimationTimer.Start();
         }
         
         
-        public void Freeze()
+        public void Freeze(FreezeType freezeType)
         {
             if (_frozen) return;
-            OnFreeze?.Invoke();
+            OnFreeze?.Invoke(freezeType);
             _frozen = true;
         }
         
@@ -109,9 +108,9 @@ namespace UnitMan.Source.Management
         }
         private void ResetSession() {
             OnReset?.Invoke();
-            Freeze();
+            Freeze(FreezeType.GameStart);
             _startupTimer.Start();
-            readyText.SetActive(true);
+            _readyText.SetActive(true);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
         }
 
@@ -120,7 +119,9 @@ namespace UnitMan.Source.Management
             SceneManager.LoadScene("Game Over", LoadSceneMode.Single);
         }
 
-        public static event Action OnFreeze;
+        public static event Action<FreezeType> OnFreeze;
         public static event Action OnUnfreeze;
     }
+
+    public enum FreezeType {EatGhost, Death, GameStart}
 }
