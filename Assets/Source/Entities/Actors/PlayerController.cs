@@ -20,7 +20,7 @@ namespace UnitMan.Source.Entities.Actors
         private Vector2Int _inputVector;
 
         public bool isInvincible;
-        private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
+        private Timer _invincibleTimer;
 
         private bool _frozen;
         private static readonly int OnDeathAnimTrigger = Animator.StringToHash("OnDeath");
@@ -35,6 +35,8 @@ namespace UnitMan.Source.Entities.Actors
         {
             base.Initialize();
             _inputMaps = new InputMaps();
+
+            _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
             
             SubscribeForEvents();
 
@@ -98,8 +100,7 @@ namespace UnitMan.Source.Entities.Actors
             if (IsCardinalDirection(_inputVector))
             {
                 int index = VectorToInt(_inputVector);
-
-                if (possibleTurns[index] && IsInTileCenter)
+                if (possibleTurns[index] && isInTileCenter)
                 {
                     currentDirection = _inputVector;
                 }

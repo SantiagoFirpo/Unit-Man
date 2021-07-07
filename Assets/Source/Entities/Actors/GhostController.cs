@@ -56,7 +56,6 @@ namespace UnitMan.Source.Entities.Actors {
         
         private bool _isInIntersection;
         private bool _pathResolved;
-        private bool _isInTileCenter;
         
         private readonly int[] _neighborHeuristics = {
             DEFAULT_DISTANCE_MAX,
@@ -116,7 +115,7 @@ namespace UnitMan.Source.Entities.Actors {
         [Header("Utilities")]
         private static readonly Func<bool,bool> IsElementTrue = element => element;
 
-        private readonly Timer _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, false);
+        private Timer _fleeingDurationTimer;
         private static readonly int OnNearEndAnimTrigger = Animator.StringToHash("OnNearEnd");
         private static readonly int OnFleeEndAnimTrigger = Animator.StringToHash("OnFleeEnd");
         
@@ -147,6 +146,8 @@ namespace UnitMan.Source.Entities.Actors {
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
            _chasePollStepTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
            _hubExitTimer = new Timer(6f, false, true);
+           
+           _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, false);
            _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
            _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
            ResolveMapMarkers();
@@ -239,14 +240,14 @@ namespace UnitMan.Source.Entities.Actors {
            UpdatePossibleTurns();
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
            
-           _isInTileCenter = IsInTileCenter;
+           isInTileCenter = IsInTileCenter;
 
-           if (!_isInTileCenter && _pathResolved) _pathResolved = false;
+           if (!isInTileCenter && _pathResolved) _pathResolved = false;
 
            
            _isInIntersection = _possibleTurnsTotal > 2;
            
-           if (_isInTileCenter && !_pathResolved)
+           if (isInTileCenter && !_pathResolved)
            {
                ResolvePath();
            }

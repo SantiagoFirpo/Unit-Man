@@ -16,7 +16,7 @@ namespace UnitMan.Source.Management
         public static SessionManagerSingle Instance { get; private set; }
         private const float STARTUP_TIME_SECONDS = 4.5f;
         private Timer _startupTimer;
-        private readonly Timer _deathAnimationTimer = new Timer(1.5f, false, true);
+        private Timer _deathAnimationTimer;
         
         [HideInInspector]
         public PlayerController playerController;
@@ -37,12 +37,11 @@ namespace UnitMan.Source.Management
         // Start is called before the first frame update
         private void Awake()
         {
-            _startupTimer = new Timer(STARTUP_TIME_SECONDS, true, true);
-            freezeTimer = new Timer(FREEZE_SECONDS, false, true);
-            
             if (Instance != null) {Destroy(gameObject);}
             Instance = this;
+
         }
+        
         
 
         private void DeathAnimationTimerOnOnEnd()
@@ -58,6 +57,10 @@ namespace UnitMan.Source.Management
 
         private void Start()
         {
+            _startupTimer = new Timer(STARTUP_TIME_SECONDS, true, true);
+            freezeTimer = new Timer(FREEZE_SECONDS, false, true);
+            _deathAnimationTimer = new Timer(1.5f, false, true);
+            
             playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
             freezeTimer.OnEnd += Unfreeze;
