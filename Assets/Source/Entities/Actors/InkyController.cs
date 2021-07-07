@@ -10,9 +10,9 @@ namespace UnitMan.Source.Entities.Actors
         [SerializeField]
         private GhostController blinkyController;
         public override void Initialize() {
-            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
+            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED + 0.1f;
             base.Initialize();
-            base.pelletThreshold = 30;
+            pelletThreshold = 30;
             _scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
 
         }
