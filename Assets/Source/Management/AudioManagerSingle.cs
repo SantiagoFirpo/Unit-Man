@@ -25,17 +25,16 @@ namespace UnitMan
             Retreating, IntroMusic
         }
 
-        private void Awake() {
+        private void OnEnable() {
             if (Instance != null) Destroy(gameObject);
 
             Instance = this;
-            SessionManagerSingle.OnReset += Reset;
-
-            _tracks = GetComponentsInChildren<AudioSource>();
+            SessionManagerSingle.OnReset += ResetTracks;
+            _tracks = GetComponents<AudioSource>();
+            
 
         }
-
-        private void Reset()
+        private void ResetTracks()
         {
             foreach (AudioSource track in _tracks)
             {
@@ -45,13 +44,18 @@ namespace UnitMan
 
         private void OnDisable()
         {
-            SessionManagerSingle.OnReset -= Reset;
+            SessionManagerSingle.OnReset -= ResetTracks;
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop)
         {
             AudioSource source = _tracks[trackNumber];
-        
+            if (source == null)
+            {
+                Debug.Log("Audio Source is null");
+                return;
+            }
+
             source.clip = effectType switch {
                 AudioEffectType.Munch => _audioCollection.munch,
                 AudioEffectType.EatGhost => _audioCollection.eatGhost,
@@ -65,6 +69,8 @@ namespace UnitMan
             };
             source.Play();
             source.loop = loop;
+
+
         }
     }
 }
