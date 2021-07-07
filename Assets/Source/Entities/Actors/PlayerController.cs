@@ -23,6 +23,7 @@ namespace UnitMan.Source.Entities.Actors
         private readonly Timer _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
 
         private bool _frozen;
+        private static readonly int OnDeathAnimTrigger = Animator.StringToHash("OnDeath");
 
         public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
@@ -56,11 +57,17 @@ namespace UnitMan.Source.Entities.Actors
             animator.enabled = thisRigidbody.velocity != LevelGridController.zero && !_frozen;
         }
 
-        protected override void Freeze()
+        protected override void Freeze(FreezeType freezeType)
         {
-            base.Freeze();
+            base.Freeze(freezeType);
             _invincibleTimer.Stop();
             _frozen = true;
+            if (freezeType != FreezeType.Death) return;
+            _frozen = false;
+            Debug.Log("Should Activate Death Animation");
+            animator.SetTrigger(OnDeathAnimTrigger);
+
+
         }
 
         protected override void Unfreeze()
@@ -105,14 +112,6 @@ namespace UnitMan.Source.Entities.Actors
         private void OnMove(InputAction.CallbackContext context)
         {
             _inputVector = Vector2Int.RoundToInt(context.ReadValue<Vector2>());
-        }
-
-        public void SetInvincible()
-        {
-            isInvincible = true;
-            _invincibleTimer.Start();
-            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
-            OnInvincibleChanged?.Invoke(isInvincible);
         }
     }
 }
