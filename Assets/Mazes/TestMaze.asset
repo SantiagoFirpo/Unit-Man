@@ -22,4 +22,4 @@ MonoBehaviour:
   mapDimensions: {x: 23, y: 26}
   mapCentralPosition: {x: 0, y: 17}
   originPositionGlobal: {x: -11, y: 4}
-  pelletCount: 283
+  pelletCount: 280
