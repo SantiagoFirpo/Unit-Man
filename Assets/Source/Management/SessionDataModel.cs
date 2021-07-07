@@ -24,15 +24,17 @@ namespace UnitMan.Source.Management
             lives--;
             UpdateLivesLabel();
         }
-
-        public void UpdateInvincibleTime(float newValue) {
-            float normalizedInvincibleTimer = 1f - newValue/PlayerController.INVINCIBLE_TIME_SECONDS;
-            UpdateInvincibleUI(normalizedInvincibleTimer);
-        }
+        
 
         public void IncrementScore(int delta)
         {
             _score += delta;
+            UpdateScoreLabel();
+        }
+
+        public void UpdateScoreLabel()
+        {
+            _scoreLabel.text = $"Score: \n {_score}";
         }
 
         private void UpdateLivesLabel() {
