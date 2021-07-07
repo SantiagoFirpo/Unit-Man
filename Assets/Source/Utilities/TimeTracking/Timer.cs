@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using UnitMan.Source.Utilities.ObserverSystem;
+using UnityEngine;
 
 namespace UnitMan.Source.Utilities.TimeTracking {
-    public class Timer
+    public class Timer : IObserver<float>
 {
     //Responsibility: Abstract model for finite timers inside other classes
     public event System.Action OnEnd;
@@ -50,14 +51,37 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         this.waitTime = waitTime;
         _autoStart = autoStart;
         _oneTime = oneTime;
-        TimerManager.OnFrameUpdate += Update;
-        TimerManager.Initialized += Setup;
+        TimerManager.Instance.Attach(this);
+        Setup();
     }
-     ~Timer() {
-         TimerManager.OnFrameUpdate -= Update;
-         TimerManager.Initialized -= Setup;
+
+    public void OnNotified(IEmitter<float> source, float deltaTime)
+    {
+        if (!Active) return;
+        if (currentTime < waitTime) {
+            currentTime += Time.deltaTime;
+        }
+        else {
+            OnEnd?.Invoke();
+            if (_oneTime) {
+                //Timer ended but is oneTime
+                Active = false;
+                currentTime = Mathf.Round(currentTime);
+            }
+            else {
+                //Timer ended and reset
+                currentTime = 0f;
+                Active = true;
+            }
+        }
     }
+
+    ~Timer() {
+        TimerManager.Instance.Detach(this);
+     }
+    
      
+
      //TODO: make TimerManager Singleton
      //TODO: manage Timer Manager with SessionManager
      //observer/dispose
