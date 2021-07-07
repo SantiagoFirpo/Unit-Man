@@ -29,40 +29,23 @@ namespace UnitMan.Source.Entities.Actors {
 
 
         [Header("Map Parameters")]
+        protected Vector2Int hubPosition;
         
+        private Vector2Int _topLeftMapBound;
         
-        private readonly Vector2 _mapCentralPosition = new Vector2(0, -8.5f);
-        [SerializeField]
-        private Transform hubMarker;
-        protected Vector3 hubPosition;
 
-        [SerializeField]
-        private Transform topLeft;
-        private Vector3 _topLeftMapBound;
-
-        [SerializeField]
-
-        private Transform topRight;
-        private Vector3 _topRightMapBound;
-
-        [SerializeField]
-
-        private Transform bottomLeft;
-        protected Vector3 bottomLeftMapBound;
+        private Vector2Int _topRightMapBound;
         
-        [SerializeField]
-        private Transform bottomRight;
-        private Vector3 _bottomRightMapBound;
+
+        protected Vector2Int bottomLeftMapBound;
+        
+        private Vector2Int _bottomRightMapBound;
 
         [Header("Pathfinding Parameters")]
-
-        [SerializeField]
-        private Transform hubExitMarker;
-        private Vector2Int _initialTargetPosition;
         
-        [SerializeField]
-        private Transform scatterTarget;
-        private Vector2Int _scatterTargetPosition;
+        private Vector2Int _hubExitTarget;
+        
+        protected Vector2Int _scatterTargetPosition;
         
         private enum Quadrant
        {
@@ -73,6 +56,7 @@ namespace UnitMan.Source.Entities.Actors {
         
         private bool _isInIntersection;
         private bool _pathResolved;
+        private bool _isInTileCenter;
         
         private readonly int[] _neighborHeuristics = {
             DEFAULT_DISTANCE_MAX,
@@ -132,17 +116,13 @@ namespace UnitMan.Source.Entities.Actors {
         [Header("Utilities")]
         private static readonly Func<bool,bool> IsElementTrue = element => element;
 
-        private readonly Timer _fleeingDurationTimer = new Timer(FLEEING_TIME_SECONDS, false, false);
+        private readonly Timer _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, false);
         private static readonly int OnNearEndAnimTrigger = Animator.StringToHash("OnNearEnd");
         private static readonly int OnFleeEndAnimTrigger = Animator.StringToHash("OnFleeEnd");
-
-        [SerializeField]
-        private Transform restingMarker;
-        private Vector3 _restingTarget;
+        
+        private Vector2Int _restingTarget;
         private static int _eatenGhostsTotal;
         private static int _fleeingGhostsTotal;
-
-        private const float FLEEING_TIME_SECONDS = 10f;
 
 
         public override void Initialize() {
@@ -173,17 +153,17 @@ namespace UnitMan.Source.Entities.Actors {
        }
        private void ResolveMapMarkers()
        {
-           _topLeftMapBound = topLeft.position;
-           _topRightMapBound = topRight.position;
-           bottomLeftMapBound = bottomLeft.position;
-           _bottomRightMapBound = bottomRight.position;
-           hubPosition = hubMarker.position;
-           _restingTarget = restingMarker.position;
+           _topLeftMapBound = LevelGridController.Instance.mazeData.topLeftMapPosition;
+           _topRightMapBound = LevelGridController.Instance.mazeData.topRightMapPosition;
+           bottomLeftMapBound = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
+           _bottomRightMapBound = LevelGridController.Instance.mazeData.bottomRightMapPosition;
+           hubPosition = LevelGridController.Instance.mazeData.hubPosition;
+           _restingTarget = LevelGridController.Instance.mazeData.restingTargetPosition;
            
            
-           _scatterTargetPosition = LevelGridController.VectorToVector2Int(scatterTarget.position);
+           _scatterTargetPosition = LevelGridController.Instance.mazeData.topRightMapPosition;
            
-           _initialTargetPosition = LevelGridController.VectorToVector2Int(hubExitMarker.position);
+           _hubExitTarget = LevelGridController.Instance.mazeData.hubExitMarker;
        }
        private void SubscribeToEvents()
        {
@@ -212,7 +192,7 @@ namespace UnitMan.Source.Entities.Actors {
 
        private void TargetHubExit()
        {
-           currentTargetPosition = LevelGridController.VectorToVector2Int(hubExitMarker.position);
+           currentTargetPosition = _hubExitTarget;
        }
        private void PollThreshold()
        {
@@ -234,7 +214,7 @@ namespace UnitMan.Source.Entities.Actors {
         {
             base.Unfreeze();
             if (currentTargetPosition
-                != _initialTargetPosition && state == State.Chase
+                != _hubExitTarget && state == State.Chase
                                           && pelletThreshold >= SessionDataModel.Instance.pelletsEaten)
             {
                 StartChasePollStepTimer();
@@ -258,22 +238,22 @@ namespace UnitMan.Source.Entities.Actors {
            UpdateGridPosition();
            UpdatePossibleTurns();
            _possibleTurnsTotal = GetTrueCount(possibleTurns);
-
-           bool isInTileCenter = IsInTileCenter;
            
-           if (!isInTileCenter && _pathResolved) _pathResolved = false;
+           _isInTileCenter = IsInTileCenter;
+
+           if (!_isInTileCenter && _pathResolved) _pathResolved = false;
 
            
            _isInIntersection = _possibleTurnsTotal > 2;
            
-           if (isInTileCenter && !_pathResolved)
+           if (_isInTileCenter && !_pathResolved)
            {
                ResolvePath();
            }
 
            StateStep();
 
-           UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
+           UpdateMotion((Vector2) currentDirection * currentMoveSpeed);
         }
 
         private void StateStep()
@@ -281,13 +261,13 @@ namespace UnitMan.Source.Entities.Actors {
             switch (state)
             {
                 case State.ExitingHub:
-                    if (IsCenteredAt(hubExitMarker.position))
+                    if (IsCenteredAt(_hubExitTarget))
                     {
                         SetState(State.Chase);
                     }
                     break;
                 case State.Fleeing:
-                    if (_fleeingDurationTimer.currentTime > 0.7f * FLEEING_TIME_SECONDS)
+                    if (_fleeingDurationTimer.currentTime > 0.7f * PlayerController.INVINCIBLE_TIME_SECONDS)
                     {
                         animator.SetTrigger(OnNearEndAnimTrigger);
                     }
@@ -298,6 +278,14 @@ namespace UnitMan.Source.Entities.Actors {
                         SetStateToChase();
                     }
                     break;
+                case State.Resting:
+                    break;
+                case State.Chase:
+                    break;
+                case State.Scatter:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -373,6 +361,11 @@ namespace UnitMan.Source.Entities.Actors {
             return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
         }
         
+        private bool IsCenteredAt(Vector2Int position)
+        {
+            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
+        }
+        
 
         
 
@@ -403,18 +396,29 @@ namespace UnitMan.Source.Entities.Actors {
           }
 
           private void SetTargetAwayFromPlayer() {
-           Quadrant playerQuadrant = GetQuadrant(_playerTransform.position, _mapCentralPosition);
-           Vector3 finalPosition = playerQuadrant switch {
+           Quadrant playerQuadrant = GetQuadrant(playerController.gridPosition,
+               LevelGridController.Instance.mazeData.mapCentralPosition);
+           Vector2Int finalPosition = playerQuadrant switch {
                Quadrant.UpRight => bottomLeftMapBound,
                Quadrant.UpLeft => _bottomRightMapBound,
                Quadrant.DownLeft => _topRightMapBound,
                Quadrant.DownRight => _topLeftMapBound,
                _ => bottomLeftMapBound
            };
-                currentTargetPosition = LevelGridController.VectorToVector2Int(finalPosition);
+                currentTargetPosition = finalPosition;
        }
 
        private static Quadrant GetQuadrant(Vector2 position, Vector2 centralPosition) {
+           bool isUp = position.y >= centralPosition.y;
+           bool isRight = position.x >= centralPosition.x;
+           if (isUp) {
+               return isRight ? Quadrant.UpRight : Quadrant.UpLeft;
+           }
+
+           return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
+       }
+       
+       private static Quadrant GetQuadrant(Vector2Int position, Vector2Int centralPosition) {
            bool isUp = position.y >= centralPosition.y;
            bool isRight = position.x >= centralPosition.x;
            if (isUp) {
@@ -479,7 +483,7 @@ namespace UnitMan.Source.Entities.Actors {
            switch (state)
            {
                case State.Resting:
-                   currentTargetPosition = LevelGridController.VectorToVector2Int(_restingTarget);
+                   currentTargetPosition = _restingTarget;
                    PelletController.OnPelletEaten += PollThreshold;
                    break;
                case State.ExitingHub:
@@ -525,13 +529,14 @@ namespace UnitMan.Source.Entities.Actors {
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
                    currentMoveSpeed = RETREAT_MOVE_SPEED;
-                   currentTargetPosition = LevelGridController.VectorToVector2Int(hubPosition);
+                   currentTargetPosition = hubPosition;
                    animator.runtimeAnimatorController = eatenAnimController;
                    _eatenGhostsTotal++;
                    AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
+                   SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, _eatenGhostsTotal));
                    
-                   SessionManagerSingle.Instance. freezeTimer.Start();
-                   SessionManagerSingle.Instance.Freeze();
+                   SessionManagerSingle.Instance.freezeTimer.Start();
+                   SessionManagerSingle.Instance.Freeze(FreezeType.EatGhost);
 
                    break;
                }
@@ -574,11 +579,12 @@ namespace UnitMan.Source.Entities.Actors {
             _eatenGhostsTotal = 0;
         }
 
-        protected override void Freeze()
+        protected override void Freeze(FreezeType freezeType)
         {
-            base.Freeze();
+            base.Freeze(freezeType);
             StopChasePollTimer();
             if (state == State.Eaten) animator.enabled = true;
         }
     }
+    //TODO: if ghost is fleeing and player dies, animation takes a while to change
 }
