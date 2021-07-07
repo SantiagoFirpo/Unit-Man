@@ -97,6 +97,7 @@ namespace UnitMan.Source.Entities.Actors
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            isInTileCenter = IsInTileCenter;
             if (IsCardinalDirection(_inputVector))
             {
                 int index = VectorToInt(_inputVector);
