@@ -28,7 +28,9 @@ namespace UnitMan.Source.Entities.Actors {
         public Vector2Int currentDirection;
         protected float currentMoveSpeed;
 
-        protected bool IsInTileCenter => LevelGridController.VectorApproximately(thisTransform.position, gridPosition, 0.1f);
+        protected bool isInTileCenter;
+
+        protected bool IsInTileCenter => LevelGridController.VectorApproximately(thisTransform.position, gridPosition, 0.11f);
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
