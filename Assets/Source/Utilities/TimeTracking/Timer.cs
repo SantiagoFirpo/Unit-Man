@@ -53,9 +53,15 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         TimerManager.OnFrameUpdate += Update;
         TimerManager.Initialized += Setup;
     }
-    //  ~Timer() {
-    //      TimerManager.OnFrameUpdate -= Update;
-    //      TimerManager.Initialized -= Setup;
-    // }
+     ~Timer() {
+         TimerManager.OnFrameUpdate -= Update;
+         TimerManager.Initialized -= Setup;
+    }
+     
+     //TODO: make TimerManager Singleton
+     //TODO: manage Timer Manager with SessionManager
+     //observer/dispose
+     
+     //https://docs.microsoft.com/en-us/dotnet/api/system.idisposable?view=net-5.0//gameprogrammingpatterns.com/observer.html
 }
 }
