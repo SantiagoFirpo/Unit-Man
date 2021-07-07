@@ -43,15 +43,15 @@ namespace UnitMan.Source.Entities.Actors {
             Up, Down, Left, Right
         }
 
-    protected void Awake() {
+    protected void OnEnable() {
             Initialize();
             ResetActor();
-            Freeze();
+            Freeze(FreezeType.GameStart);
         }
 
     protected abstract void ResetActor();
 
-    protected virtual void Freeze()
+    protected virtual void Freeze(FreezeType freezeType)
     {
         animator.enabled = false;
         thisRigidbody.simulated = false;
