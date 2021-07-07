@@ -2,7 +2,7 @@
 {
 	public interface IObserver<TDataContainer>
 	{
-		public void OnObserved(IEmitter<TDataContainer> source, TDataContainer dataContainer);
+		public void OnNotified(IEmitter<TDataContainer> source, TDataContainer dataContainer);
 	}
 	
 	public interface IObserver
