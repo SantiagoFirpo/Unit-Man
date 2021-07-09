@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace UnitMan.Source.Utilities.TimeTracking {
-    public class Timer : IObserver<float>
+    public class Timer
 {
     //Responsibility: Abstract model for finite timers inside other classes
     public event System.Action OnEnd;
@@ -11,28 +11,10 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     private readonly bool _autoStart;
     private readonly bool _oneTime;
 
-    public bool Active { get; private set;}
+    private readonly Observer<float> _timeObserver;
 
-    private void Update(float deltaTime) {
-        if (!Active) return;
-        if (currentTime < waitTime) {
-            currentTime += Time.deltaTime;
-        }
-        else {
-            OnEnd?.Invoke();
-            if (_oneTime) {
-                //Timer ended but is oneTime
-                Active = false;
-                currentTime = Mathf.Round(currentTime);
-            }
-            else {
-                //Timer ended and reset
-                currentTime = 0f;
-                Active = true;
-            }
-        }
+    private bool Active { get; set;}
 
-    }
     public void Start() {
         currentTime = 0f;
         Active = true;
@@ -47,15 +29,16 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         Active = _autoStart;
     }
 
-    public Timer(float waitTime, bool autoStart, bool oneTime, float delay = 0)  { // prev was waitTime = 1, autoStart = false, oneTime = true
+    public Timer(float waitTime, bool autoStart, bool oneTime)  { // prev was waitTime = 1, autoStart = false, oneTime = true
         this.waitTime = waitTime;
         _autoStart = autoStart;
         _oneTime = oneTime;
-        TimerManager.Instance.Attach(this);
+        _timeObserver = new Observer<float>(OnNotified);
+        TimerManager.Instance.timeEmitter.Attach(_timeObserver);
         Setup();
     }
 
-    public void OnNotified(IEmitter<float> source, float deltaTime)
+    private void OnNotified(Emitter<float> source, float deltaTime)
     {
         if (!Active) return;
         if (currentTime < waitTime) {
@@ -77,7 +60,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     }
 
     ~Timer() {
-        TimerManager.Instance.Detach(this);
+        TimerManager.Instance.timeEmitter.Detach(_timeObserver);
      }
     
      
