@@ -13,7 +13,7 @@ namespace UnitMan.Source.Entities.Actors
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED + 0.1f;
             base.Initialize();
             pelletThreshold = 30;
-            _scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
+            scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
 
         }
 

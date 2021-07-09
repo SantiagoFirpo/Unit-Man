@@ -45,7 +45,7 @@ namespace UnitMan.Source.Entities.Actors {
         
         private Vector2Int _hubExitTarget;
         
-        protected Vector2Int _scatterTargetPosition;
+        protected Vector2Int scatterTargetPosition;
         
         private enum Quadrant
        {
