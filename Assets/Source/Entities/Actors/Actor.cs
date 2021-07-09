@@ -1,4 +1,5 @@
 using UnitMan.Source.Management;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
@@ -15,9 +16,6 @@ namespace UnitMan.Source.Entities.Actors {
         protected Rigidbody2D thisRigidbody;
 
         protected Transform thisTransform;
-
-        private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
-        private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
 
         protected GameObject thisGameObject;
 
@@ -40,6 +38,11 @@ namespace UnitMan.Source.Entities.Actors {
         public Vector2Int gridPosition;
         private bool _isWrapping;
 
+        private Observer _resetObserver;
+        private Observer<FreezeType> _freezeObserver;
+        private Observer _unfreezeObserver;
+        protected bool frozen = true;
+
         public enum Direction
         {
             Up, Down, Left, Right
@@ -48,20 +51,21 @@ namespace UnitMan.Source.Entities.Actors {
     protected void OnEnable() {
             Initialize();
             ResetActor();
-            Freeze(FreezeType.GameStart);
-        }
+    }
 
     protected abstract void ResetActor();
 
-    protected virtual void Freeze(FreezeType freezeType)
+    protected virtual void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
     {
         animator.enabled = false;
+        frozen = true;
         thisRigidbody.simulated = false;
     }
 
     protected virtual void Unfreeze()
     {
         animator.enabled = true;
+        frozen = false;
         thisRigidbody.simulated = true;
     }
 
@@ -78,9 +82,13 @@ namespace UnitMan.Source.Entities.Actors {
 
     private void SubscribeForEvents()
     {
-        SessionManagerSingle.OnReset += ResetPosition;
-        SessionManagerSingle.OnFreeze += Freeze;
-        SessionManagerSingle.OnUnfreeze += Unfreeze;
+        _resetObserver = new Observer(ResetPosition);
+        _freezeObserver = new Observer<FreezeType>(Freeze);
+        _unfreezeObserver = new Observer(Unfreeze);
+        
+        SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
+        SessionManagerSingle.Instance.freezeEmitter.Attach(_freezeObserver);
+        SessionManagerSingle.Instance.unfreezeEmitter.Attach(_unfreezeObserver);
     }
 
     protected virtual void Update()
@@ -96,9 +104,7 @@ namespace UnitMan.Source.Entities.Actors {
 
         protected virtual void UnsubscribeFromEvents()
         {
-            SessionManagerSingle.OnReset -= ResetPosition;
-            SessionManagerSingle.OnFreeze -= Freeze;
-            SessionManagerSingle.OnUnfreeze -= Unfreeze;
+            SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
         }
 
         private void ResetPosition() {
@@ -197,10 +203,7 @@ namespace UnitMan.Source.Entities.Actors {
             }
         }
 
-        private void UpdateAnimation() {
-            animator.SetInteger(DirectionXAnimator, currentDirection.x);
-            animator.SetInteger(DirectionYAnimator, currentDirection.y);
-        }
+        protected abstract void UpdateAnimation();
     }
 }
 
