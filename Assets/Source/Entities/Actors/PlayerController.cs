@@ -1,6 +1,7 @@
 using System;
 using Input;
 using UnitMan.Source.Management;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -22,14 +23,17 @@ namespace UnitMan.Source.Entities.Actors
         public bool isInvincible;
         private Timer _invincibleTimer;
 
-        private bool _frozen;
-        private static readonly int OnDeathAnimTrigger = Animator.StringToHash("OnDeath");
+        private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
+        private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
+        private static readonly int DeadAnimatorParam = Animator.StringToHash("Dead");
 
-        public static event Action<bool> OnInvincibleChanged;
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
         protected override void ResetActor()
-        { }
+        {
+            animator.SetBool(DeadAnimatorParam, true);
+            animator.enabled = false;
+        }
 
         public override void Initialize()
         {
@@ -52,23 +56,17 @@ namespace UnitMan.Source.Entities.Actors
             _invincibleTimer.OnEnd += DisableInvincibility;
         }
 
-        protected override void Update()
+        protected override void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
         {
-            // if (!thisRigidbody.simulated) return;
-            base.Update();
-            animator.enabled = thisRigidbody.velocity != LevelGridController.zero && !_frozen;
-        }
-
-        protected override void Freeze(FreezeType freezeType)
-        {
-            base.Freeze(freezeType);
+            base.Freeze(source, freezeType);
             _invincibleTimer.Stop();
-            _frozen = true;
+            // Debug.Log(freezeType.ToString());
             if (freezeType != FreezeType.Death) return;
-            _frozen = false;
-            Debug.Log("Should Activate Death Animation");
-            animator.SetTrigger(OnDeathAnimTrigger);
-
+            // Debug.Log("Should Activate Death Animation");
+            frozen = false;
+            animator.enabled = true;
+            animator.SetBool(DeadAnimatorParam, true);
+            animator.Play("Death");
 
         }
 
@@ -76,7 +74,7 @@ namespace UnitMan.Source.Entities.Actors
         {
             base.Unfreeze();
             _invincibleTimer.Start();
-            _frozen = false;
+            animator.enabled = true;
         }
 
         protected override void UnsubscribeFromEvents()
@@ -90,8 +88,13 @@ namespace UnitMan.Source.Entities.Actors
         private void DisableInvincibility()
         {
             isInvincible = false;
-            OnInvincibleChanged?.Invoke(isInvincible);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            animator.enabled = !(thisRigidbody.velocity == Vector2.zero || frozen);
         }
 
         protected override void FixedUpdate()
@@ -110,7 +113,13 @@ namespace UnitMan.Source.Entities.Actors
 
             UpdateMotion(new Vector2(currentDirection.x, currentDirection.y) * currentMoveSpeed);
         }
-        
+
+        protected override void UpdateAnimation()
+        {
+            animator.SetInteger(DirectionXAnimator, currentDirection.x);
+            animator.SetInteger(DirectionYAnimator, currentDirection.y);
+        }
+
         private void OnMove(InputAction.CallbackContext context)
         {
             _inputVector = Vector2Int.RoundToInt(context.ReadValue<Vector2>());
