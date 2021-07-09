@@ -1,15 +1,16 @@
-﻿using System;
-using UnitMan.Source.Management;
-using UnitMan.Source.Utilities;
+﻿using UnitMan.Source.Utilities;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.Management
 {
     public sealed class AudioManagerSingle : MonoBehaviour
     {
         public static AudioManagerSingle Instance {get; private set; }
 
         private AudioSource[] _tracks;
+
+        private Observer _resetObserver;
 
         [SerializeField] private AudioCollection _audioCollection;
 
@@ -29,7 +30,9 @@ namespace UnitMan
             if (Instance != null) Destroy(gameObject);
 
             Instance = this;
-            SessionManagerSingle.OnReset += ResetTracks;
+            _resetObserver = new Observer(ResetTracks);
+            
+            SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
             _tracks = GetComponents<AudioSource>();
             
 
@@ -44,17 +47,12 @@ namespace UnitMan
 
         private void OnDisable()
         {
-            SessionManagerSingle.OnReset -= ResetTracks;
+            SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop)
         {
             AudioSource source = _tracks[trackNumber];
-            if (source == null)
-            {
-                Debug.Log("Audio Source is null");
-                return;
-            }
 
             source.clip = effectType switch {
                 AudioEffectType.Munch => _audioCollection.munch,
