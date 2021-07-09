@@ -1,13 +1,17 @@
 using UnitMan.Source.Management;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
 namespace UnitMan
 {
     public class ReadyController : MonoBehaviour
     {
+
+	    private Observer _resetObserver;
 	    private void OnEnable()
 	    {
-		    SessionManagerSingle.OnReset += DisableLabel;
+		    _resetObserver = new Observer(DisableLabel);
+		    SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
 	    }
 
 	    private void DisableLabel()
@@ -17,7 +21,7 @@ namespace UnitMan
 
 	    private void OnDisable()
 	    {
-		    SessionManagerSingle.OnReset -= DisableLabel;
+		    SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
 	    }
     }
     }
