@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnitMan.Source.Management;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -9,10 +10,10 @@ using UnityEngine;
 namespace UnitMan.Source.Entities.Actors {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
-        
-        //TODO: add scatter state
-        
-        //TODO: add pellet threshold
+
+
+        private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
+        private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
         
 
         [Header("Physics State")]
@@ -74,6 +75,9 @@ namespace UnitMan.Source.Entities.Actors {
         private Timer _chaseDurationTimer;
         private Timer _scatterDurationTimer;
 
+        private Observer _pelletEatenObserver;
+        private Observer _powerPelletObserver;
+
         public enum State {
             Resting, ExitingHub,
             Chase, Scatter, Fleeing, Eaten,
@@ -96,7 +100,6 @@ namespace UnitMan.Source.Entities.Actors {
         
         private int _inactiveLayer;
         private int _defaultLayer;
-        private Transform _playerTransform;
         protected PlayerController playerController;
         
         //Components
@@ -142,7 +145,6 @@ namespace UnitMan.Source.Entities.Actors {
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
-           _playerTransform = SessionManagerSingle.Instance.player.transform;
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
            _chasePollStepTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
            _hubExitTimer = new Timer(6f, false, true);
@@ -150,6 +152,9 @@ namespace UnitMan.Source.Entities.Actors {
            _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, false);
            _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
            _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
+
+           _pelletEatenObserver = new Observer(PollThreshold);
+           _powerPelletObserver = new Observer(SetStateToFleeing);
            ResolveMapMarkers();
        }
        private void ResolveMapMarkers()
@@ -162,7 +167,7 @@ namespace UnitMan.Source.Entities.Actors {
            _restingTarget = LevelGridController.Instance.mazeData.restingTargetPosition;
            
            
-           _scatterTargetPosition = LevelGridController.Instance.mazeData.topRightMapPosition;
+           scatterTargetPosition = LevelGridController.Instance.mazeData.topRightMapPosition;
            
            _hubExitTarget = LevelGridController.Instance.mazeData.hubExitMarker;
        }
@@ -172,9 +177,7 @@ namespace UnitMan.Source.Entities.Actors {
            _hubExitTimer.OnEnd += SetStateToChase;
            _chasePollStepTimer.OnEnd += PollChaseTarget;
            _fleeingDurationTimer.OnEnd += SetStateToChase;
-           PowerPelletController.OnPowerPelletCollected += SetStateToFleeing;
-           SessionManagerSingle.OnReset += ResetActor;
-           PelletController.OnPelletEaten += PollThreshold;
+           SessionManagerSingle.Instance.powerPelletEmitter.Attach(_powerPelletObserver);
 
            _chaseDurationTimer.OnEnd += SetStateToScatter;
            _scatterDurationTimer.OnEnd += SetStateToChase;
@@ -257,6 +260,12 @@ namespace UnitMan.Source.Entities.Actors {
            UpdateMotion((Vector2) currentDirection * currentMoveSpeed);
         }
 
+        protected override void UpdateAnimation()
+        {
+            animator.SetInteger(DirectionXAnimator, currentDirection.x);
+            animator.SetInteger(DirectionYAnimator, currentDirection.y);
+        }
+
         private void StateStep()
         {
             switch (state)
@@ -279,14 +288,6 @@ namespace UnitMan.Source.Entities.Actors {
                         SetStateToChase();
                     }
                     break;
-                case State.Resting:
-                    break;
-                case State.Chase:
-                    break;
-                case State.Scatter:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -356,12 +357,7 @@ namespace UnitMan.Source.Entities.Actors {
            // pathFindThread.Start();
            return bestTurn;
        }
-        
-        private bool IsCenteredAt(Vector3 position)
-        {
-            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
-        }
-        
+
         private bool IsCenteredAt(Vector2Int position)
         {
             return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
@@ -409,17 +405,7 @@ namespace UnitMan.Source.Entities.Actors {
                 currentTargetPosition = finalPosition;
        }
 
-       private static Quadrant GetQuadrant(Vector2 position, Vector2 centralPosition) {
-           bool isUp = position.y >= centralPosition.y;
-           bool isRight = position.x >= centralPosition.x;
-           if (isUp) {
-               return isRight ? Quadrant.UpRight : Quadrant.UpLeft;
-           }
-
-           return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
-       }
-       
-       private static Quadrant GetQuadrant(Vector2Int position, Vector2Int centralPosition) {
+          private static Quadrant GetQuadrant(Vector2Int position, Vector2Int centralPosition) {
            bool isUp = position.y >= centralPosition.y;
            bool isRight = position.x >= centralPosition.x;
            if (isUp) {
@@ -443,7 +429,7 @@ namespace UnitMan.Source.Entities.Actors {
            switch (previousState)
            {
                case State.Resting:
-                   PelletController.OnPelletEaten -= PollThreshold;
+                   SessionManagerSingle.Instance.onPelletEatenEmitter.Detach(_pelletEatenObserver);
                    break;
                case State.ExitingHub:
                    _hubExitTimer.Stop();
@@ -485,7 +471,7 @@ namespace UnitMan.Source.Entities.Actors {
            {
                case State.Resting:
                    currentTargetPosition = _restingTarget;
-                   PelletController.OnPelletEaten += PollThreshold;
+                   SessionManagerSingle.Instance.onPelletEatenEmitter.Attach(_pelletEatenObserver);
                    break;
                case State.ExitingHub:
                    TargetHubExit();
@@ -511,7 +497,7 @@ namespace UnitMan.Source.Entities.Actors {
 
                case State.Scatter:
                {
-                   currentTargetPosition = _scatterTargetPosition;
+                   currentTargetPosition = scatterTargetPosition;
                    _scatterDurationTimer.Start();
                    break;
                }
@@ -580,9 +566,9 @@ namespace UnitMan.Source.Entities.Actors {
             _eatenGhostsTotal = 0;
         }
 
-        protected override void Freeze(FreezeType freezeType)
+        protected override void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
         {
-            base.Freeze(freezeType);
+            base.Freeze(source, freezeType);
             StopChasePollTimer();
             if (state == State.Eaten) animator.enabled = true;
         }
