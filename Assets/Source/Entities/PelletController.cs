@@ -8,8 +8,7 @@ namespace UnitMan.Source.Entities
     {
         private GameObject _gameObject;
         protected int scoreValue = 10;
-
-        public static event Action OnPelletEaten;
+        
 
         protected virtual void Awake() {
             _gameObject = gameObject;
@@ -30,7 +29,7 @@ namespace UnitMan.Source.Entities
         protected virtual void UpdateSessionState() {
             SessionDataModel.Instance.pelletsEaten++;
             SessionManagerSingle.CheckIfGameIsWon();
-            OnPelletEaten?.Invoke();
+            SessionManagerSingle.Instance.onPelletEatenEmitter.EmitNotification();
         }
     }
 }
