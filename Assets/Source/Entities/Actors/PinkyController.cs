@@ -4,6 +4,7 @@ namespace UnitMan.Source.Entities.Actors
 {
     public class PinkyController : GhostController
     {
+        //BUG: sometimes Pinky stays still in ghost house
         public override void Initialize()
         {
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
