@@ -17,7 +17,7 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 
 		public void EmitNotification()
 		{
-			foreach (Observer observer in _observers)//_observers seems to be altered in this foreach, copying it with ToList() solves
+			foreach (Observer observer in _observers.ToArray())//_observers seems to be altered in this foreach, copying it with ToList() solves
 														//this but generates a lot of garbage
 														//happens in PelletController and TimerManager
 			{
@@ -32,7 +32,8 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 		
 		~Emitter()
 		{
-			foreach (Observer observer in _observers)
+			foreach (Observer observer in _observers.ToArray()) //intentionally copying collection to avoid unintended
+																//modifications
 			{
 				Detach(observer);
 			}
@@ -67,7 +68,7 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 		
 		~Emitter()
 		{
-			foreach (Observer<TDataContainer> observer in _observers)
+			foreach (Observer<TDataContainer> observer in _observers.ToArray())
 			{
 				Detach(observer);
 			}
