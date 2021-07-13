@@ -4,7 +4,6 @@ namespace UnitMan.Source.Entities.Actors
 {
     public class ClydeController : GhostController
     {
-        //TODO: set target to initialPosition first and then chase position when pellet threshold is achieved
         public override void Initialize() {
             standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
