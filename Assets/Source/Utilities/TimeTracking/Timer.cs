@@ -6,7 +6,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
 {
     //Responsibility: Abstract model for finite timers inside other classes
     public event System.Action OnEnd;
-    public readonly float waitTime;
+    private readonly float _waitTime;
     public float currentTime;
     private readonly bool _autoStart;
     private readonly bool _oneTime;
@@ -30,7 +30,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     }
 
     public Timer(float waitTime, bool autoStart, bool oneTime)  { // prev was waitTime = 1, autoStart = false, oneTime = true
-        this.waitTime = waitTime;
+        _waitTime = waitTime;
         _autoStart = autoStart;
         _oneTime = oneTime;
         _timeObserver = new Observer<float>(OnNotified);
@@ -41,7 +41,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     private void OnNotified(Emitter<float> source, float deltaTime)
     {
         if (!Active) return;
-        if (currentTime < waitTime) {
+        if (currentTime < _waitTime) {
             currentTime += Time.deltaTime;
         }
         else {
@@ -62,13 +62,5 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     ~Timer() {
         TimerManager.Instance.timeEmitter.Detach(_timeObserver);
      }
-    
-     
-
-     //TODO: make TimerManager Singleton
-     //TODO: manage Timer Manager with SessionManager
-     //observer/dispose
-     
-     //https://docs.microsoft.com/en-us/dotnet/api/system.idisposable?view=net-5.0//gameprogrammingpatterns.com/observer.html
 }
 }
