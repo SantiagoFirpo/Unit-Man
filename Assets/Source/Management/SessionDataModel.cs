@@ -1,5 +1,4 @@
 using TMPro;
-using UnitMan.Source.Entities.Actors;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +6,6 @@ namespace UnitMan.Source.Management
 {
     public class SessionDataModel : MonoBehaviour
     {
-        //TODO: add score label
         //TODO: add lives icons
         public static SessionDataModel Instance
         {
@@ -32,18 +30,14 @@ namespace UnitMan.Source.Management
             UpdateScoreLabel();
         }
 
-        public void UpdateScoreLabel()
+        private void UpdateScoreLabel()
         {
-            _scoreLabel.text = $"Score: \n {_score}";
+            scoreLabel.text = $"Score: \n {_score}";
         }
 
         private void UpdateLivesLabel() {
-            _livesLabel.text = $"Lives: {lives}";
+            livesLabel.text = $"Lives: \n {lives}";
             // _scoreLabel.text = $"Score: {_score}";
-        }
-
-        private void UpdateInvincibleUI(float newValue) {
-            _invincibleTimer.fillAmount = newValue;
         }
 
         // Start is called before the first frame update
@@ -52,12 +46,9 @@ namespace UnitMan.Source.Management
         private int _score;
 
         [SerializeField]
-        private TMP_Text _livesLabel;
+        private TMP_Text livesLabel;
         
         [SerializeField]
-        private TMP_Text _scoreLabel;
-        
-        [SerializeField]
-        private Image _invincibleTimer;
+        private TMP_Text scoreLabel;
     }
 }
