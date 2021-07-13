@@ -102,10 +102,7 @@ namespace UnitMan.Source.Management
         public static void CheckIfGameIsWon() {
             if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.mazeData.pelletCount) return;
             // Debug.Log("You won!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-            foreach (Actor actor in FindObjectsOfType<Actor>()) {
-                actor.Initialize();
-            }
+            SceneManager.LoadScene("You Won", LoadSceneMode.Single);
         }
 
         public void Die() {
