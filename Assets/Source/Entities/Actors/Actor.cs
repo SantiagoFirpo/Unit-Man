@@ -32,16 +32,19 @@ namespace UnitMan.Source.Entities.Actors {
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
-        [HideInInspector]
-        public Animator animator;
+        protected Animator animator;
+        
+        private Vector3 _rightWarpPosition;
+        
+        private Vector3 _leftWrapPosition;
+        
         
         public Vector2Int gridPosition;
         private bool _isWrapping;
 
         private Observer _resetObserver;
-        private Observer<FreezeType> _freezeObserver;
+        private Observer _freezeObserver;
         private Observer _unfreezeObserver;
-        protected bool frozen = true;
 
         public enum Direction
         {
@@ -53,19 +56,20 @@ namespace UnitMan.Source.Entities.Actors {
             ResetActor();
     }
 
-    protected abstract void ResetActor();
+    protected virtual void ResetActor()
+    {
+        ResetPosition();
+    }
 
-    protected virtual void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
+    protected virtual void Freeze()
     {
         animator.enabled = false;
-        frozen = true;
         thisRigidbody.simulated = false;
     }
 
     protected virtual void Unfreeze()
     {
         animator.enabled = true;
-        frozen = false;
         thisRigidbody.simulated = true;
     }
 
@@ -75,6 +79,8 @@ namespace UnitMan.Source.Entities.Actors {
             thisTransform = transform;
             thisGameObject = gameObject;
             
+           
+            
             
             SubscribeForEvents();
             StartPosition = thisTransform.position;
@@ -82,13 +88,19 @@ namespace UnitMan.Source.Entities.Actors {
 
     private void SubscribeForEvents()
     {
-        _resetObserver = new Observer(ResetPosition);
-        _freezeObserver = new Observer<FreezeType>(Freeze);
+        _resetObserver = new Observer(ResetActor);
+        _freezeObserver = new Observer(Freeze);
         _unfreezeObserver = new Observer(Unfreeze);
         
         SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
         SessionManagerSingle.Instance.freezeEmitter.Attach(_freezeObserver);
         SessionManagerSingle.Instance.unfreezeEmitter.Attach(_unfreezeObserver);
+    }
+
+    private void Start()
+    {
+        _rightWarpPosition = SessionManagerSingle.Instance.rightWrap.position;
+        _leftWrapPosition = SessionManagerSingle.Instance.leftWrap.position;
     }
 
     protected virtual void Update()
@@ -173,26 +185,33 @@ namespace UnitMan.Source.Entities.Actors {
                 _ => Vector2Int.zero
             };
         }
+        
+        protected bool IsCenteredAt(Vector2Int position)
+        {
+            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
+        }
+        
+        protected bool IsCenteredAt(Vector3 position)
+        {
+            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
+        }
 
         protected virtual void FixedUpdate() {
             UpdateGridPosition();
             LevelGridController.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
+
             
-            if (LevelGridController.VectorApproximately(thisTransform.position,
-                                            SessionManagerSingle.Instance.rightWrap.position,
-                                            0.1f)
+            if (IsCenteredAt(_rightWarpPosition)
                 && !_isWrapping)
             {
-                thisTransform.position = SessionManagerSingle.Instance.leftWrap.position;
+                thisTransform.position = _leftWrapPosition;
                 _isWrapping = true;
             }
             
-            else if (LevelGridController.VectorApproximately(thisTransform.position,
-                                                SessionManagerSingle.Instance.leftWrap.position,
-                                                0.1f)
+            else if (IsCenteredAt(_leftWrapPosition)
                      && !_isWrapping)
             {
-                thisTransform.position = SessionManagerSingle.Instance.rightWrap.position;
+                thisTransform.position = _rightWarpPosition;
                 _isWrapping = true;
             }
 
