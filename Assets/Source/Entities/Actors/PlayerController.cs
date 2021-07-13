@@ -1,7 +1,5 @@
-using System;
 using Input;
 using UnitMan.Source.Management;
-using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -12,7 +10,6 @@ namespace UnitMan.Source.Entities.Actors
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerController : Actor
     {
-        //TODO: death animation
 
         private const float MOVE_SPEED = 5f;
         public const float PLAYER_STEP_TIME = 0.2f;
@@ -25,14 +22,27 @@ namespace UnitMan.Source.Entities.Actors
 
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
-        private static readonly int DeadAnimatorParam = Animator.StringToHash("Dead");
+        private static readonly int OnDeathAnimTrigger = Animator.StringToHash("OnDeath");
+        private bool _wasStoppedLastFrame = true;
+        private bool _isDead;
+        private static readonly int OnReset = Animator.StringToHash("OnReset");
 
         public const float INVINCIBLE_TIME_SECONDS = 10f;
 
+        public void ResetAnimation()
+        {
+            animator.enabled = true;
+            animator.Play("Up");
+            animator.SetTrigger(OnReset);
+            animator.ResetTrigger(OnReset);
+        }
+        
         protected override void ResetActor()
         {
-            animator.SetBool(DeadAnimatorParam, true);
+            base.ResetActor();
+            _isDead = false;
             animator.enabled = false;
+            
         }
 
         public override void Initialize()
@@ -56,17 +66,10 @@ namespace UnitMan.Source.Entities.Actors
             _invincibleTimer.OnEnd += DisableInvincibility;
         }
 
-        protected override void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
+        protected override void Freeze()
         {
-            base.Freeze(source, freezeType);
+            base.Freeze();
             _invincibleTimer.Stop();
-            // Debug.Log(freezeType.ToString());
-            if (freezeType != FreezeType.Death) return;
-            // Debug.Log("Should Activate Death Animation");
-            frozen = false;
-            animator.enabled = true;
-            animator.SetBool(DeadAnimatorParam, true);
-            animator.Play("Death");
 
         }
 
@@ -75,6 +78,15 @@ namespace UnitMan.Source.Entities.Actors
             base.Unfreeze();
             _invincibleTimer.Start();
             animator.enabled = true;
+        }
+
+        public void Die()
+        {
+            _isDead = true;
+            animator.enabled = true;
+            animator.Play("Death");
+            animator.SetTrigger(OnDeathAnimTrigger);
+            animator.ResetTrigger(OnDeathAnimTrigger);
         }
 
         protected override void UnsubscribeFromEvents()
@@ -94,7 +106,13 @@ namespace UnitMan.Source.Entities.Actors
         protected override void Update()
         {
             base.Update();
-            animator.enabled = !(thisRigidbody.velocity == Vector2.zero || frozen);
+            bool isStopped = (thisRigidbody.velocity == Vector2.zero || !thisRigidbody.simulated) && !_isDead;
+            if (!_wasStoppedLastFrame)
+            {
+                animator.enabled = !isStopped;
+            }
+
+            _wasStoppedLastFrame = isStopped;
         }
 
         protected override void FixedUpdate()
