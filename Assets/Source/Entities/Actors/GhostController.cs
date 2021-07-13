@@ -10,6 +10,8 @@ using UnityEngine;
 namespace UnitMan.Source.Entities.Actors {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
+        //BUG: ghosts stay blue after reset
+        // Power pellet animation and sound bugs
 
 
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
@@ -123,8 +125,6 @@ namespace UnitMan.Source.Entities.Actors {
         private static readonly int OnFleeEndAnimTrigger = Animator.StringToHash("OnFleeEnd");
         
         private Vector2Int _restingTarget;
-        private static int _eatenGhostsTotal;
-        private static int _fleeingGhostsTotal;
 
 
         public override void Initialize() {
@@ -288,6 +288,14 @@ namespace UnitMan.Source.Entities.Actors {
                         SetStateToChase();
                     }
                     break;
+                case State.Resting:
+                    break;
+                case State.Chase:
+                    break;
+                case State.Scatter:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -358,13 +366,8 @@ namespace UnitMan.Source.Entities.Actors {
            return bestTurn;
        }
 
-        private bool IsCenteredAt(Vector2Int position)
-        {
-            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
-        }
-        
 
-        
+
 
         private void SetDirection(int directionNumber) => currentDirection = DirectionToVector2Int((Direction) directionNumber);
           private void FollowPath()
@@ -445,17 +448,17 @@ namespace UnitMan.Source.Entities.Actors {
                    currentMoveSpeed = standardMoveSpeed;
                    animator.SetTrigger(OnFleeEndAnimTrigger);
 
-                   _fleeingGhostsTotal--;
+                   SessionManagerSingle.Instance.fleeingGhostsTotal--;
                    break;
                case State.Eaten:
                    EnableCollisionsWithPlayer();
                    currentMoveSpeed = standardMoveSpeed;
                    animator.runtimeAnimatorController = _standardAnimController;
-                   _eatenGhostsTotal--;
-                   if (_eatenGhostsTotal == 0)
+                   SessionManagerSingle.Instance.eatenGhostsTotal--;
+                   if (SessionManagerSingle.Instance.eatenGhostsTotal == 0)
                    {
                        AudioManagerSingle.Instance.PlayClip(
-                           _fleeingGhostsTotal == 0
+                           SessionManagerSingle.Instance.fleeingGhostsTotal == 0
                                ? AudioManagerSingle.AudioEffectType.Siren
                                : AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
                    }
@@ -510,7 +513,7 @@ namespace UnitMan.Source.Entities.Actors {
                    SetTargetAwayFromPlayer();
                    animator.SetBool(FleeingAnimator, true);
 
-                   _fleeingGhostsTotal++;
+                   SessionManagerSingle.Instance.fleeingGhostsTotal++;
                    break;
                }
                case State.Eaten: {
@@ -518,12 +521,12 @@ namespace UnitMan.Source.Entities.Actors {
                    currentMoveSpeed = RETREAT_MOVE_SPEED;
                    currentTargetPosition = hubPosition;
                    animator.runtimeAnimatorController = eatenAnimController;
-                   _eatenGhostsTotal++;
+                   SessionManagerSingle.Instance.eatenGhostsTotal++;
                    AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
-                   SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, _eatenGhostsTotal));
+                   SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, SessionManagerSingle.Instance.eatenGhostsTotal));
                    
                    SessionManagerSingle.Instance.freezeTimer.Start();
-                   SessionManagerSingle.Instance.Freeze(FreezeType.EatGhost);
+                   SessionManagerSingle.Instance.Freeze();
 
                    break;
                }
@@ -561,17 +564,18 @@ namespace UnitMan.Source.Entities.Actors {
 
         protected override void ResetActor()
         {
+            base.ResetActor();
             SetState(State.ExitingHub);
             if (_possibleTurnsTotal == 1) FollowPath();
-            _eatenGhostsTotal = 0;
+            SessionManagerSingle.Instance.eatenGhostsTotal = 0;
         }
 
-        protected override void Freeze(Emitter<FreezeType> source, FreezeType freezeType)
+        protected override void Freeze()
         {
-            base.Freeze(source, freezeType);
+            base.Freeze();
             StopChasePollTimer();
             if (state == State.Eaten) animator.enabled = true;
         }
     }
-    //TODO: if ghost is fleeing and player dies, animation takes a while to change
+    //BUG: if ghost is fleeing and player dies, animation takes a while to change
 }
