@@ -15,6 +15,7 @@ namespace UnitMan.Source.Management
         public Timer freezeTimer;
         public static SessionManagerSingle Instance { get; private set; }
         private const float STARTUP_TIME_SECONDS = 4.5f;
+        private const float DEATH_ANIMATION_SECONDS = 1.5f;
         private Timer _startupTimer;
         private Timer _deathAnimationTimer;
         
@@ -30,7 +31,7 @@ namespace UnitMan.Source.Management
 
         private bool _frozen = true;
 
-        public Emitter<FreezeType> freezeEmitter;
+        public Emitter freezeEmitter;
 
         public Emitter unfreezeEmitter;
 
@@ -39,6 +40,9 @@ namespace UnitMan.Source.Management
         public Emitter onPelletEatenEmitter;
         
         public Emitter powerPelletEmitter;
+        
+        public int eatenGhostsTotal;
+        public int fleeingGhostsTotal;
 
 
         // Start is called before the first frame update
@@ -50,7 +54,7 @@ namespace UnitMan.Source.Management
             }
             Instance = this;
 
-            freezeEmitter = new Emitter<FreezeType>();
+            freezeEmitter = new Emitter();
             unfreezeEmitter = new Emitter();
             resetEmitter = new Emitter();
             
@@ -63,6 +67,7 @@ namespace UnitMan.Source.Management
         private void DeathAnimationTimerOnOnEnd()
         {
             SessionDataModel.Instance.LoseLife();
+            playerController.ResetAnimation();
             if (SessionDataModel.Instance.lives < 0) {
                 GameOver();
             }
@@ -75,7 +80,8 @@ namespace UnitMan.Source.Management
         {
             _startupTimer = new Timer(STARTUP_TIME_SECONDS, true, true);
             freezeTimer = new Timer(FREEZE_SECONDS, false, true);
-            _deathAnimationTimer = new Timer(1.5f, false, true);
+            
+            _deathAnimationTimer = new Timer(DEATH_ANIMATION_SECONDS, false, true);
             
             playerController = player.GetComponent<PlayerController>();
             _startupTimer.OnEnd += StartLevel;
@@ -83,7 +89,7 @@ namespace UnitMan.Source.Management
             _deathAnimationTimer.OnEnd += DeathAnimationTimerOnOnEnd;
             _readyText = GameObject.Find("Ready!");
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
-            Freeze(FreezeType.GameStart);
+            Freeze();
         }
 
         private void StartLevel() {
@@ -106,19 +112,20 @@ namespace UnitMan.Source.Management
             Debug.Log("Died!");
             
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Death, 1, false);
-            Freeze(FreezeType.Death);
+            Freeze();
+            playerController.Die();
             _deathAnimationTimer.Start();
         }
         
         
-        public void Freeze(FreezeType freezeType)
+        public void Freeze()
         {
             if (_frozen) return;
-            freezeEmitter.EmitNotification(freezeType);
+            freezeEmitter.EmitNotification();
             _frozen = true;
         }
-        
-        public void Unfreeze()
+
+        private void Unfreeze()
         {
             if (!_frozen) return;
             unfreezeEmitter.EmitNotification();
@@ -126,7 +133,7 @@ namespace UnitMan.Source.Management
         }
         private void ResetSession() {
             resetEmitter.EmitNotification();
-            Freeze(FreezeType.GameStart);
+            Freeze();
             _startupTimer.Start();
             _readyText.SetActive(true);
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.IntroMusic, 0, false);
