@@ -18,7 +18,7 @@ namespace UnitMan.Source.Entities.Actors
         private Vector2Int _inputVector;
 
         public bool isInvincible;
-        private Timer _invincibleTimer;
+        public Timer invincibleTimer;
 
         private static readonly int DirectionXAnimator = Animator.StringToHash("DirectionX");
         private static readonly int DirectionYAnimator = Animator.StringToHash("DirectionY");
@@ -63,20 +63,20 @@ namespace UnitMan.Source.Entities.Actors
             _inputMaps.Player.Enable();
             _inputMaps.Player.Move.performed += OnMove;
             
-            _invincibleTimer.OnEnd += DisableInvincibility;
+            invincibleTimer.OnEnd += DisableInvincibility;
         }
 
         protected override void Freeze()
         {
             base.Freeze();
-            _invincibleTimer.Stop();
+            invincibleTimer.Stop();
 
         }
 
         protected override void Unfreeze()
         {
             base.Unfreeze();
-            _invincibleTimer.Start();
+            invincibleTimer.Start();
             animator.enabled = true;
         }
 
@@ -92,7 +92,7 @@ namespace UnitMan.Source.Entities.Actors
         protected override void UnsubscribeFromEvents()
         {
             base.UnsubscribeFromEvents();
-            _invincibleTimer.OnEnd -= DisableInvincibility;
+            invincibleTimer.OnEnd -= DisableInvincibility;
             _inputMaps.Player.Move.performed -= OnMove;
             _inputMaps.Player.Disable();
         }
@@ -100,7 +100,7 @@ namespace UnitMan.Source.Entities.Actors
         private void DisableInvincibility()
         {
             isInvincible = false;
-            AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
+
         }
 
         protected override void Update()

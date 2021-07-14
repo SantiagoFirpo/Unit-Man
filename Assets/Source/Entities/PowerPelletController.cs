@@ -21,6 +21,7 @@ namespace UnitMan.Source.Entities
         {
             SessionManagerSingle.Instance.powerPelletEmitter.EmitNotification();
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
+            _playerController.invincibleTimer.Start();
         }
 
         
