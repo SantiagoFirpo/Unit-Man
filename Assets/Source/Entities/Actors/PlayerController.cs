@@ -1,5 +1,4 @@
 using Input;
-using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -50,7 +49,7 @@ namespace UnitMan.Source.Entities.Actors
             base.Initialize();
             _inputMaps = new InputMaps();
 
-            _invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS, false, true);
+            invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS + 1.8f, false, true);
             
             SubscribeForEvents();
 
