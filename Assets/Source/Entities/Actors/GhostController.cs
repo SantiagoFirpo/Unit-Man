@@ -114,10 +114,13 @@ namespace UnitMan.Source.Entities.Actors {
         private static readonly Func<bool,bool> IsElementTrue = element => element;
 
         private Timer _fleeingDurationTimer;
-        private static readonly int OnNearEndAnimTrigger = Animator.StringToHash("OnNearEnd");
-        private static readonly int OnFleeEndAnimTrigger = Animator.StringToHash("OnFleeEnd");
-        
+
         private Vector2Int _restingTarget;
+        private static readonly int PowerPelletCollectTrigger = Animator.StringToHash("OnPowerPelletCollect");
+        private static readonly int OnFleeNearEndTrigger = Animator.StringToHash("OnFleeNearEnd");
+        private static readonly int OnArrivedGhostHouseTrigger = Animator.StringToHash("OnArrivedGhostHouse");
+        private static readonly int OnFleeEndTrigger = Animator.StringToHash("OnFleeEnd");
+        private static readonly int OnEatenTrigger = Animator.StringToHash("OnEaten");
 
 
         public override void Initialize() {
@@ -142,12 +145,12 @@ namespace UnitMan.Source.Entities.Actors {
            _chasePollStepTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
            _hubExitTimer = new Timer(6f, false, true);
            
-           _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, false);
+           _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, true);
            _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
            _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
 
            _pelletEatenObserver = new Observer(PollThreshold);
-           _powerPelletObserver = new Observer(SetStateToFleeing);
+           _powerPelletObserver = new Observer(OnPowerPelletCollect);
            ResolveMapMarkers();
        }
        private void ResolveMapMarkers()
@@ -156,7 +159,7 @@ namespace UnitMan.Source.Entities.Actors {
            _topRightMapBound = LevelGridController.Instance.mazeData.topRightMapPosition;
            bottomLeftMapBound = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
            _bottomRightMapBound = LevelGridController.Instance.mazeData.bottomRightMapPosition;
-           hubPosition = LevelGridController.Instance.mazeData.hubPosition;
+           _hubPosition = LevelGridController.Instance.mazeData.hubPosition;
            _restingTarget = LevelGridController.Instance.mazeData.restingTargetPosition;
            
            
@@ -219,8 +222,13 @@ namespace UnitMan.Source.Entities.Actors {
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
         }
         
-       private void SetStateToFleeing()
+       private void OnPowerPelletCollect()
        {
+           animator.ResetTrigger(PowerPelletCollectTrigger);
+           animator.SetTrigger(PowerPelletCollectTrigger);
+           //PLAY POWER PELLET SOUND
+           // animator.ResetTrigger("OnPowerPelletCollect");
+           Debug.Log("Collected Power Pellet");
            if (state == State.Eaten) return;
            SetState(State.Fleeing);
            _fleeingDurationTimer.Start();
@@ -270,25 +278,23 @@ namespace UnitMan.Source.Entities.Actors {
                     }
                     break;
                 case State.Fleeing:
-                    if (_fleeingDurationTimer.currentTime > 0.7f * PlayerController.INVINCIBLE_TIME_SECONDS)
+                    if (Math.Abs(_fleeingDurationTimer.currentTime - 0.7f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
                     {
-                        animator.SetTrigger(OnNearEndAnimTrigger);
+                        animator.SetTrigger(OnFleeNearEndTrigger);
                     }
+                    
+                    if (Math.Abs(_fleeingDurationTimer.currentTime - 0.81f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
+                    {
+                        animator.ResetTrigger(OnFleeNearEndTrigger);
+                    }
+                    
                     break;
                 case State.Eaten:
-                    if (IsCenteredAt(hubPosition))
+                    if (IsCenteredAt(_hubPosition))
                     {
                         SetStateToChase();
                     }
                     break;
-                case State.Resting:
-                    break;
-                case State.Chase:
-                    break;
-                case State.Scatter:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -413,10 +419,11 @@ namespace UnitMan.Source.Entities.Actors {
 
        protected void SetState(State targetState)
        {
-           if (state == targetState) return;
+           if (state == targetState && (state != targetState || state != State.Fleeing)) return;
            previousState = state;
            state = targetState;
            OnStateExit();
+
            OnStateEntered();
        }
 
@@ -439,8 +446,6 @@ namespace UnitMan.Source.Entities.Actors {
                case State.Fleeing:
                    _fleeingDurationTimer.Stop();
                    currentMoveSpeed = standardMoveSpeed;
-                   animator.SetTrigger(OnFleeEndAnimTrigger);
-
                    SessionManagerSingle.Instance.fleeingGhostsTotal--;
                    break;
                case State.Eaten:
@@ -463,6 +468,8 @@ namespace UnitMan.Source.Entities.Actors {
        }
 
        private void OnStateEntered() {
+           animator.ResetTrigger(OnFleeEndTrigger);
+           animator.ResetTrigger(OnFleeNearEndTrigger);
            // Debug.Log($"Entered state {state}", thisGameObject);
            switch (state)
            {
@@ -486,6 +493,13 @@ namespace UnitMan.Source.Entities.Actors {
                    {
                        AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
                    }
+                   if (previousState == State.Fleeing)
+                   {
+                       Debug.Log("Should return to normal");
+                       AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
+                       animator.ResetTrigger(OnFleeEndTrigger);
+                       animator.SetTrigger(OnFleeEndTrigger);
+                   }
                    break;
                }
 
@@ -502,7 +516,7 @@ namespace UnitMan.Source.Entities.Actors {
                    thisGameObject.layer = _defaultLayer;
                    currentMoveSpeed = _slowMoveSpeed;
                    SetTargetAwayFromPlayer();
-                   animator.SetBool(FleeingAnimator, true);
+                   
 
                    SessionManagerSingle.Instance.fleeingGhostsTotal++;
                    break;
@@ -556,9 +570,11 @@ namespace UnitMan.Source.Entities.Actors {
         protected override void ResetActor()
         {
             base.ResetActor();
+            _pathResolved = false;
+            FollowPath();
             SetState(State.ExitingHub);
-            if (_possibleTurnsTotal == 1) FollowPath();
             SessionManagerSingle.Instance.eatenGhostsTotal = 0;
+            animator.Play("Up");
         }
 
         protected override void Freeze()
