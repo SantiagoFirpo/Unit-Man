@@ -7,14 +7,27 @@ namespace UnitMan.Source.Management
     public class MainMenu : MonoBehaviour
     {
         [SerializeField]
-        private Button startButton;
+        private Button classicalMapButton;
+        [SerializeField]
+        private Button testMapButton;
         
-        private static void OnPressStart() {
+        public void OnPressStart() {
+            // classicalMapButton.gameObject.SetActive(true);
+            testMapButton.gameObject.SetActive(true);
+        }
+
+        public void OnSelectClassicMap()
+        {
+            SceneManager.LoadScene("Classic Map", LoadSceneMode.Single);
+        }
+
+        public void OnSelectTestMap()
+        {
             SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         }
 
-        private void Start() {
-            startButton.onClick.AddListener(OnPressStart);
+        public void Start() {
+            // startButton.onClick.AddListener(OnPressStart);
         }
     }
 }
