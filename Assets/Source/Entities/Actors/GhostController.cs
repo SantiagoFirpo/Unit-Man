@@ -105,14 +105,7 @@ namespace UnitMan.Source.Entities.Actors {
         protected PlayerController playerController;
         
         //Components
-        
-        [Header("Animation Parameters")]
-        
-        [SerializeField]
-        private RuntimeAnimatorController eatenAnimController;
-        private RuntimeAnimatorController _standardAnimController;
-        private static readonly int FleeingAnimator = Animator.StringToHash("Fleeing");
-        
+
         [Header("Debug Parameters")]
         [SerializeField]
         private Color debugColor;
@@ -138,7 +131,7 @@ namespace UnitMan.Source.Entities.Actors {
             _slowMoveSpeed = standardMoveSpeed/2f;
             pelletThreshold = 1;
            
-            _standardAnimController = animator.runtimeAnimatorController;
+            // _standardAnimController = animator.runtimeAnimatorController;
         }
        private void ResolveDependencies()
        {
@@ -453,7 +446,8 @@ namespace UnitMan.Source.Entities.Actors {
                case State.Eaten:
                    EnableCollisionsWithPlayer();
                    currentMoveSpeed = standardMoveSpeed;
-                   animator.runtimeAnimatorController = _standardAnimController;
+                   // animator.runtimeAnimatorController = _standardAnimController;
+                   animator.SetTrigger(OnArrivedGhostHouseTrigger);
                    SessionManagerSingle.Instance.eatenGhostsTotal--;
                    if (SessionManagerSingle.Instance.eatenGhostsTotal == 0)
                    {
@@ -484,13 +478,10 @@ namespace UnitMan.Source.Entities.Actors {
 
                    StartChasePollStepTimer();
                        StartChaseDuration();
-                   
-                   
-                   animator.SetBool(FleeingAnimator, false);
-                   if (animator.runtimeAnimatorController != _standardAnimController)
-                   {
-                       animator.runtimeAnimatorController = _standardAnimController;
-                   }
+                       // if (animator.runtimeAnimatorController != _standardAnimController)
+                   // {
+                   //     animator.runtimeAnimatorController = _standardAnimController;
+                   // }
                    if (playerController.isInvincible)
                    {
                        AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
@@ -519,8 +510,8 @@ namespace UnitMan.Source.Entities.Actors {
                case State.Eaten: {
                    thisGameObject.layer = _inactiveLayer;
                    currentMoveSpeed = RETREAT_MOVE_SPEED;
-                   currentTargetPosition = hubPosition;
-                   animator.runtimeAnimatorController = eatenAnimController;
+                   currentTargetPosition = _hubPosition;
+                   animator.SetTrigger(OnEatenTrigger);
                    SessionManagerSingle.Instance.eatenGhostsTotal++;
                    AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
                    SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, SessionManagerSingle.Instance.eatenGhostsTotal));
