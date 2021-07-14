@@ -32,7 +32,7 @@ namespace UnitMan.Source.Entities.Actors {
 
 
         [Header("Map Parameters")]
-        protected Vector2Int hubPosition;
+        private Vector2Int _hubPosition;
         
         private Vector2Int _topLeftMapBound;
         
