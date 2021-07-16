@@ -3,7 +3,7 @@ using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
-namespace UnitMan.Source.Entities.Actors {
+namespace UnitMan.Source.Entities {
     [RequireComponent(typeof(CircleCollider2D),
                     typeof(Rigidbody2D),
                     typeof(Animator))]

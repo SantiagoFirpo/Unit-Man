@@ -1,8 +1,7 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace UnitMan.Source.Management
+namespace UnitMan.Source.Management.Session
 {
     public class SessionDataModel : MonoBehaviour
     {

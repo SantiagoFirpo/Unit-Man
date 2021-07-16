@@ -2,7 +2,7 @@ using UnitMan.Source.Management;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.UI
 {
     public class ReadyController : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 ﻿using UnitMan.Source.Utilities.Pathfinding;
 
-namespace UnitMan.Source.Entities.Actors
+namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class ClydeController : GhostController
     {

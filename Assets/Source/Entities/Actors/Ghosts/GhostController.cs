@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnitMan.Source.Management;
+using UnitMan.Source.Management.Audio;
+using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 
-namespace UnitMan.Source.Entities.Actors {
+namespace UnitMan.Source.Entities.Actors.Ghosts {
     public class GhostController : Actor {
         //TODO: refactor/organize this class
         //BUG: ghosts stay blue after reset
@@ -495,7 +497,6 @@ namespace UnitMan.Source.Entities.Actors {
                    }
                    if (previousState == State.Fleeing)
                    {
-                       Debug.Log("Should return to normal");
                        AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
                        animator.ResetTrigger(OnFleeEndTrigger);
                        animator.SetTrigger(OnFleeEndTrigger);

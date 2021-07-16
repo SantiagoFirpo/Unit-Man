@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using UnitMan.Source.Entities.Actors;
+using UnitMan.Source.Config;
+using UnitMan.Source.Entities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 

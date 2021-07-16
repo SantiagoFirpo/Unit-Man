@@ -1,7 +1,6 @@
-using System;
 using UnitMan.Source.Entities.Actors;
 using UnitMan.Source.Management;
-using UnitMan.Source.Utilities.ObserverSystem;
+using UnitMan.Source.Management.Audio;
 
 namespace UnitMan.Source.Entities
 {

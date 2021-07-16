@@ -1,7 +1,7 @@
 ﻿using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
-namespace UnitMan.Source.Entities.Actors
+namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class InkyController : GhostController
     {

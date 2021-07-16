@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace UnitMan.Source.Management
+namespace UnitMan.Source.UI
 {
     public class MainMenu : MonoBehaviour
     {
@@ -18,7 +18,7 @@ namespace UnitMan.Source.Management
 
         public void OnSelectClassicMap()
         {
-            SceneManager.LoadScene("Classic Map", LoadSceneMode.Single);
+            // SceneManager.LoadScene("Classic Map", LoadSceneMode.Single);
         }
 
         public void OnSelectTestMap()

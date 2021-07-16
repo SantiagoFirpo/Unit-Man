@@ -1,4 +1,5 @@
-﻿using UnitMan.Source.Utilities.ObserverSystem;
+﻿using UnitMan.Source.Management.Time;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
 namespace UnitMan.Source.Utilities.TimeTracking {

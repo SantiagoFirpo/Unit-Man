@@ -1,4 +1,4 @@
-using Input;
+using UnitMan.Source.Config;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;

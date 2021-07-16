@@ -1,4 +1,6 @@
 using UnitMan.Source.Entities.Actors;
+using UnitMan.Source.Management.Audio;
+using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;

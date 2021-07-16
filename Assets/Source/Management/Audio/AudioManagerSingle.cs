@@ -1,8 +1,8 @@
-﻿using UnitMan.Source.Utilities;
+﻿using UnitMan.Source.Config;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
-namespace UnitMan.Source.Management
+namespace UnitMan.Source.Management.Audio
 {
     public sealed class AudioManagerSingle : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace UnitMan.Source.Management
 
         private Observer _resetObserver;
 
-        [SerializeField] private AudioCollection _audioCollection;
+        [SerializeField] private AudioCollection audioCollection;
 
 
         public bool IsTrackPlaying(int trackNumber) {
@@ -55,14 +55,14 @@ namespace UnitMan.Source.Management
             AudioSource source = _tracks[trackNumber];
 
             source.clip = effectType switch {
-                AudioEffectType.Munch => _audioCollection.munch,
-                AudioEffectType.EatGhost => _audioCollection.eatGhost,
-                AudioEffectType.Death => _audioCollection.death,
-                AudioEffectType.Intermission => _audioCollection.intermission,
-                AudioEffectType.Siren => _audioCollection.siren,
-                AudioEffectType.Fleeing => _audioCollection.powerPellet,
-                AudioEffectType.Retreating => _audioCollection.retreating,
-                AudioEffectType.IntroMusic => _audioCollection.introMusic,
+                AudioEffectType.Munch => audioCollection.munch,
+                AudioEffectType.EatGhost => audioCollection.eatGhost,
+                AudioEffectType.Death => audioCollection.death,
+                AudioEffectType.Intermission => audioCollection.intermission,
+                AudioEffectType.Siren => audioCollection.siren,
+                AudioEffectType.Fleeing => audioCollection.powerPellet,
+                AudioEffectType.Retreating => audioCollection.retreating,
+                AudioEffectType.IntroMusic => audioCollection.introMusic,
                 _ => source.clip
             };
             source.Play();
