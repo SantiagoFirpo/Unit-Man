@@ -26,7 +26,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
         [Header("Physics Parameters")]
         
-        protected const float INKY_BLINKY_PINKY_MOVE_SPEED = 3.5f;
+        protected const float PINKY_MOVE_SPEED = 3.5f;
         protected float standardMoveSpeed = 4.5f;
         private float _slowMoveSpeed;
         private const float RETREAT_MOVE_SPEED = 8f;
@@ -78,6 +78,8 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         
         private Timer _chaseDurationTimer;
         private Timer _scatterDurationTimer;
+        
+        private Timer _fleeingDurationTimer;
 
         private Observer _pelletEatenObserver;
         private Observer _powerPelletObserver;
@@ -85,7 +87,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         public enum State {
             Resting, ExitingHub,
             Chase, Scatter, Fleeing, Eaten,
-            
         }
 
         public State state; //DO NOT ASSIGN DIRECTLY, USE SetState(State.TargetState)
@@ -115,7 +116,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         [Header("Utilities")]
         private static readonly Func<bool,bool> IsElementTrue = element => element;
 
-        private Timer _fleeingDurationTimer;
 
         private Vector2Int _restingTarget;
         private static readonly int PowerPelletCollectTrigger = Animator.StringToHash("OnPowerPelletCollect");
@@ -135,8 +135,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             currentMoveSpeed = standardMoveSpeed;
             _slowMoveSpeed = standardMoveSpeed/2f;
             pelletThreshold = 1;
-           
-            // _standardAnimController = animator.runtimeAnimatorController;
         }
        private void ResolveDependencies()
        {
@@ -171,7 +169,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
        }
        private void SubscribeToEvents()
        {
-           // _retreatTimer.OnEnd += ResetPositionAndState;
            _hubExitTimer.OnEnd += SetStateToChase;
            _chasePollStepTimer.OnEnd += PollChaseTarget;
            _fleeingDurationTimer.OnEnd += SetStateToChase;
@@ -228,9 +225,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
        {
            animator.ResetTrigger(PowerPelletCollectTrigger);
            animator.SetTrigger(PowerPelletCollectTrigger);
-           //PLAY POWER PELLET SOUND
-           // animator.ResetTrigger("OnPowerPelletCollect");
-           Debug.Log("Collected Power Pellet");
            if (state == State.Eaten) return;
            SetState(State.Fleeing);
            _fleeingDurationTimer.Start();
@@ -269,7 +263,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }
 
-        private void StateStep()
+        private void StateStep() //TODO: divide this method
         {
             switch (state)
             {
@@ -346,7 +340,6 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
                 {
                     bool isDirectionValid = viableTurns[i]
                                             && (Direction) i != originDirection;
-                                            // && DirectionToVector2Int(i) != currentDirection;
                     if (isDirectionValid) {
                         _neighborHeuristics[i] = LevelGridController.TaxiCabDistance(
                                                                         initialPosition + DirectionToVector2Int(i),
@@ -469,10 +462,9 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            }
        }
 
-       private void OnStateEntered() {
+       private void OnStateEntered() { //TODO: divide this method
            animator.ResetTrigger(OnFleeEndTrigger);
            animator.ResetTrigger(OnFleeNearEndTrigger);
-           // Debug.Log($"Entered state {state}", thisGameObject);
            switch (state)
            {
                case State.Resting:
@@ -585,5 +577,4 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             if (state == State.Eaten) animator.enabled = true;
         }
     }
-    //BUG: if ghost is fleeing and player dies, animation takes a while to change
 }

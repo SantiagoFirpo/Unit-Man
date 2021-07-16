@@ -1,13 +1,12 @@
 using UnitMan.Source.Entities.Actors;
 using UnitMan.Source.Management.Audio;
-using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnitMan.Source.Management
+namespace UnitMan.Source.Management.Session
 {
     public class SessionManagerSingle : MonoBehaviour
     {

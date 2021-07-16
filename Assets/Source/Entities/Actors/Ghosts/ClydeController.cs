@@ -5,7 +5,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
     public class ClydeController : GhostController
     {
         public override void Initialize() {
-            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
+            standardMoveSpeed = PINKY_MOVE_SPEED * 0.8f;
             base.Initialize();
             pelletThreshold = 60;
             scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;

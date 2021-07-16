@@ -4,11 +4,10 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class PinkyController : GhostController
     {
-        //BUG: sometimes Pinky stays still in ghost house
         public override void Initialize()
         {
-            standardMoveSpeed = INKY_BLINKY_PINKY_MOVE_SPEED;
             base.Initialize();
+            standardMoveSpeed = PINKY_MOVE_SPEED;
             scatterTargetPosition = LevelGridController.Instance.mazeData.topLeftMapPosition;
         }
 
