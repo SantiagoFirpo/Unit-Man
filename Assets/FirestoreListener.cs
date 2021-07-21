@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Firebase.Firestore;
 using UnityEngine;
 
@@ -7,18 +7,24 @@ namespace UnitMan
 {
     public class FirestoreListener : MonoBehaviour
     {
+	    private IEnumerable<LeaderData> _localLeaders;
         // Start is called before the first frame update
         private void Start()
         {
-	        FirebaseFirestore firestore = Firebase.Firestore.FirebaseFirestore.DefaultInstance;
-	        firestore.Document("leaders/hhhhh").Listen(dataSnapshot =>
+	        FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
+	        firestore.Collection("leaders").Listen(ListenCallback);
+        }
+
+        private void ListenCallback(QuerySnapshot dataSnapshot)
+        {
+	        
+	        _localLeaders = dataSnapshot.Documents.Select(x => x.ConvertTo<LeaderData>());
+	        foreach (LeaderData leader in _localLeaders)
 	        {
-		        LeaderData leaderData = dataSnapshot.ConvertTo<LeaderData>();
-		        Debug.Log(leaderData.PlayerDisplayName);
-		        Debug.Log(leaderData.PlayerID);
-		        Debug.Log(leaderData.Score);
-		        Debug.Log(leaderData.PlayerWon);
-	        });
+		        Debug.Log(leader.PlayerDisplayName);
+		        Debug.Log(leader.Score);
+		        Debug.Log(leader.PlayerWon);
+	        }
         }
     }
 	}
