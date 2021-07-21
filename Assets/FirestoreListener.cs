@@ -18,7 +18,7 @@ namespace UnitMan
         private void ListenCallback(QuerySnapshot dataSnapshot)
         {
 	        
-	        _localLeaders = dataSnapshot.Documents.Select(x => x.ConvertTo<LeaderData>());
+	        _localLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData);
 	        foreach (LeaderData leader in _localLeaders)
 	        {
 		        Debug.Log(leader.PlayerDisplayName);
@@ -26,5 +26,7 @@ namespace UnitMan
 		        Debug.Log(leader.PlayerWon);
 	        }
         }
+
+        private static LeaderData DocumentToLeaderData(DocumentSnapshot snapshot) => snapshot.ConvertTo<LeaderData>();
     }
 	}
