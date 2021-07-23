@@ -945,7 +945,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72979b783ad67cf43b98c387303e3c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nameField: {fileID: 0}
+  nameField: {fileID: 161555531}
 --- !u!4 &631288274
 Transform:
   m_ObjectHideFlags: 0
@@ -1362,49 +1362,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1050514605}
   m_CullTransparentMesh: 1
---- !u!1 &1243709736
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1243709738}
-  - component: {fileID: 1243709737}
-  m_Layer: 0
-  m_Name: Reader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1243709737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243709736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18a31e5a2b1311a44a26809829cb75a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1243709738
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243709736}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 407.99246, y: 229.96841, z: -815.8767}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1782636784
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,7 +1444,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1782636787}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 631288273}
+        m_TargetAssemblyTypeName: UnitMan.Source.Management.Firebase.Firestore_Leaderboard.FirestoreWriter,
+          Assembly-CSharp
+        m_MethodName: GoToScoreboard
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1782636787
 MonoBehaviour:
   m_ObjectHideFlags: 0
