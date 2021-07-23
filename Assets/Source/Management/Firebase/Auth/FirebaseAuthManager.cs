@@ -24,6 +24,12 @@ namespace UnitMan.Source.Management.Firebase.Auth
         [SerializeField]
         private TextMeshProUGUI loginStatusLabel;
 
+        private enum LoginStatus
+        {
+            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut
+        }
+
+        private LoginStatus _loginStatus;
 
         // Start is called before the first frame update
         private void Awake()
@@ -91,39 +97,79 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void TryRegisterUser(string email, string password)
         {
-            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
-                if (task.IsCanceled) {
+            void RegisterTask(Task<FirebaseUser> task)
+            {
+                if (task.IsCanceled)
+                {
                     Debug.LogError("Asynchronous User Register was cancelled");
+                    _loginStatus = LoginStatus.RegisterCanceled;
+
                     return;
                 }
-                if (task.IsFaulted) {
+
+                if (task.IsFaulted)
+                {
                     Debug.LogError($"Asynchronous User Register encountered an error: {task.Exception}");
+                    _loginStatus = LoginStatus.RegisterError;
+
                     return;
                 }
 
                 // Firebase user has been created.
                 FirebaseUser newUser = task.Result;
-                Debug.LogFormat("Firebase user created successfully: {0} ({1})",
-                    newUser.DisplayName, newUser.UserId);
+                Debug.LogFormat("Firebase user created successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
+                _loginStatus = LoginStatus.RegisterSuccessful;
+                TryLoginUser(email, password);
+            }
+
+            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(RegisterTask);
+            UpdateLoginStatusLabel(email);
+        }
+
+        private void UpdateLoginStatusLabel(string email)
+        {
+            loginStatusLabel.SetText(_loginStatus switch
+            {
+                LoginStatus.LoginCanceled => "LOGIN CANCELED",
+                LoginStatus.LoginError => "LOGIN ERROR",
+                LoginStatus.RegisterCanceled => "REGISTERED CANCELED",
+                LoginStatus.RegisterError => "REGISTER ERROR",
+                LoginStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL, REGISTERED AS {email}",
+                LoginStatus.LoginSuccessful => $"LOGIN SUCCESSFUL, LOGGED AS {auth.CurrentUser.Email}",
+                LoginStatus.SignedOut => "SIGNED OUT",
+                _ => throw new ArgumentOutOfRangeException()
             });
         }
 
         private void TryLoginUser(string email, string password)
         {
-            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
-                if (task.IsCanceled) {
-                    Debug.LogError("Login was canceled.");
-                    return;
-                }
-                if (task.IsFaulted) {
-                    Debug.LogError($"Login encountered an error: {task.Exception}");
-                    return;
-                }
+            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(LoginTask);
+            UpdateLoginStatusLabel(email);
+            
+        }
 
-                FirebaseUser loggedUser = task.Result;
-                Debug.LogFormat("User logged in successfully: {0} ({1})",
-                    loggedUser.DisplayName, loggedUser.UserId);
-            });
+        private void LoginTask(Task<FirebaseUser> task)
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("Login was canceled.");
+                _loginStatus = LoginStatus.LoginCanceled;
+
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                Debug.LogError($"Login encountered an error: {task.Exception}");
+                _loginStatus = LoginStatus.LoginError;
+
+                return;
+            }
+
+            FirebaseUser loggedUser = task.Result;
+            Debug.LogFormat("User logged in successfully: {0} ({1})", loggedUser.DisplayName, loggedUser.UserId);
+            // logStatus.gameObject.SetActive(false);
+            _loginStatus = LoginStatus.LoginSuccessful;
         }
     }
 }
