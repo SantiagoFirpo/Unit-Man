@@ -15,15 +15,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
         private FirebaseApp _app;
 
         public FirebaseAuth auth;
-        
-        [SerializeField]
-        private TMP_InputField emailField;
-        
-        [SerializeField]
-        private TMP_InputField passwordField;
-
-        [SerializeField]
-        private TextMeshProUGUI loginStatusLabel;
 
         private Timer _loginFetchTimer;
 
@@ -47,17 +38,19 @@ namespace UnitMan.Source.Management.Firebase.Auth
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+                
             }
 
             InitializeFirebase();
             _loginFetchTimer = new Timer(1f, false, true);
             _loginFetchTimer.OnEnd += LoginFetchTimerOnOnEnd;
 
+
         }
 
         private void LoginFetchTimerOnOnEnd()
         {
-            UpdateLoginStatusLabel(emailField.text);
+            UpdateLoginStatusLabel(auth.CurrentUser.Email);
         }
 
         private void InitializeFirebase()
@@ -87,12 +80,14 @@ namespace UnitMan.Source.Management.Firebase.Auth
             auth = FirebaseAuth.DefaultInstance;
             _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
+        
+        //TODO: move all dependent methods and fields to MainMenu
 
         public void RegisterUserWithTextFields()
         {
             _loginStatus = LoginStatus.Fetching;
             TryRegisterUser(emailField.text, passwordField.text);
-            _loginFetchTimer.Start();
+            
         }
 
         public void LoginUserWithTextFields()
@@ -101,7 +96,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             TryLoginUser(emailField.text, passwordField.text);
             _loginFetchTimer.Start();
         }
-
+        //BUG: user can't logout after gameplay because the AuthManager is flagged DontDestroyOnLoad
         public void SignOutUser()
         {
             _loginStatus = LoginStatus.Fetching;
@@ -113,6 +108,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void TryRegisterUser(string email, string password)
         {
+            _loginStatus = LoginStatus.Fetching;
             void RegisterTask(Task<FirebaseUser> task)
             {
                 if (task.IsCanceled)
@@ -139,9 +135,10 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(RegisterTask);
+            _loginFetchTimer.Start();
         }
 
-        private void UpdateLoginStatusLabel(string email)
+        public void UpdateLoginStatusLabel(string email)
         {
             loginStatusLabel.SetText(_loginStatus switch
             {

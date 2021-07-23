@@ -2361,8 +2361,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448bd2e543eed934d9c53e6851c9c579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  classicalMapButton: {fileID: 1878411396}
   testMapButton: {fileID: 58593149}
+  loginStatusLabel: {fileID: 729535695}
 --- !u!4 &1664926319
 Transform:
   m_ObjectHideFlags: 0
