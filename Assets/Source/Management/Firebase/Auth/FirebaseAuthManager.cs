@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using TMPro;
+using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 
 namespace UnitMan.Source.Management.Firebase.Auth
@@ -24,8 +25,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
         [SerializeField]
         private TextMeshProUGUI loginStatusLabel;
 
+        private Timer _loginFetchTimer;
+
         private enum LoginStatus
         {
+            Fetching,
             RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut
         }
 
@@ -46,7 +50,14 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             InitializeFirebase();
-            
+            _loginFetchTimer = new Timer(1f, false, true);
+            _loginFetchTimer.OnEnd += LoginFetchTimerOnOnEnd;
+
+        }
+
+        private void LoginFetchTimerOnOnEnd()
+        {
+            UpdateLoginStatusLabel(emailField.text);
         }
 
         private void InitializeFirebase()
@@ -79,16 +90,21 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public void RegisterUserWithTextFields()
         {
+            _loginStatus = LoginStatus.Fetching;
             TryRegisterUser(emailField.text, passwordField.text);
+            _loginFetchTimer.Start();
         }
 
         public void LoginUserWithTextFields()
         {
+            _loginStatus = LoginStatus.Fetching;
             TryLoginUser(emailField.text, passwordField.text);
+            _loginFetchTimer.Start();
         }
 
         public void SignOutUser()
         {
+            _loginStatus = LoginStatus.Fetching;
             auth.SignOut();
             _loginStatus = LoginStatus.SignedOut;
             loginStatusLabel.SetText("SIGNED OUT");
@@ -123,7 +139,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(RegisterTask);
-            UpdateLoginStatusLabel(email);
         }
 
         private void UpdateLoginStatusLabel(string email)
@@ -137,6 +152,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 LoginStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL, REGISTERED AS {email}",
                 LoginStatus.LoginSuccessful => $"LOGIN SUCCESSFUL, LOGGED AS {auth.CurrentUser.Email}",
                 LoginStatus.SignedOut => "SIGNED OUT",
+                LoginStatus.Fetching => "FETCHING",
                 _ => throw new ArgumentOutOfRangeException()
             });
         }
@@ -144,6 +160,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
         private void TryLoginUser(string email, string password)
         {
             auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(LoginTask);
+            
             UpdateLoginStatusLabel(email);
             
         }
