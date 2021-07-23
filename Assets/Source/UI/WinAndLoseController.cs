@@ -17,9 +17,9 @@ namespace UnitMan.Source.UI
         }
 
         private void ReturnToMainScreen() {
-            Debug.Log("Timer ended!");
+            // Debug.Log("Timer ended!");
             _returnTimer.Stop();
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene("Score Query");
         }
     }
 }

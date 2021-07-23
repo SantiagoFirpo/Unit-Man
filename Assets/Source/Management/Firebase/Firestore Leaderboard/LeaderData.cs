@@ -1,6 +1,6 @@
 ﻿using Firebase.Firestore;
 
-namespace UnitMan
+namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 {
 	[FirestoreData]
 	public struct LeaderData
