@@ -6,6 +6,18 @@ namespace UnitMan.Source.Management.Session
     public class SessionDataModel : MonoBehaviour
     {
         //TODO: add lives icons
+
+        // Start is called before the first frame update
+        public int pelletsEaten;
+        public int lives = 3;
+        public int score = 0;
+        public bool won = false;
+
+        [SerializeField]
+        private TMP_Text livesLabel;
+        
+        [SerializeField]
+        private TMP_Text scoreLabel;
         public static SessionDataModel Instance
         {
             get;
@@ -15,6 +27,7 @@ namespace UnitMan.Source.Management.Session
         private void Awake() {
             if (Instance != null) return;
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         public void LoseLife() {
@@ -25,29 +38,18 @@ namespace UnitMan.Source.Management.Session
 
         public void IncrementScore(int delta)
         {
-            _score += delta;
+            score += delta;
             UpdateScoreLabel();
         }
 
         private void UpdateScoreLabel()
         {
-            scoreLabel.text = $"Score: \n {_score}";
+            scoreLabel.text = $"Score: \n {score}";
         }
 
         private void UpdateLivesLabel() {
             livesLabel.text = $"Lives: \n {lives}";
             // _scoreLabel.text = $"Score: {_score}";
         }
-
-        // Start is called before the first frame update
-        public int pelletsEaten;
-        public int lives = 3;
-        private int _score;
-
-        [SerializeField]
-        private TMP_Text livesLabel;
-        
-        [SerializeField]
-        private TMP_Text scoreLabel;
     }
 }
