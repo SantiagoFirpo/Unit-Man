@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Firebase.Firestore;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace UnitMan
+namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 {
     public class FirestoreListener : MonoBehaviour
     {

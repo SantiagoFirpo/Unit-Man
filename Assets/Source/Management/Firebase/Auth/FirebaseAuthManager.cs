@@ -1,12 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
-using Firebase.Database;
-using Firebase.Firestore;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-namespace UnitMan.Source.Management.FirebaseManagement
+namespace UnitMan.Source.Management.Firebase.Auth
 {
     public class FirebaseAuthManager : MonoBehaviour
     {

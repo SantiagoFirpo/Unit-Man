@@ -1,11 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
+using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.Management.Session;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace UnitMan
+namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 {
     public class FirestoreWriter : MonoBehaviour
     {
