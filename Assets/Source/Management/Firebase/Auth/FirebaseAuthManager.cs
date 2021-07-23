@@ -80,6 +80,13 @@ namespace UnitMan.Source.Management.Firebase.Auth
         {
             TryLoginUser(emailField.text, passwordField.text);
         }
+
+        public void SignOutUser()
+        {
+            auth.SignOut();
+            _loginStatus = LoginStatus.SignedOut;
+            loginStatusLabel.SetText("SIGNED OUT");
+
         }
 
         private void TryRegisterUser(string email, string password)
