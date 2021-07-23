@@ -1,10 +1,16 @@
+using Firebase.Extensions;
+using Firebase.Firestore;
+using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.Management.Firebase.Firestore_Leaderboard;
+using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 namespace UnitMan.Source.UI
 {
-    public class GameOverController : MonoBehaviour
+    public class WinAndLoseController : MonoBehaviour
     {
         // Start is called before the first frame update
         private Timer _returnTimer;
@@ -19,7 +25,23 @@ namespace UnitMan.Source.UI
         private void ReturnToMainScreen() {
             // Debug.Log("Timer ended!");
             _returnTimer.Stop();
-            SceneManager.LoadScene("Score Query");
+            
+            FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
+            firestore.Document($"leaders/{FirebaseAuthManager.Instance.auth.CurrentUser.UserId}").GetSnapshotAsync()
+                .ContinueWithOnMainThread(
+                    task =>
+                    {
+                        Assert.IsNull(task.Exception);
+                        LeaderData userData = task.Result.ConvertTo<LeaderData>();
+                        if (userData.Score < SessionDataModel.Instance.score)
+                        {
+                            SceneManager.LoadScene("Score Query");
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene("Scoreboard");
+                        }
+                    });
         }
     }
 }
