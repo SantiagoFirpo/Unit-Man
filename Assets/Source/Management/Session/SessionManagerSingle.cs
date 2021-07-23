@@ -20,6 +20,8 @@ namespace UnitMan.Source.Management.Session
         private Timer _startupTimer;
         private Timer _deathAnimationTimer;
         
+        private const int POINT_PER_LIFE_REMAINING = 500;
+        
         [HideInInspector]
         public PlayerController playerController;
 
@@ -103,6 +105,9 @@ namespace UnitMan.Source.Management.Session
         public static void CheckIfGameIsWon() {
             if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.mazeData.pelletCount) return;
             // Debug.Log("You won!");
+            SessionDataModel.Instance.won = true;
+            
+            SessionDataModel.Instance.score += SessionDataModel.Instance.lives * POINT_PER_LIFE_REMAINING;
             SceneManager.LoadScene("You Won", LoadSceneMode.Single);
         }
 
