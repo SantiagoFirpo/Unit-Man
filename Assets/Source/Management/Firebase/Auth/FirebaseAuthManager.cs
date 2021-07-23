@@ -10,8 +10,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
     public class FirebaseAuthManager : MonoBehaviour
     {
         public static FirebaseAuthManager Instance { get; private set; }
-        
-        public FirebaseApp app;
+
+        private FirebaseApp _app;
 
         public FirebaseAuth auth;
 
