@@ -14,10 +14,16 @@ namespace UnitMan.Source.Management.Firebase.Auth
         private FirebaseApp _app;
 
         public FirebaseAuth auth;
+        
+        [SerializeField]
+        private TMP_InputField emailField;
+        
+        [SerializeField]
+        private TMP_InputField passwordField;
 
-        public TMPro.TMP_InputField _emailField;
+        [SerializeField]
+        private TextMeshProUGUI loginStatusLabel;
 
-        public TMPro.TMP_InputField _passwordField;
 
         // Start is called before the first frame update
         private void Awake()
@@ -46,15 +52,14 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 {
                     // Create and hold a reference to your FirebaseApp,
                     // where app is a Firebase.FirebaseApp property of your application class.
-                    app = FirebaseApp.DefaultInstance;
+                    _app = FirebaseApp.DefaultInstance;
                     InitializeAuth();
 
                     // Set a flag here to indicate whether Firebase is ready to use by your app.
                 }
                 else
                 {
-                    Debug.LogError(string.Format(
-                        "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                    Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
                     // Firebase Unity SDK is not safe to use here.
                 }
             });
@@ -63,17 +68,18 @@ namespace UnitMan.Source.Management.Firebase.Auth
         private void InitializeAuth()
         {
             auth = FirebaseAuth.DefaultInstance;
-            app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
+            _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
 
         public void RegisterUserWithTextFields()
         {
-            TryRegisterUser(_emailField.text, _passwordField.text);
+            TryRegisterUser(emailField.text, passwordField.text);
         }
 
         public void LoginUserWithTextFields()
         {
-            TryLoginUser(_emailField.text, _passwordField.text);
+            TryLoginUser(emailField.text, passwordField.text);
+        }
         }
 
         private void TryRegisterUser(string email, string password)
