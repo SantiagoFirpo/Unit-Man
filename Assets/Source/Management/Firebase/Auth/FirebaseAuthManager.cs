@@ -70,7 +70,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 {
                     // Create and hold a reference to your FirebaseApp,
                     // where app is a Firebase.FirebaseApp property of your application class.
-                    _app = FirebaseApp.Create();
+                    _app = FirebaseApp.DefaultInstance;
                     InitializeAuth();
 
                     // Set a flag here to indicate whether Firebase is ready to use by your app.
