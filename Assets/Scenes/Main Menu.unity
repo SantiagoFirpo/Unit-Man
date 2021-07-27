@@ -1450,10 +1450,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1421268319}
-        m_TargetAssemblyTypeName: UnitMan.Source.Management.Firebase.Auth.FirebaseAuthManager,
-          Assembly-CSharp
-        m_MethodName: SignOutUser
+      - m_Target: {fileID: 1664926318}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: SignOut
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1775,10 +1774,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1421268319}
-        m_TargetAssemblyTypeName: UnitMan.Source.Management.FirebaseManagement.FirebaseAuthManager,
-          Assembly-CSharp
-        m_MethodName: LoginUserWithTextFields
+      - m_Target: {fileID: 1664926318}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: LoginUser
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1971,9 +1969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43a275e8effa8364abd49a4a916c1547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emailField: {fileID: 249961232}
-  passwordField: {fileID: 1839167319}
-  loginStatusLabel: {fileID: 729535695}
 --- !u!4 &1421268320
 Transform:
   m_ObjectHideFlags: 0
@@ -2281,10 +2276,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1421268319}
-        m_TargetAssemblyTypeName: UnitMan.Source.Management.FirebaseManagement.FirebaseAuthManager,
-          Assembly-CSharp
-        m_MethodName: RegisterUserWithTextFields
+      - m_Target: {fileID: 1664926318}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
+        m_MethodName: RegisterUser
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2343,7 +2337,7 @@ GameObject:
   - component: {fileID: 1664926319}
   - component: {fileID: 1664926318}
   m_Layer: 0
-  m_Name: Scene Loader
+  m_Name: Main Menu Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2363,6 +2357,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testMapButton: {fileID: 58593149}
   loginStatusLabel: {fileID: 729535695}
+  emailField: {fileID: 249961232}
+  passwordField: {fileID: 1839167319}
 --- !u!4 &1664926319
 Transform:
   m_ObjectHideFlags: 0

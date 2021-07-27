@@ -2,8 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
-using TMPro;
-using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 
 namespace UnitMan.Source.Management.Firebase.Auth
@@ -16,15 +14,13 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public FirebaseAuth auth;
 
-        private Timer _loginFetchTimer;
-
         private enum LoginStatus
         {
             Fetching,
             RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut
         }
 
-        private LoginStatus _loginStatus;
+        private LoginStatus _authStatus;
 
         // Start is called before the first frame update
         private void Awake()
@@ -42,16 +38,27 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             InitializeFirebase();
-            _loginFetchTimer = new Timer(1f, false, true);
-            _loginFetchTimer.OnEnd += LoginFetchTimerOnOnEnd;
 
 
         }
 
-        private void LoginFetchTimerOnOnEnd()
+        private void AuthFetchTimerOnOnEnd()
         {
-            UpdateLoginStatusLabel(auth.CurrentUser.Email);
+            
         }
+
+        public string AuthStatusMessage { get {return _authStatus switch
+        {
+            LoginStatus.LoginCanceled => "LOGIN CANCELED",
+            LoginStatus.LoginError => "LOGIN ERROR",
+            LoginStatus.RegisterCanceled => "REGISTERED CANCELED",
+            LoginStatus.RegisterError => "REGISTER ERROR",
+            LoginStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL, REGISTERED AS {auth.CurrentUser.Email}",
+            LoginStatus.LoginSuccessful => $"LOGIN SUCCESSFUL, LOGGED AS {auth.CurrentUser.Email}",
+            LoginStatus.SignedOut => "SIGNED OUT",
+            LoginStatus.Fetching => "FETCHING",
+            _ => throw new ArgumentOutOfRangeException()
+        };}}
 
         private void InitializeFirebase()
         {
@@ -83,38 +90,22 @@ namespace UnitMan.Source.Management.Firebase.Auth
         
         //TODO: move all dependent methods and fields to MainMenu
 
-        public void RegisterUserWithTextFields()
-        {
-            _loginStatus = LoginStatus.Fetching;
-            TryRegisterUser(emailField.text, passwordField.text);
-            
-        }
-
-        public void LoginUserWithTextFields()
-        {
-            _loginStatus = LoginStatus.Fetching;
-            TryLoginUser(emailField.text, passwordField.text);
-            _loginFetchTimer.Start();
-        }
         //BUG: user can't logout after gameplay because the AuthManager is flagged DontDestroyOnLoad
         public void SignOutUser()
         {
-            _loginStatus = LoginStatus.Fetching;
             auth.SignOut();
-            _loginStatus = LoginStatus.SignedOut;
-            loginStatusLabel.SetText("SIGNED OUT");
-
+            _authStatus = LoginStatus.SignedOut;
         }
 
-        private void TryRegisterUser(string email, string password)
+        public void TryRegisterUser(string email, string password)
         {
-            _loginStatus = LoginStatus.Fetching;
+            _authStatus = LoginStatus.Fetching;
             void RegisterTask(Task<FirebaseUser> task)
             {
                 if (task.IsCanceled)
                 {
                     Debug.LogError("Asynchronous User Register was cancelled");
-                    _loginStatus = LoginStatus.RegisterCanceled;
+                    _authStatus = LoginStatus.RegisterCanceled;
 
                     return;
                 }
@@ -122,7 +113,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 if (task.IsFaulted)
                 {
                     Debug.LogError($"Asynchronous User Register encountered an error: {task.Exception}");
-                    _loginStatus = LoginStatus.RegisterError;
+                    _authStatus = LoginStatus.RegisterError;
 
                     return;
                 }
@@ -130,35 +121,18 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 // Firebase user has been created.
                 FirebaseUser newUser = task.Result;
                 Debug.LogFormat("Firebase user created successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
-                _loginStatus = LoginStatus.RegisterSuccessful;
+                _authStatus = LoginStatus.RegisterSuccessful;
                 TryLoginUser(email, password);
             }
 
             auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(RegisterTask);
-            _loginFetchTimer.Start();
+            _authStatus = LoginStatus.Fetching;
         }
 
-        public void UpdateLoginStatusLabel(string email)
+        public void TryLoginUser(string email, string password)
         {
-            loginStatusLabel.SetText(_loginStatus switch
-            {
-                LoginStatus.LoginCanceled => "LOGIN CANCELED",
-                LoginStatus.LoginError => "LOGIN ERROR",
-                LoginStatus.RegisterCanceled => "REGISTERED CANCELED",
-                LoginStatus.RegisterError => "REGISTER ERROR",
-                LoginStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL, REGISTERED AS {email}",
-                LoginStatus.LoginSuccessful => $"LOGIN SUCCESSFUL, LOGGED AS {auth.CurrentUser.Email}",
-                LoginStatus.SignedOut => "SIGNED OUT",
-                LoginStatus.Fetching => "FETCHING",
-                _ => throw new ArgumentOutOfRangeException()
-            });
-        }
-
-        private void TryLoginUser(string email, string password)
-        {
+            _authStatus = LoginStatus.Fetching;
             auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(LoginTask);
-            
-            UpdateLoginStatusLabel(email);
             
         }
 
@@ -167,7 +141,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             if (task.IsCanceled)
             {
                 Debug.LogError("Login was canceled.");
-                _loginStatus = LoginStatus.LoginCanceled;
+                _authStatus = LoginStatus.LoginCanceled;
 
                 return;
             }
@@ -175,7 +149,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             if (task.IsFaulted)
             {
                 Debug.LogError($"Login encountered an error: {task.Exception}");
-                _loginStatus = LoginStatus.LoginError;
+                _authStatus = LoginStatus.LoginError;
 
                 return;
             }
@@ -183,7 +157,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             FirebaseUser loggedUser = task.Result;
             Debug.LogFormat("User logged in successfully: {0} ({1})", loggedUser.DisplayName, loggedUser.UserId);
             // logStatus.gameObject.SetActive(false);
-            _loginStatus = LoginStatus.LoginSuccessful;
+            _authStatus = LoginStatus.LoginSuccessful;
         }
     }
 }
