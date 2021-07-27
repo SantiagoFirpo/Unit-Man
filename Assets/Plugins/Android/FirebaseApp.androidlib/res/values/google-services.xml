@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id">
+  <string name="firebase_database_url" translatable="false">https://unit-man-default-rtdb.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">750785577045</string>
+  <string name="google_storage_bucket" translatable="false">unit-man.appspot.com</string>
+  <string name="project_id" translatable="false">unit-man</string>
+  <string name="google_api_key" translatable="false">AIzaSyDfHx5Hrd___P3TjoA_2f9E0jZMq-5AZkM</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDfHx5Hrd___P3TjoA_2f9E0jZMq-5AZkM</string>
+  <string name="google_app_id" translatable="false">1:750785577045:android:062d3a39ef570899f514dc</string>
+  <string name="default_web_client_id" translatable="false">750785577045-5l99ksqsicp3mjh43ho2fr76mvmhksfd.apps.googleusercontent.com</string>
+</resources>

@@ -62,6 +62,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void InitializeFirebase()
         {
+            
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
             {
                 DependencyStatus dependencyStatus = task.Result;
@@ -69,7 +70,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 {
                     // Create and hold a reference to your FirebaseApp,
                     // where app is a Firebase.FirebaseApp property of your application class.
-                    _app = FirebaseApp.DefaultInstance;
+                    _app = FirebaseApp.Create();
                     InitializeAuth();
 
                     // Set a flag here to indicate whether Firebase is ready to use by your app.
@@ -84,7 +85,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void InitializeAuth()
         {
-            auth = FirebaseAuth.DefaultInstance;
+            auth = FirebaseAuth.GetAuth(_app);
             _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
         

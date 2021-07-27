@@ -1,3 +1,4 @@
+using System;
 using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
@@ -12,15 +13,17 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
     {
         [SerializeField]
         private TMP_InputField nameField;
+        
+        [SerializeField]
+        private TMP_Text scoreField;
 
         private LeaderData _leaderData;
-        
-        
 
-        // private void Awake()
-        // {
-        //     _leaderData = new LeaderData(FirebaseAuthManager.Instance.auth.CurrentUser.UserId, "Firpy", 0, false);
-        // }
+
+        private void Awake()
+        {
+            scoreField.SetText($"Score: {SessionDataModel.Instance.score}");
+        }
 
         public void SubmitScore()
         {
