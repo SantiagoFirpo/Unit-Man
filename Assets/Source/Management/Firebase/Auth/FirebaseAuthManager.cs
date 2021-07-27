@@ -122,7 +122,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
                 // Firebase user has been created.
                 FirebaseUser newUser = task.Result;
-                Debug.LogFormat("Firebase user created successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
+                Debug.Log($"Firebase user created successfully: {newUser.DisplayName} ({newUser.UserId})");
                 _authStatus = LoginStatus.RegisterSuccessful;
                 TryLoginUser(email, password);
             }
