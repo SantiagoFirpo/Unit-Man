@@ -27,6 +27,7 @@ namespace UnitMan.Source.UI
 
         private void Awake()
         {
+            Debug.Log("Main Menu should initialize");
             _authFetchTimer = new Timer(1f, false, true);
             _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
         }

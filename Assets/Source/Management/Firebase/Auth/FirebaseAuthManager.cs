@@ -27,6 +27,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
         {
             if (Instance != null)
             {
+                Debug.LogError("Instance is not null");
                 Destroy(gameObject);
                 
             }
