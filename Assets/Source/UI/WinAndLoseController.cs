@@ -36,14 +36,9 @@ namespace UnitMan.Source.UI
                     {
                         Assert.IsNull(task.Exception);
                         LeaderData userData = task.Result.ConvertTo<LeaderData>();
-                        if (userData.Score < SessionDataModel.Instance.score)
-                        {
-                            SceneManager.LoadScene("Score Query");
-                        }
-                        else
-                        {
-                            SceneManager.LoadScene("Scoreboard");
-                        }
+                        SceneManager.LoadScene(userData.Score < SessionDataModel.Instance.score
+                            ? "Score Query"
+                            : "Scoreboard");
                     });
         }
     }
