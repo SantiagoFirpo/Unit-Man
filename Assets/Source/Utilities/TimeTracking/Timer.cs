@@ -5,7 +5,6 @@ using UnityEngine;
 namespace UnitMan.Source.Utilities.TimeTracking {
     public class Timer
 {
-    //Responsibility: Abstract model for finite timers inside other classes
     public event System.Action OnEnd;
     private readonly float _waitTime;
     public float currentTime;
@@ -35,8 +34,17 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         _autoStart = autoStart;
         _oneTime = oneTime;
         _timeObserver = new Observer<float>(OnNotified);
-        TimerManager.Instance.timeEmitter.Attach(_timeObserver);
-        Setup();
+
+        if (TimerManager.Instance == null)
+        {
+            Debug.LogError("TimerManager Instance is null, can't attach this timer's observer");
+        }
+        else
+        {
+            TimerManager.Instance.timeEmitter.Attach(_timeObserver);
+            Setup();
+        }
+        
     }
 
     private void OnNotified(Emitter<float> source, float deltaTime)
