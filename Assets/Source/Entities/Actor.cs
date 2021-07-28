@@ -51,11 +51,7 @@ namespace UnitMan.Source.Entities {
         {
             Up, Down, Left, Right
         }
-
-    protected void OnEnable() {
-            Initialize();
-            ResetActor();
-    }
+        
 
     protected virtual void ResetActor()
     {
@@ -74,13 +70,14 @@ namespace UnitMan.Source.Entities {
         thisRigidbody.simulated = true;
     }
 
-    public virtual void Initialize() {
+    protected virtual void Initialize() {
             thisRigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             thisTransform = transform;
             thisGameObject = gameObject;
             
-           
+            _rightWarpPosition = SessionManagerSingle.Instance.rightWrap.position;
+            _leftWrapPosition = SessionManagerSingle.Instance.leftWrap.position;
             
             
             SubscribeForEvents();
@@ -100,8 +97,9 @@ namespace UnitMan.Source.Entities {
 
     private void Start()
     {
-        _rightWarpPosition = SessionManagerSingle.Instance.rightWrap.position;
-        _leftWrapPosition = SessionManagerSingle.Instance.leftWrap.position;
+        Initialize();
+        ResetActor();
+        
     }
 
     protected virtual void Update()

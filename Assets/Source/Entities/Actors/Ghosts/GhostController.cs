@@ -124,7 +124,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         private static readonly int OnEatenTrigger = Animator.StringToHash("OnEaten");
 
 
-        public override void Initialize() {
+        protected override void Initialize() {
            base.Initialize();
 
            ResolveDependencies();
@@ -141,17 +141,23 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
            playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
-           _chasePollStepTimer = new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
-           _hubExitTimer = new Timer(6f, false, true);
-           
-           _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, true);
-           _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
-           _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
-
+           CreateTimers();
            _pelletEatenObserver = new Observer(PollThreshold);
            _powerPelletObserver = new Observer(OnPowerPelletCollect);
            ResolveMapMarkers();
        }
+
+       private void CreateTimers()
+       {
+           _chasePollStepTimer =
+               new Timer(PlayerController.PLAYER_STEP_TIME, false, false); //old: chasePollSeconds as waitTime
+           _hubExitTimer = new Timer(6f, false, true);
+
+           _fleeingDurationTimer = new Timer(PlayerController.INVINCIBLE_TIME_SECONDS, false, true);
+           _chaseDurationTimer = new Timer(CHASE_DURATION_SECONDS, false, true);
+           _scatterDurationTimer = new Timer(SCATTER_DURATION_SECONDS, false, true);
+       }
+
        private void ResolveMapMarkers()
        {
            _topLeftMapBound = LevelGridController.Instance.mazeData.topLeftMapPosition;
