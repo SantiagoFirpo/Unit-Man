@@ -44,7 +44,7 @@ namespace UnitMan.Source.Entities.Actors
             
         }
 
-        public override void Initialize()
+        protected override void Initialize()
         {
             base.Initialize();
             _inputMaps = new InputMaps();

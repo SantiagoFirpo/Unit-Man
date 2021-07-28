@@ -4,7 +4,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class ClydeController : GhostController
     {
-        public override void Initialize() {
+        protected override void Initialize() {
             standardMoveSpeed = PINKY_MOVE_SPEED * 0.8f;
             base.Initialize();
             pelletThreshold = 60;

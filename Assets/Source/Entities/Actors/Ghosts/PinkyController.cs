@@ -4,7 +4,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class PinkyController : GhostController
     {
-        public override void Initialize()
+        protected override void Initialize()
         {
             base.Initialize();
             standardMoveSpeed = PINKY_MOVE_SPEED;
