@@ -222,9 +222,9 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         
        private void OnPowerPelletCollect()
        {
+           if (state == State.Eaten) return;
            animator.ResetTrigger(PowerPelletCollectTrigger);
            animator.SetTrigger(PowerPelletCollectTrigger);
-           if (state == State.Eaten) return;
            SetState(State.Fleeing);
            _fleeingDurationTimer.Start();
        }
@@ -289,10 +289,10 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
         private void EatenStep()
         {
-            if (IsCenteredAt(_hubPosition))
-            {
-                SetStateToChase();
-            }
+            if (!IsCenteredAt(_hubPosition)) return;
+            SetStateToChase();
+            // animator.Play("Up");
+            // animator.ResetTrigger(OnFleeEndTrigger);
         }
 
         private void FleeingStep()
