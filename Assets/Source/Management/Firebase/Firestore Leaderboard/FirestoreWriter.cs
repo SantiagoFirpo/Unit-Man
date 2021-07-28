@@ -29,7 +29,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
         {
             FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
             _leaderData = new LeaderData(currentUser.UserId,
-                                        nameField.text,
+                                        nameField.text.ToUpper(),
                                         SessionDataModel.Instance.score,
                                         SessionDataModel.Instance.won);
             Debug.Log("Should write to db");
