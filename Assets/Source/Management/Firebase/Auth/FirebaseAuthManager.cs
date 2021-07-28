@@ -16,7 +16,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private enum LoginStatus
         {
-            Fetching,
+            WaitingForUser, Fetching,
             RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut
         }
 
@@ -27,9 +27,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
         {
             if (Instance != null)
             {
-                Debug.LogError("Instance is not null");
+                // Debug.LogError("Instance is not null");
                 Destroy(gameObject);
-                
             }
             else
             {
@@ -43,11 +42,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         }
 
-        private void AuthFetchTimerOnOnEnd()
-        {
-            
-        }
-
         public string AuthStatusMessage { get {return _authStatus switch
         {
             LoginStatus.LoginCanceled => "LOGIN CANCELED",
@@ -57,7 +51,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
             LoginStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL, REGISTERED AS {auth.CurrentUser.Email}",
             LoginStatus.LoginSuccessful => $"LOGIN SUCCESSFUL, LOGGED AS {auth.CurrentUser.Email}",
             LoginStatus.SignedOut => "SIGNED OUT",
-            LoginStatus.Fetching => "FETCHING",
+            LoginStatus.Fetching => "FETCHING...",
+            LoginStatus.WaitingForUser => "PLEASE LOGIN OR REGISTER BELOW:",
             _ => throw new ArgumentOutOfRangeException()
         };}}
 
@@ -157,7 +152,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             FirebaseUser loggedUser = task.Result;
-            Debug.LogFormat("User logged in successfully: {0} ({1})", loggedUser.DisplayName, loggedUser.UserId);
+            Debug.LogFormat($"User logged in successfully: {loggedUser.DisplayName} ({loggedUser.UserId})");
             // logStatus.gameObject.SetActive(false);
             _authStatus = LoginStatus.LoginSuccessful;
         }
