@@ -25,20 +25,21 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 
 		private void ListenCallback(QuerySnapshot dataSnapshot)
 		{
-			_scoreboardTextBuffer = "";
 			_localLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
 			//TODO: add win based sorting
+				// _scoreboardTextBuffer = "SCORE			NAME";
 			foreach (LeaderData leader in _localLeaders)
 			{
 				Debug.Log(leader.PlayerDisplayName);
 				Debug.Log(leader.Score);
 				Debug.Log(leader.PlayerWon);
 				string leaderWon = leader.PlayerWon ? "Yes" : "No";
-				_scoreboardTextBuffer =
-					$"{_scoreboardTextBuffer}Name: {leader.PlayerDisplayName} \n Score: {leader.Score} \n Player won? {leaderWon} \n \n";
+				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader.Score}		{leader.PlayerDisplayName}";
+
+				// $"{_scoreboardTextBuffer}Name: {leader.PlayerDisplayName} \n Score: {leader.Score} \n Player won? {leaderWon} \n \n";
 			}
 
-			scoreboardText.text = _scoreboardTextBuffer;
+			scoreboardText.SetText(_scoreboardTextBuffer);
 
 
 		}
