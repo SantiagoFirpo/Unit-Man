@@ -28,8 +28,6 @@ namespace UnitMan.Source.UI
         private void Awake()
         {
             Debug.Log("Main Menu should initialize");
-            _authFetchTimer = new Timer(1f, false, true);
-            _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
         }
 
         private void AuthFetchTimerOnOnEnd()
@@ -39,7 +37,9 @@ namespace UnitMan.Source.UI
 
         private void Start()
         {
-            if (FirebaseAuthManager.Instance.auth == null) return;
+            // if (FirebaseAuthManager.Instance.auth == null) return;
+            _authFetchTimer = new Timer(1f, false, true);
+            _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
             loginStatusLabel.SetText(FirebaseAuthManager.Instance.AuthStatusMessage);
         }
         public void OnPressStart() {

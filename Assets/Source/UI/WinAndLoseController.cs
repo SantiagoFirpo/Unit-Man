@@ -1,3 +1,4 @@
+using System;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using UnitMan.Source.Management.Firebase.Auth;
@@ -15,11 +16,13 @@ namespace UnitMan.Source.UI
         // Start is called before the first frame update
         private Timer _returnTimer;
 
-        private void Awake() {
-            _returnTimer = new Timer(1f, false, true);
+        private void Start()
+        {
             Debug.Log("Starting timer!");
-            _returnTimer.Start();
+
+            _returnTimer = new Timer(1f, false, true);
             _returnTimer.OnEnd += ReturnToMainScreen;
+            _returnTimer.Start();
         }
 
         private void ReturnToMainScreen() {
