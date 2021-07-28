@@ -20,7 +20,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
         private LeaderData _leaderData;
 
 
-        private void Awake()
+        private void Start()
         {
             scoreField.SetText($"Score: {SessionDataModel.Instance.score}");
         }
