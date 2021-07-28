@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnitMan.Source.Management;
 using UnitMan.Source.Management.Audio;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
@@ -268,29 +267,52 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             switch (state)
             {
                 case State.ExitingHub:
-                    if (IsCenteredAt(_hubExitTarget))
-                    {
-                        SetState(State.Chase);
-                    }
+                    HubExitStep();
                     break;
                 case State.Fleeing:
-                    if (Math.Abs(_fleeingDurationTimer.currentTime - 0.7f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
-                    {
-                        animator.SetTrigger(OnFleeNearEndTrigger);
-                    }
-                    
-                    if (Math.Abs(_fleeingDurationTimer.currentTime - 0.81f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
-                    {
-                        animator.ResetTrigger(OnFleeNearEndTrigger);
-                    }
-                    
+                    FleeingStep();
+
                     break;
                 case State.Eaten:
-                    if (IsCenteredAt(_hubPosition))
-                    {
-                        SetStateToChase();
-                    }
+                    EatenStep();
                     break;
+                case State.Resting:
+                    break;
+                case State.Chase:
+                    break;
+                case State.Scatter:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void EatenStep()
+        {
+            if (IsCenteredAt(_hubPosition))
+            {
+                SetStateToChase();
+            }
+        }
+
+        private void FleeingStep()
+        {
+            if (Math.Abs(_fleeingDurationTimer.currentTime - 0.7f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
+            {
+                animator.SetTrigger(OnFleeNearEndTrigger);
+            }
+
+            if (Math.Abs(_fleeingDurationTimer.currentTime - 0.81f * PlayerController.INVINCIBLE_TIME_SECONDS) < 0.1f)
+            {
+                animator.ResetTrigger(OnFleeNearEndTrigger);
+            }
+        }
+
+        private void HubExitStep()
+        {
+            if (IsCenteredAt(_hubExitTarget))
+            {
+                SetState(State.Chase);
             }
         }
 
@@ -465,34 +487,18 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
        private void OnStateEntered() { //TODO: divide this method
            animator.ResetTrigger(OnFleeEndTrigger);
            animator.ResetTrigger(OnFleeNearEndTrigger);
+           
            switch (state)
            {
                case State.Resting:
-                   currentTargetPosition = _restingTarget;
-                   SessionManagerSingle.Instance.onPelletEatenEmitter.Attach(_pelletEatenObserver);
+                   OnRestingEntered();
                    break;
                case State.ExitingHub:
-                   TargetHubExit();
-                   _hubExitTimer.Start();
+                   OnExitingHubEntered();
                    break;
-               case State.Chase: {
-
-                   StartChasePollStepTimer();
-                       StartChaseDuration();
-                       // if (animator.runtimeAnimatorController != _standardAnimController)
-                   // {
-                   //     animator.runtimeAnimatorController = _standardAnimController;
-                   // }
-                   if (playerController.isInvincible)
-                   {
-                       AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
-                   }
-                   if (previousState == State.Fleeing)
-                   {
-                       AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
-                       animator.ResetTrigger(OnFleeEndTrigger);
-                       animator.SetTrigger(OnFleeEndTrigger);
-                   }
+               case State.Chase:
+               {
+                   OnChaseEntered();
                    break;
                }
 
@@ -502,36 +508,78 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
                    _scatterDurationTimer.Start();
                    break;
                }
-                   
                
-               
-               case State.Fleeing: {
-                   thisGameObject.layer = _defaultLayer;
-                   currentMoveSpeed = _slowMoveSpeed;
-                   SetTargetAwayFromPlayer();
-                   
-
-                   SessionManagerSingle.Instance.fleeingGhostsTotal++;
+               case State.Fleeing:
+               {
+                   OnFleeingEntered();
                    break;
                }
-               case State.Eaten: {
-                   thisGameObject.layer = _inactiveLayer;
-                   currentMoveSpeed = RETREAT_MOVE_SPEED;
-                   currentTargetPosition = _hubPosition;
-                   animator.SetTrigger(OnEatenTrigger);
-                   SessionManagerSingle.Instance.eatenGhostsTotal++;
-                   AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
-                   SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, SessionManagerSingle.Instance.eatenGhostsTotal));
-                   
-                   SessionManagerSingle.Instance.freezeTimer.Start();
-                   SessionManagerSingle.Instance.Freeze();
-
+               case State.Eaten:
+               {
+                   OnEatenEntered();
                    break;
                }
                default: {
                    return;
                }
            }
+       }
+
+       private void OnFleeingEntered()
+       {
+           thisGameObject.layer = _defaultLayer;
+           currentMoveSpeed = _slowMoveSpeed;
+           SetTargetAwayFromPlayer();
+
+
+           SessionManagerSingle.Instance.fleeingGhostsTotal++;
+       }
+
+       private void OnEatenEntered()
+       {
+           thisGameObject.layer = _inactiveLayer;
+           currentMoveSpeed = RETREAT_MOVE_SPEED;
+           currentTargetPosition = _hubPosition;
+           animator.SetTrigger(OnEatenTrigger);
+           SessionManagerSingle.Instance.eatenGhostsTotal++;
+           AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.EatGhost, 1, false);
+           SessionDataModel.Instance.IncrementScore(100 * (int) Mathf.Pow(2, SessionManagerSingle.Instance.eatenGhostsTotal));
+
+           SessionManagerSingle.Instance.freezeTimer.Start();
+           SessionManagerSingle.Instance.Freeze();
+       }
+
+       private void OnChaseEntered()
+       {
+           StartChasePollStepTimer();
+           StartChaseDuration();
+           // if (animator.runtimeAnimatorController != _standardAnimController)
+           // {
+           //     animator.runtimeAnimatorController = _standardAnimController;
+           // }
+           if (playerController.isInvincible)
+           {
+               AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
+           }
+
+           if (previousState == State.Fleeing)
+           {
+               AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
+               animator.ResetTrigger(OnFleeEndTrigger);
+               animator.SetTrigger(OnFleeEndTrigger);
+           }
+       }
+
+       private void OnExitingHubEntered()
+       {
+           TargetHubExit();
+           _hubExitTimer.Start();
+       }
+
+       private void OnRestingEntered()
+       {
+           currentTargetPosition = _restingTarget;
+           SessionManagerSingle.Instance.onPelletEatenEmitter.Attach(_pelletEatenObserver);
        }
 
        private void StartChaseDuration()
