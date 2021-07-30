@@ -1,4 +1,3 @@
-using System;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using UnitMan.Source.Management.Firebase.Auth;
