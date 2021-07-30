@@ -600,17 +600,6 @@
                 },
                 {
                     "name": "",
-                    "id": "64de13c7-7148-49b9-a17a-d8de6944fd48",
-                    "path": "<Mouse>/position",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "38c99815-14ea-4617-8627-164d27641299",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
