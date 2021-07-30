@@ -2,6 +2,7 @@ using System;
 using UnitMan.Source.Config;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 namespace UnitMan.Source.UI
 {
@@ -21,6 +22,11 @@ namespace UnitMan.Source.UI
             _inputMap.Enable();
             _inputMap.UI.Point.performed += OnMouseMove;
             _inputMap.UI.Click.performed += OnClick;
+        }
+
+        private void Start()
+        {
+            _wallOrigin = wallTilemap.origin;
         }
 
         private void OnDisable()
