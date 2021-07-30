@@ -12,7 +12,7 @@ namespace UnitMan.Source.Entities.Actors
 
         private const float MOVE_SPEED = 5f;
         public const float PLAYER_STEP_TIME = 0.2f;
-        private InputMaps _inputMaps;
+        private Gameplay _inputMaps;
 
         private Vector2Int _inputVector;
 
@@ -47,7 +47,7 @@ namespace UnitMan.Source.Entities.Actors
         protected override void Initialize()
         {
             base.Initialize();
-            _inputMaps = new InputMaps();
+            _inputMaps = new Gameplay();
 
             invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS + 1.8f, false, true);
             

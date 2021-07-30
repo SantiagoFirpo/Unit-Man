@@ -10,7 +10,7 @@ namespace UnitMan.Source.UI
     public class MazeEditorController : MonoBehaviour
     {
         private Maze _currentWorkingMaze;
-        private InputMaps _inputMap;
+        private Gameplay _inputMap;
         private Vector2 _mousePosition;
 
         [SerializeField]
@@ -25,7 +25,7 @@ namespace UnitMan.Source.UI
 
         private void Awake()
         {
-            _inputMap = new InputMaps();
+            _inputMap = new Gameplay();
             _inputMap.Enable();
             _inputMap.UI.Point.performed += OnMouseMove;
             _inputMap.UI.Click.performed += OnClickUpdated;
