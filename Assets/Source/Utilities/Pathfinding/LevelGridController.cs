@@ -133,6 +133,16 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             return new Vector3(vector.x, vector.y, 0f);
         }
+        
+        public static Vector3 Vector2ToVector3(Vector2 vector)
+        {
+            return new Vector3(vector.x, vector.y, 0f);
+        }
+        
+        public static Vector3Int Vector2ToVector3Int(Vector2 vector)
+        {
+            return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), 0);
+        }
 
         private void OnDrawGizmos() {
             InitializeGrid();
