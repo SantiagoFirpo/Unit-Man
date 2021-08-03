@@ -202,7 +202,7 @@ public class @Gameplay : IInputActionCollection, IDisposable
                     ""name"": ""Click"",
                     ""type"": ""PassThrough"",
                     ""id"": ""b1cb935a-d6b2-4b82-ba80-bde25dd228a8"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
