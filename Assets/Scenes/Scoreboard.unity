@@ -615,7 +615,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2129293393}
-        m_TargetAssemblyTypeName: UnitMan.Source.Management.Firebase.Firestore_Leaderboard.FirestoreListener,
+        m_TargetAssemblyTypeName: UnitMan.Source.Management.Firebase.FirestoreLeaderboard.FirestoreListener,
           Assembly-CSharp
         m_MethodName: GoToMainMenu
         m_Mode: 1
