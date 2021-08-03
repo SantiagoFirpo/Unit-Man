@@ -13,12 +13,14 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 	{
 		[SerializeField] private TMP_Text scoreboardText;
 
-		private Leaderboard _leaderboard;
+		private Leaderboard _firestoreLeaderboard;
 
 		private string _scoreboardTextBuffer;
 		private string _leaderboardJson;
 
-		private IEnumerable<FirestoreLeaderData> _localLeaders;
+		private IEnumerable<FirestoreLeaderData> _firestoreLeaders;
+
+		private LocalLeaderData[] _localLeaders;
 
 		// Start is called before the first frame update
 		private void Start()
@@ -30,20 +32,22 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 		private void ListenCallback(QuerySnapshot dataSnapshot)
 		{
-			_localLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
-			_leaderboard = new Leaderboard(_localLeaders.ToArray());
-			_leaderboardJson = JsonUtility.ToJson(_leaderboard, true);
+			_firestoreLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
+			_leaderboardJson = JsonUtility.ToJson(new Leaderboard(_firestoreLeaders.ToArray()), true);
+
+			_localLeaders = JsonUtility.FromJson<Leaderboard>(_leaderboardJson).values.ToArray();
+			
 			//TODO: add win based sorting
 			_scoreboardTextBuffer = "SCORE			NAME";
 			Debug.Log(_leaderboardJson);
 				
-			foreach (LocalLeaderData leader in _leaderboard.values)
+			foreach (LocalLeaderData leader in _localLeaders)
 			{
-				Debug.Log(leader.playerDisplayName);
-				Debug.Log(leader.score);
-				Debug.Log(leader.playerWon);
+				// Debug.Log(leader.playerDisplayName);
+				// Debug.Log(leader.score);
+				// Debug.Log(leader.playerWon);
 				// string leaderWon = leader.playerWon ? "Yes" : "No";
-				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader.score}		{leader.playerDisplayName}";
+				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader}";
 			
 			}
 			SaveStringIntoJson(_leaderboardJson);
