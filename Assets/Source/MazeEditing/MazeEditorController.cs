@@ -1,5 +1,3 @@
-using System;
-using UnitMan.Source.Config;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 using UnityEngine.InputSystem;

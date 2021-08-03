@@ -1,4 +1,3 @@
-using System;
 using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
