@@ -2,6 +2,7 @@ using Firebase.Extensions;
 using Firebase.Firestore;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.Firestore_Leaderboard;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;

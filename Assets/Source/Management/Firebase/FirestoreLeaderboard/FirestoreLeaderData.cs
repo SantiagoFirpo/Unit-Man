@@ -1,7 +1,6 @@
 ﻿using Firebase.Firestore;
-using UnityEngine;
 
-namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
+namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
 	[FirestoreData]
 	public struct FirestoreLeaderData

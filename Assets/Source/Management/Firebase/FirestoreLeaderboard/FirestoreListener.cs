@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Firebase.Firestore;
 using TMPro;
+using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
+namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
 	public class FirestoreListener : MonoBehaviour
 	{
@@ -37,18 +39,23 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 				
 			foreach (LocalLeaderData leader in _leaderboard.values)
 			{
-				Debug.Log(leader.PlayerDisplayName);
-				Debug.Log(leader.Score);
-				Debug.Log(leader.PlayerWon);
-				string leaderWon = leader.PlayerWon ? "Yes" : "No";
-				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader.Score}		{leader.PlayerDisplayName}";
-
-				// $"{_scoreboardTextBuffer}Name: {leader.PlayerDisplayName} \n Score: {leader.Score} \n Player won? {leaderWon} \n \n";
+				Debug.Log(leader.playerDisplayName);
+				Debug.Log(leader.score);
+				Debug.Log(leader.playerWon);
+				// string leaderWon = leader.playerWon ? "Yes" : "No";
+				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader.score}		{leader.playerDisplayName}";
+			
 			}
+			SaveStringIntoJson(_leaderboardJson);
 
 			scoreboardText.SetText(_scoreboardTextBuffer);
 
 
+		}
+		
+		public static void SaveStringIntoJson(string json){
+			File.WriteAllText($"{Application.persistentDataPath}/leaderboard.json", json);
+			Debug.Log($"Saved leaderboard.json to {Application.persistentDataPath}");
 		}
 
 		private static int ScoreSorter(FirestoreLeaderData firestoreLeader)

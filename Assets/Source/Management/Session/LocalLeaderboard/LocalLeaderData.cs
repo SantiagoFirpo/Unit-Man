@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.Management.Session.LocalLeaderboard
 {
     [Serializable]
     public class LocalLeaderData

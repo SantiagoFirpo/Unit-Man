@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnitMan.Source.UI;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 
-namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
+namespace UnitMan.Source.Management.Session.LocalLeaderboard
 {
     [Serializable]
     public class Leaderboard

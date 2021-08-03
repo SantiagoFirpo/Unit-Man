@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Utilities.TimeTracking;

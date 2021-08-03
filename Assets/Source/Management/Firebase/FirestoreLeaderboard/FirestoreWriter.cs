@@ -3,6 +3,7 @@ using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
 using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Management.Session;
 using UnityEngine;
 using UnityEngine.SceneManagement;
