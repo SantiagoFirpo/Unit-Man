@@ -11,7 +11,10 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 	{
 		[SerializeField] private TMP_Text scoreboardText;
 
+		private Leaderboard _leaderboard;
+
 		private string _scoreboardTextBuffer;
+		private string _leaderboardJson;
 
 		private IEnumerable<FirestoreLeaderData> _localLeaders;
 
@@ -26,9 +29,13 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 		private void ListenCallback(QuerySnapshot dataSnapshot)
 		{
 			_localLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
+			_leaderboard = new Leaderboard(_localLeaders.ToArray());
+			_leaderboardJson = JsonUtility.ToJson(_leaderboard, true);
 			//TODO: add win based sorting
-				// _scoreboardTextBuffer = "SCORE			NAME";
-			foreach (LeaderData leader in _localLeaders)
+			_scoreboardTextBuffer = "SCORE			NAME";
+			Debug.Log(_leaderboardJson);
+				
+			foreach (LocalLeaderData leader in _leaderboard.values)
 			{
 				Debug.Log(leader.PlayerDisplayName);
 				Debug.Log(leader.Score);
