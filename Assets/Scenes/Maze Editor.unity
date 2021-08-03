@@ -1138,8 +1138,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d2d911d0a7e6a84db1f678155678cc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wallTilemap: {fileID: 2053896148}
+  wallTilemap: {fileID: 2053896148}
   wallRuleTile: {fileID: 11400000, guid: 71fcd36843baa804c8dfad0633df2066, type: 2}
+  pelletPrefab: {fileID: 385068253680773091, guid: 59e9366f5fc4b8e43972fdc3cbbd081b, type: 3}
+  powerPrefab: {fileID: 385068253680773091, guid: 4b7c927ef6fdc8c4291fac8325d6266e, type: 3}
+  blinkyPrefab: {fileID: 0}
+  pinkyPrefab: {fileID: 0}
+  inkyPrefab: {fileID: 0}
+  clydePrefab: {fileID: 0}
 --- !u!4 &753522263
 Transform:
   m_ObjectHideFlags: 0
@@ -1234,7 +1240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.3367643, y: 0.05}
   m_AnchorMax: {x: 0.42000002, y: 0.2}
-  m_AnchoredPosition: {x: 0, y: 0.0000009536743}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.0000019073486}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &857483542
