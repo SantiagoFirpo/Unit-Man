@@ -15,5 +15,10 @@ namespace UnitMan.Source.Management.Session.LocalLeaderboard
             this.score = score;
             this.playerWon = playerWon;
         }
+
+        public override string ToString()
+        {
+            return $"{this.score}		{this.playerDisplayName}";
+        }
     }
 }
