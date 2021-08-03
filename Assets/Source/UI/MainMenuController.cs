@@ -42,6 +42,12 @@ namespace UnitMan.Source.UI
             _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
             loginStatusLabel.SetText(FirebaseAuthManager.Instance.AuthStatusMessage);
         }
+
+        public void GoToLeaderboard()
+        {
+            SceneManager.LoadScene("Scoreboard");
+        }
+        
         public void OnPressStart() {
             // classicalMapButton.gameObject.SetActive(true);
             testMapButton.gameObject.SetActive(true);
