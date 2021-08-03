@@ -1,13 +1,11 @@
 ﻿using Firebase.Firestore;
+using UnityEngine;
 
 namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 {
 	[FirestoreData]
-	public struct LeaderData
+	public struct FirestoreLeaderData
 	{
-		[FirestoreProperty]
-		public string PlayerID { get; set; }
-		
 		[FirestoreProperty]
 		public string PlayerDisplayName { get; set; }
 		
@@ -17,9 +15,10 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 		[FirestoreProperty]
 		public bool PlayerWon { get; set; }
 
-		public LeaderData(string playerID, string playerDisplayName, int score, bool playerWon)
+		
+
+		public FirestoreLeaderData(string playerDisplayName, int score, bool playerWon)
 		{
-			PlayerID = playerID;
 			PlayerDisplayName = playerDisplayName;
 			Score = score;
 			PlayerWon = playerWon;

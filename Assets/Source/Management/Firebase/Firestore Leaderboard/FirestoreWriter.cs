@@ -17,7 +17,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
         [SerializeField]
         private TMP_Text scoreField;
 
-        private LeaderData _leaderData;
+        private FirestoreLeaderData _firestoreLeaderData;
 
 
         private void Start()
@@ -28,13 +28,12 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
         public void SubmitScore()
         {
             FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
-            _leaderData = new LeaderData(currentUser.UserId,
-                                        nameField.text.ToUpper(),
+            _firestoreLeaderData = new FirestoreLeaderData(nameField.text.ToUpper(),
                                         SessionDataModel.Instance.score,
                                         SessionDataModel.Instance.won);
             Debug.Log("Should write to db");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-            firestore.Document($"leaders/{_leaderData.PlayerID}").SetAsync(_leaderData);
+            firestore.Document($"leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
             GoToScoreboard();
             
         }

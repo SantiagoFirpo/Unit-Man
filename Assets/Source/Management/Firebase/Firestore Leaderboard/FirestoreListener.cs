@@ -13,7 +13,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 
 		private string _scoreboardTextBuffer;
 
-		private IEnumerable<LeaderData> _localLeaders;
+		private IEnumerable<FirestoreLeaderData> _localLeaders;
 
 		// Start is called before the first frame update
 		private void Start()
@@ -44,13 +44,13 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
 
 		}
 
-		private static int ScoreSorter(LeaderData leader)
+		private static int ScoreSorter(FirestoreLeaderData firestoreLeader)
 		{
-			return leader.Score;
+			return firestoreLeader.Score;
 		}
 
-		private static LeaderData DocumentToLeaderData(DocumentSnapshot snapshot) =>
-			snapshot.ConvertTo<LeaderData>();
+		private static FirestoreLeaderData DocumentToLeaderData(DocumentSnapshot snapshot) =>
+			snapshot.ConvertTo<FirestoreLeaderData>();
 		
 		public void GoToMainMenu()
 		{

@@ -34,7 +34,7 @@ namespace UnitMan.Source.UI
                     task =>
                     {
                         Assert.IsNull(task.Exception);
-                        LeaderData userData = task.Result.ConvertTo<LeaderData>();
+                        FirestoreLeaderData userData = task.Result.ConvertTo<FirestoreLeaderData>();
                         SceneManager.LoadScene(userData.Score < SessionDataModel.Instance.score
                             ? "Score Query"
                             : "Scoreboard");
