@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Firebase.Firestore;
-using TMPro;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,13 +11,9 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
 	public class FirestoreListener : MonoBehaviour
 	{
-		[SerializeField]
-		private TMP_Text scoreboardText;
-
 		[FormerlySerializedAs("_leaderboardUIController")] [SerializeField]
 		private LeaderboardUIController leaderboardUIController;
 
-		private string _scoreboardTextBuffer;
 		private string _leaderboardJson;
 
 		private IEnumerable<FirestoreLeaderData> _firestoreLeaders;
@@ -30,7 +25,6 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		{
 			FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
 			firestore.Collection("leaders").Listen(ListenCallback);
-			_scoreboardTextBuffer = "";
 		}
 
 		private void ListenCallback(QuerySnapshot dataSnapshot)
@@ -41,24 +35,11 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 			_localLeaderboard = JsonUtility.FromJson<Leaderboard>(_leaderboardJson);
 			
 			leaderboardUIController.InjectLeaderboard(_localLeaderboard);
-			
-			//TODO: add win based sorting
-			_scoreboardTextBuffer = "SCORE			NAME";
 			Debug.Log(_leaderboardJson);
-
-			foreach (LocalLeaderData leader in _localLeaderboard.values)
-			{
-				// Debug.Log(leader.playerDisplayName);
-				// Debug.Log(leader.score);
-				// Debug.Log(leader.playerWon);
-				// string leaderWon = leader.playerWon ? "Yes" : "No";
-				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader}";
-
-			}
+			
 
 			SaveStringIntoJson(_leaderboardJson);
-
-			scoreboardText.SetText(_scoreboardTextBuffer);
+			
 
 		}
 
