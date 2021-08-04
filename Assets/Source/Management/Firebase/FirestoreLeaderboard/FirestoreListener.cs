@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Firebase.Firestore;
 using TMPro;
-using UnitMan.Source.Management.Firebase.Firestore_Leaderboard;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +31,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		private void ListenCallback(QuerySnapshot dataSnapshot)
 		{
 			_firestoreLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
-			_leaderboardJson = JsonArrayHelper.ToJson<FirestoreLeaderData[]>(FirestoreToLocal(_firestoreLeaders.ToArray()), true);
+			_leaderboardJson = JsonUtility.ToJson(new Leaderboard(_firestoreLeaders), true);
 
 			_localLeaders = JsonUtility.FromJson<LocalLeaderData[]>(_leaderboardJson);
 

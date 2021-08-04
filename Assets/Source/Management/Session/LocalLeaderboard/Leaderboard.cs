@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 
 namespace UnitMan.Source.Management.Session.LocalLeaderboard
@@ -7,20 +8,16 @@ namespace UnitMan.Source.Management.Session.LocalLeaderboard
     [Serializable]
     public class Leaderboard
     {
-        public List<LocalLeaderData> values;
+        public LocalLeaderData[] values;
 
-        public Leaderboard(FirestoreLeaderData[] firestoreLeaders)
+        public Leaderboard(IEnumerable<FirestoreLeaderData> firestoreLeaders)
         {
-            int firestoreLeadersLength = firestoreLeaders.Length;
-            values = new List<LocalLeaderData>(firestoreLeadersLength);
-            foreach (FirestoreLeaderData firestoreLeader in firestoreLeaders)
+            FirestoreLeaderData[] firestoreLeaderArray = firestoreLeaders.ToArray(); //duplicating
+            values = new LocalLeaderData[firestoreLeaderArray.Length];
+            for (int i = 0; i < firestoreLeaderArray.Length; i++)
             {
-                values.Add(new LocalLeaderData(firestoreLeader.PlayerDisplayName,
-                    firestoreLeader.Score,
-                    firestoreLeader.PlayerWon));
-            }
-            {
-                
+                FirestoreLeaderData currentLeader = firestoreLeaderArray[i];
+                values[i] = new LocalLeaderData(currentLeader.PlayerDisplayName, currentLeader.Score, currentLeader.PlayerWon);
             }
         }
     }
