@@ -85,8 +85,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
             _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
         
-        //TODO: move all dependent methods and fields to MainMenu
-
         //BUG: user can't logout after gameplay because the AuthManager is flagged DontDestroyOnLoad
         public void SignOutUser()
         {
