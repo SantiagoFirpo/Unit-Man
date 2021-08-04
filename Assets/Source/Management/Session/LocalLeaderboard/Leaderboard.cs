@@ -14,10 +14,10 @@ namespace UnitMan.Source.Management.Session.LocalLeaderboard
         {
             FirestoreLeaderData[] firestoreLeaderArray = firestoreLeaders.ToArray(); //duplicating
             values = new LocalLeaderData[firestoreLeaderArray.Length];
-            for (int i = 0; i < firestoreLeaderArray.Length; i++)
+            for (uint i = 0; i < firestoreLeaderArray.Length; i++)
             {
                 FirestoreLeaderData currentLeader = firestoreLeaderArray[i];
-                values[i] = new LocalLeaderData(currentLeader.PlayerDisplayName, currentLeader.Score, currentLeader.PlayerWon);
+                values[i] = new LocalLeaderData(currentLeader.PlayerDisplayName, currentLeader.Score, currentLeader.PlayerWon, i);
             }
         }
     }
