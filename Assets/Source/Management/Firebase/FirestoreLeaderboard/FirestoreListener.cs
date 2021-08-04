@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Firebase.Firestore;
 using TMPro;
+using UnitMan.Source.Management.Firebase.Firestore_Leaderboard;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,8 +13,6 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 	public class FirestoreListener : MonoBehaviour
 	{
 		[SerializeField] private TMP_Text scoreboardText;
-
-		private Leaderboard _firestoreLeaderboard;
 
 		private string _scoreboardTextBuffer;
 		private string _leaderboardJson;
@@ -33,14 +32,14 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		private void ListenCallback(QuerySnapshot dataSnapshot)
 		{
 			_firestoreLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
-			_leaderboardJson = JsonUtility.ToJson(new Leaderboard(_firestoreLeaders.ToArray()), true);
+			_leaderboardJson = JsonArrayHelper.ToJson<FirestoreLeaderData[]>(FirestoreToLocal(_firestoreLeaders.ToArray()), true);
 
-			_localLeaders = JsonUtility.FromJson<Leaderboard>(_leaderboardJson).values.ToArray();
-			
+			_localLeaders = JsonUtility.FromJson<LocalLeaderData[]>(_leaderboardJson);
+
 			//TODO: add win based sorting
 			_scoreboardTextBuffer = "SCORE			NAME";
 			Debug.Log(_leaderboardJson);
-				
+
 			foreach (LocalLeaderData leader in _localLeaders)
 			{
 				// Debug.Log(leader.playerDisplayName);
@@ -48,15 +47,29 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 				// Debug.Log(leader.playerWon);
 				// string leaderWon = leader.playerWon ? "Yes" : "No";
 				_scoreboardTextBuffer = $"{_scoreboardTextBuffer} \n {leader}";
-			
+
 			}
+
 			SaveStringIntoJson(_leaderboardJson);
 
 			scoreboardText.SetText(_scoreboardTextBuffer);
 
-
 		}
 		
+		public static List<LocalLeaderData> FirestoreToLocal(FirestoreLeaderData[] firestoreLeaders)
+		{
+			int firestoreLeadersLength = firestoreLeaders.Length;
+			List<LocalLeaderData> result = new List<LocalLeaderData>(firestoreLeadersLength);
+			for (int i = 0; i < firestoreLeadersLength; i++)
+			{
+				FirestoreLeaderData firestoreLeader = firestoreLeaders[i];
+				result.Add(new LocalLeaderData(firestoreLeader.PlayerDisplayName, firestoreLeader.Score,
+												firestoreLeader.PlayerWon));
+			}
+
+			return result;
+		}
+
 		public static void SaveStringIntoJson(string json){
 			File.WriteAllText($"{Application.persistentDataPath}/leaderboard.json", json);
 			Debug.Log($"Saved leaderboard.json to {Application.persistentDataPath}");
