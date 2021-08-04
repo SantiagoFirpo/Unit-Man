@@ -127,16 +127,16 @@ namespace UnitMan.Source.Entities {
 
         protected static int VectorToInt(Vector2Int vector) {
             int index = -1;
-            if (vector == LevelGridController.upVector2Int) {
+            if (vector == LevelGridController.UpVector2Int) {
                 index = (int) Direction.Up;
             }
-            else if (vector == LevelGridController.downVector2Int) {
+            else if (vector == LevelGridController.DownVector2Int) {
                 index = (int) Direction.Down;
             }
-            else if (vector == LevelGridController.leftVector2Int) {
+            else if (vector == LevelGridController.LeftVector2Int) {
                 index = (int) Direction.Left;
             }
-            else if (vector == LevelGridController.rightVector2Int) {
+            else if (vector == LevelGridController.RightVector2Int) {
                 index = (int) Direction.Right;
             }
 
@@ -176,10 +176,10 @@ namespace UnitMan.Source.Entities {
 
         protected static Vector2Int DirectionToVector2Int(Direction enumDirection) {
             return enumDirection switch {
-                Direction.Up => LevelGridController.upVector2Int,
-                Direction.Down => LevelGridController.downVector2Int,
-                Direction.Left => LevelGridController.leftVector2Int,
-                Direction.Right => LevelGridController.rightVector2Int,
+                Direction.Up => LevelGridController.UpVector2Int,
+                Direction.Down => LevelGridController.DownVector2Int,
+                Direction.Left => LevelGridController.LeftVector2Int,
+                Direction.Right => LevelGridController.RightVector2Int,
                 _ => Vector2Int.zero
             };
         }

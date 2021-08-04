@@ -52,7 +52,7 @@ namespace UnitMan.Source.Entities.Actors
             
             SubscribeForEvents();
 
-            currentDirection = LevelGridController.rightVector2Int;
+            currentDirection = LevelGridController.RightVector2Int;
             currentMoveSpeed = MOVE_SPEED;
         }
 

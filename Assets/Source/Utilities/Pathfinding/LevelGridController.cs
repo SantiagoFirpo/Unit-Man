@@ -10,7 +10,23 @@ namespace UnitMan.Source.Utilities.Pathfinding
     [RequireComponent(typeof(Tilemap))]
     public class LevelGridController : MonoBehaviour
     {
+        public static readonly Vector2 Zero = Vector2.zero;
+        public static readonly Vector2Int UpVector2Int = Vector2Int.up;
+        public static readonly Vector2Int DownVector2Int = Vector2Int.down;
+        public static readonly Vector2Int LeftVector2Int = Vector2Int.left;
+        public static readonly Vector2Int RightVector2Int = Vector2Int.right;
+        
+        public static readonly Vector2 UpVector2 = Vector2.up;
+        public static readonly Vector2 DownVector2 = Vector2.down;
+        public static readonly Vector2 LeftVector2 = Vector2.left;
+        public static readonly Vector2 RightVector2 = Vector2.right;
+        
+
+        public Tilemap walkableTilemap;
+
+        private bool[][] _grid;
         public MazeData mazeData;
+        
         public bool GetGridPosition(int x, int y) {
             // Debug.Log($"{x}, {y}");
             return _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x];
@@ -24,21 +40,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
             _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x] = value;
         }
 
-        public static Vector2 zero = Vector2.zero;
-        public static Vector2Int upVector2Int = Vector2Int.up;
-        public static Vector2Int downVector2Int = Vector2Int.down;
-        public static Vector2Int leftVector2Int = Vector2Int.left;
-        public static Vector2Int rightVector2Int = Vector2Int.right;
-        
-        public static readonly Vector2 UpVector2 = Vector2.up;
-        public static readonly Vector2 DownVector2 = Vector2.down;
-        public static readonly Vector2 LeftVector2 = Vector2.left;
-        public static readonly Vector2 RightVector2 = Vector2.right;
-        
-
-        public Tilemap walkableTilemap;
-
-        private bool[][] _grid;
 
 
         public static LevelGridController Instance { get; private set; }
@@ -50,12 +51,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
             Instance = this;
             mazeData.CalculateBounds();
             InitializeGrid();
-
-            // foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
-            //     SetGridPosition(position.x, position.y, false);
-            //     // grid.Add(position, false);
-            //     SetGridPosition(position.x, position.y,false);
-            // }
+            
             //bools are canWalk
            
         }
