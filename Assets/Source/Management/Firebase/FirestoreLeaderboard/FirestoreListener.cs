@@ -6,19 +6,24 @@ using TMPro;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
 	public class FirestoreListener : MonoBehaviour
 	{
-		[SerializeField] private TMP_Text scoreboardText;
+		[SerializeField]
+		private TMP_Text scoreboardText;
+
+		[FormerlySerializedAs("_leaderboardUIController")] [SerializeField]
+		private LeaderboardUIController leaderboardUIController;
 
 		private string _scoreboardTextBuffer;
 		private string _leaderboardJson;
 
 		private IEnumerable<FirestoreLeaderData> _firestoreLeaders;
 
-		private LocalLeaderData[] _localLeaders;
+		private Leaderboard _localLeaderboard;
 
 		// Start is called before the first frame update
 		private void Start()
@@ -33,13 +38,15 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 			_firestoreLeaders = dataSnapshot.Documents.Select(DocumentToLeaderData).OrderByDescending(ScoreSorter);
 			_leaderboardJson = JsonUtility.ToJson(new Leaderboard(_firestoreLeaders), true);
 
-			_localLeaders = JsonUtility.FromJson<LocalLeaderData[]>(_leaderboardJson);
-
+			_localLeaderboard = JsonUtility.FromJson<Leaderboard>(_leaderboardJson);
+			
+			leaderboardUIController.InjectLeaderboard(_localLeaderboard);
+			
 			//TODO: add win based sorting
 			_scoreboardTextBuffer = "SCORE			NAME";
 			Debug.Log(_leaderboardJson);
 
-			foreach (LocalLeaderData leader in _localLeaders)
+			foreach (LocalLeaderData leader in _localLeaderboard.values)
 			{
 				// Debug.Log(leader.playerDisplayName);
 				// Debug.Log(leader.score);
@@ -53,20 +60,6 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 			scoreboardText.SetText(_scoreboardTextBuffer);
 
-		}
-		
-		public static List<LocalLeaderData> FirestoreToLocal(FirestoreLeaderData[] firestoreLeaders)
-		{
-			int firestoreLeadersLength = firestoreLeaders.Length;
-			List<LocalLeaderData> result = new List<LocalLeaderData>(firestoreLeadersLength);
-			for (int i = 0; i < firestoreLeadersLength; i++)
-			{
-				FirestoreLeaderData firestoreLeader = firestoreLeaders[i];
-				result.Add(new LocalLeaderData(firestoreLeader.PlayerDisplayName, firestoreLeader.Score,
-												firestoreLeader.PlayerWon));
-			}
-
-			return result;
 		}
 
 		public static void SaveStringIntoJson(string json){
