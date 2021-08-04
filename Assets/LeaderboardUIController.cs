@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using TMPro;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 
@@ -11,12 +9,25 @@ namespace UnitMan
         [SerializeField]
         private LeaderCellController[] leaderCells;
 
+        [SerializeField]
+        private TMP_Text threeDots;
+
         private LeaderCellController _lastLeader;
+
+        private const string THREE_DOTS = "...";
 
         public void InjectLeaderboard(Leaderboard leaderboard)
         {
-            _lastLeader = leaderCells[leaderCells.Length];
-            for (int i = 0; i < leaderboard.values.Length; i++)
+            LocalLeaderData[] leaders = leaderboard.values;
+            int leadersLength = leaders.Length;
+            if (leadersLength > 3)
+            {
+                threeDots.SetText(THREE_DOTS);
+                _lastLeader = leaderCells[leaderCells.Length - 1];
+                _lastLeader.InjectLeaderData(leaders[leadersLength - 1]);
+            }
+            
+            for (int i = 0; i < leadersLength; i++)
             {
                 if (leaderCells[i] is null)
                 {
@@ -24,7 +35,7 @@ namespace UnitMan
                 }
                 else
                 {
-                    leaderCells[i].InjectLeaderData(leaderboard.values[i]);
+                    leaderCells[i].InjectLeaderData(leaders[i]);
                 }
             }
         }
