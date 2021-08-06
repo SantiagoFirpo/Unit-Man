@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "com.google.external-dependency-manager": {
-      "version": "file:C:/Users/santiago.firpo/Downloads/com.google.external-dependency-manager-1.2.166.tgz",
+      "version": "file:com.google.external-dependency-manager-1.2.166.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
     },
     "com.google.firebase.app": {
-      "version": "file:C:/Users/santiago.firpo/Downloads/com.google.firebase.app-8.1.0.tgz",
+      "version": "file:com.google.firebase.app-8.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -15,7 +15,7 @@
       }
     },
     "com.google.firebase.auth": {
-      "version": "file:C:/Users/santiago.firpo/Downloads/com.google.firebase.auth-8.1.0.tgz",
+      "version": "file:com.google.firebase.auth-8.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -23,7 +23,7 @@
       }
     },
     "com.google.firebase.firestore": {
-      "version": "file:C:/Users/santiago.firpo/Downloads/com.google.firebase.firestore-8.1.0.tgz",
+      "version": "file:com.google.firebase.firestore-8.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -31,7 +31,7 @@
       }
     },
     "com.google.firebase.storage": {
-      "version": "file:C:/Users/santiago.firpo/Downloads/com.google.firebase.storage-8.1.0.tgz",
+      "version": "file:com.google.firebase.storage-8.1.0.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {
@@ -39,7 +39,7 @@
       }
     },
     "com.unity.2d.animation": {
-      "version": "5.0.5",
+      "version": "5.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -229,7 +229,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.24",
+      "version": "1.1.27",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -240,7 +240,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.4",
+      "version": "3.0.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
