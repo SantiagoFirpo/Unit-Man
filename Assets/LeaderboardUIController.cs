@@ -1,43 +1,56 @@
-using TMPro;
+using System;
+using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace UnitMan
 {
     public class LeaderboardUIController : MonoBehaviour
     {
-        [SerializeField]
-        private LeaderCellController[] leaderCells;
+        [FormerlySerializedAs("leaderCells")] [SerializeField]
+        private LeaderCellController[] leaderUICells;
 
         [SerializeField]
-        private TMP_Text threeDots;
+        private GameObject threeDots;
 
         private LeaderCellController _lastLeader;
 
-        private const string THREE_DOTS = "...";
+        private bool _isSignedIn;
+
 
         public void InjectLeaderboard(Leaderboard leaderboard)
         {
             LocalLeaderData[] leaders = leaderboard.values;
             int leadersLength = leaders.Length;
-            if (leadersLength > 3)
-            {
-                threeDots.SetText(THREE_DOTS);
-                _lastLeader = leaderCells[leaderCells.Length - 1];
-                _lastLeader.InjectLeaderData(leaders[leadersLength - 1]);
-            }
-            
             for (int i = 0; i < leadersLength; i++)
             {
-                if (leaderCells[i] is null)
-                {
-                    //TODO: inject the user's scoreboard into last cell if it's on the scoreboard
-                }
-                else
-                {
-                    leaderCells[i].InjectLeaderData(leaders[i]);
-                }
+                if (leaderUICells.Length - 1 < i) break;
+                leaderUICells[i]?.InjectLeaderData(leaders[i]);
             }
+
+            if (leadersLength < 5) return;
+            threeDots.SetActive(true);  
+            _lastLeader = leaderUICells[leaderUICells.Length - 1];
+            _isSignedIn = FirebaseAuthManager.Instance != null && FirebaseAuthManager.Instance.auth != null;
+            // LocalLeaderData userLeader = Array.Find(leaders, FindUserEntry);
+            if (!_isSignedIn)
+            {
+                _lastLeader.InjectLeaderData(leaders[leadersLength - 1]);
+                _lastLeader.MarkAsLast();    
+            }
+            else
+            {
+                _lastLeader.InjectLeaderData(Array.Find(leaders, FindUserEntry));
+                _lastLeader.MarkAsUserScore();
+            }
+            
+        }
+
+        private bool FindUserEntry(LocalLeaderData obj)
+        {
+            if (!_isSignedIn) return false;
+            return obj.playerId == FirebaseAuthManager.Instance.auth.CurrentUser.UserId;
         }
     }
 }
