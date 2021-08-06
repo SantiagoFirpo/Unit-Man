@@ -191,7 +191,7 @@
                     "id": "b1cb935a-d6b2-4b82-ba80-bde25dd228a8",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "ScrollWheel",
@@ -215,7 +215,7 @@
                     "id": "40f8a295-d7ec-4032-a598-a171952fa1e2",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "TrackedDevicePosition",

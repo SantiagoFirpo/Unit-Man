@@ -1140,12 +1140,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallTilemap: {fileID: 2053896148}
   wallRuleTile: {fileID: 11400000, guid: 71fcd36843baa804c8dfad0633df2066, type: 2}
-  pelletMarkerPrefab: {fileID: 0}
-  powerMarkerPrefab: {fileID: 0}
-  blinkyMarkerPrefab: {fileID: 0}
-  pinkyMarkerPrefab: {fileID: 0}
-  inkyMarkerPrefab: {fileID: 0}
-  clydeMarkerPrefab: {fileID: 0}
+  pelletMarkerPrefab: {fileID: 1890045635}
+  powerMarkerPrefab: {fileID: 1189514710}
+  blinkyMarkerPrefab: {fileID: 2132669306}
+  pinkyMarkerPrefab: {fileID: 1041115683}
+  inkyMarkerPrefab: {fileID: 1844427115}
+  clydeMarkerPrefab: {fileID: 2031658630}
 --- !u!4 &753522263
 Transform:
   m_ObjectHideFlags: 0
@@ -1470,6 +1470,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 984481373}
   m_CullTransparentMesh: 1
+--- !u!1 &1041115683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6771489937822362469, guid: ff1287b2b9514d648a617b23fd5376d1, type: 3}
+  m_PrefabInstance: {fileID: 6771489936983359814}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1189514710 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1208791135804869657, guid: 682a7b26e1916164bbe052d65cb5b7cd, type: 3}
+  m_PrefabInstance: {fileID: 1208791136985727439}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1315949727
 GameObject:
   m_ObjectHideFlags: 0
@@ -1753,6 +1763,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1822916582}
   m_CullTransparentMesh: 1
+--- !u!1 &1844427115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6743509063539093092, guid: 9389da9abf9b1b14b92691df417df4b9, type: 3}
+  m_PrefabInstance: {fileID: 6743509063846352655}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1890045635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5414215807660122168, guid: 3299869dde9388840ae8aa96064f5aa9, type: 3}
+  m_PrefabInstance: {fileID: 5414215806307610363}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2018023243
 GameObject:
   m_ObjectHideFlags: 0
@@ -1886,6 +1906,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2018023243}
   m_CullTransparentMesh: 1
+--- !u!1 &2031658630 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5479799095331345069, guid: c2e5a04bd02efaa4bb153a6014df9cbe, type: 3}
+  m_PrefabInstance: {fileID: 5479799093568205867}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2053896145
 GameObject:
   m_ObjectHideFlags: 0
@@ -2137,6 +2162,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082223224}
   m_CullTransparentMesh: 1
+--- !u!1 &2132669306 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 648894986967278246, guid: 10868a7b8681fff4398511881d464a64, type: 3}
+  m_PrefabInstance: {fileID: 648894985003504092}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &648894985003504092
 PrefabInstance:
   m_ObjectHideFlags: 0
