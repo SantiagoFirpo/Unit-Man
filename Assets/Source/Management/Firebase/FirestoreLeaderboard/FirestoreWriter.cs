@@ -30,7 +30,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
             FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
             _firestoreLeaderData = new FirestoreLeaderData(nameField.text.ToUpper(),
                                         SessionDataModel.Instance.score,
-                                        SessionDataModel.Instance.won);
+                                        SessionDataModel.Instance.won, currentUser.UserId);
             Debug.Log("Should write to db");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
             firestore.Document($"leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);

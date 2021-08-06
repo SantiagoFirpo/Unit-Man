@@ -17,7 +17,7 @@ namespace UnitMan.Source.Management.Session.LocalLeaderboard
             for (uint i = 0; i < firestoreLeaderArray.Length; i++)
             {
                 FirestoreLeaderData currentLeader = firestoreLeaderArray[i];
-                values[i] = new LocalLeaderData(currentLeader.PlayerDisplayName, currentLeader.Score, currentLeader.PlayerWon, i + 1);
+                values[i] = new LocalLeaderData(currentLeader.PlayerDisplayName, currentLeader.Score, currentLeader.PlayerWon, i + 1, currentLeader.PlayerId);
             }
         }
     }

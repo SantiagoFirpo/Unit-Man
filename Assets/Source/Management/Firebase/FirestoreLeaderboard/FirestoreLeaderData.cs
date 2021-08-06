@@ -9,6 +9,9 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		public string PlayerDisplayName { get; set; }
 		
 		[FirestoreProperty]
+		public string PlayerId { get; set; }
+		
+		[FirestoreProperty]
 		public int Score { get; set; }
 		
 		[FirestoreProperty]
@@ -16,11 +19,12 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 		
 
-		public FirestoreLeaderData(string playerDisplayName, int score, bool playerWon)
+		public FirestoreLeaderData(string playerDisplayName, int score, bool playerWon, string playerId)
 		{
 			PlayerDisplayName = playerDisplayName;
 			Score = score;
 			PlayerWon = playerWon;
+			PlayerId = playerId;
 		}
 	}
 }
