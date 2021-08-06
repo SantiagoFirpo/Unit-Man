@@ -29,22 +29,22 @@ namespace UnitMan.Source.MazeEditing
         private bool _isRightClicking;
         
         [SerializeField]
-        private GameObject pelletPrefab;
+        private GameObject pelletMarkerPrefab;
         
         [SerializeField]
-        private GameObject powerPrefab;
+        private GameObject powerMarkerPrefab;
         
         [SerializeField]
-        private GameObject blinkyPrefab;
+        private GameObject blinkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject pinkyPrefab;
+        private GameObject pinkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject inkyPrefab;
+        private GameObject inkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject clydePrefab;
+        private GameObject clydeMarkerPrefab;
 
         private void Awake()
         {
@@ -117,20 +117,24 @@ namespace UnitMan.Source.MazeEditing
                 case MazeObjectType.Wall:
                     break;
                 case MazeObjectType.Pellet:
-                    PlaceLevelObject(pelletPrefab);
+                    PlaceLevelObject(pelletMarkerPrefab);
                     break;
                 case MazeObjectType.PowerPellet:
-                    PlaceLevelObject(powerPrefab);
+                    PlaceLevelObject(powerMarkerPrefab);
                     break;
                 case MazeObjectType.Player:
                     break;
                 case MazeObjectType.Blinky:
+                    PlaceLevelObject(blinkyMarkerPrefab);
                     break;
                 case MazeObjectType.Pinky:
+                    PlaceLevelObject(pinkyMarkerPrefab);
                     break;
                 case MazeObjectType.Inky:
+                    PlaceLevelObject(inkyMarkerPrefab);
                     break;
                 case MazeObjectType.Clyde:
+                    PlaceLevelObject(clydeMarkerPrefab);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

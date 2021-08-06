@@ -222,7 +222,7 @@ MonoBehaviour:
   - {fileID: 1727137224}
   - {fileID: 1933497003}
   - {fileID: 787950072}
-  threeDots: {fileID: 0}
+  threeDots: {fileID: 258924649}
 --- !u!1001 &103179469
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -431,7 +431,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &258924650
 RectTransform:
   m_ObjectHideFlags: 0
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: ...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 30904dcba32bd6f49bffe656f7d222fe, type: 2}
   m_sharedMaterial: {fileID: 3216320164172365, guid: 30904dcba32bd6f49bffe656f7d222fe, type: 2}
