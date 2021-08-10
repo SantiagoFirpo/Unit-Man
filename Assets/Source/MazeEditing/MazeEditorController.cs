@@ -227,8 +227,7 @@ namespace UnitMan.Source.MazeEditing
             if (_eventSystem.IsPointerOverGameObject()) return;
             {
                 _mouseWorldPositionV2Int = LevelGridController.VectorToVector2Int(_mouseWorldPosition);
-                _currentWorkingMaze.levelObjects.Remove(_mouseWorldPositionV2Int);
-                wallTilemap.SetTile(_mouseTilesetPosition, null);
+                PlaceLevelObject(_selectedObjectType, _mouseWorldPosition);
             }
 
             else if (_isLeftClicking && !_currentWorkingMaze.levelObjects.ContainsKey(_mouseWorldPositionV2Int))
