@@ -15,7 +15,6 @@ namespace UnitMan.Source.MazeEditing
         private Maze _currentWorkingMaze;
         private Gameplay _inputMap;
         private Vector2 _mouseScreenPosition;
-        private Vector3Int _mouseTilesetPosition;
         private Vector3 _mouseWorldPosition;
 
         [FormerlySerializedAs("_wallTilemap")] [SerializeField]
@@ -24,11 +23,10 @@ namespace UnitMan.Source.MazeEditing
         [SerializeField]
         private TileBase wallRuleTile;
         
-        private Vector3Int _wallOrigin;
         private Camera _mainCamera;
         private bool _isLeftClicking;
         private bool _isRightClicking;
-        private Vector2Int _mouseWorldPositionV2Int;
+        
         [SerializeField]
         private GameObject pelletMarkerPrefab;
         
@@ -47,8 +45,12 @@ namespace UnitMan.Source.MazeEditing
         [SerializeField]
         private GameObject clydeMarkerPrefab;
 
+        private Vector3Int _mouseTilesetPosition;
+
         private readonly Dictionary<Vector3, GameObject> _localObjects = new Dictionary<Vector3, GameObject>();
         
+        [SerializeField]
+        private Transform pacManTransform;
 
         private EventSystem _eventSystem;
 
@@ -67,7 +69,6 @@ namespace UnitMan.Source.MazeEditing
 
         private void Start()
         {
-            _wallOrigin = wallTilemap.origin;
             _mainCamera = Camera.main;
             _eventSystem = EventSystem.current;
         }
@@ -116,52 +117,12 @@ namespace UnitMan.Source.MazeEditing
         {
             _selectedObjectType = MazeObjectType.PowerPellet;
         }
-        //
-        // private void OnLeftClick(InputAction.CallbackContext context)
-        // {
-        //     if (!context.started) return;
-        //     Debug.Log("Should place");
-        //     Vector2Int mouseWorldPosition = LevelGridController.VectorToVector2Int(_mouseWorldPosition);
-        //     if (_currentWorkingMaze.levelObjects.ContainsKey(mouseWorldPosition)) return;
-        //     switch (_selectedObjectType)
-        //     {
-        //         case MazeObjectType.Wall:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Wall);
-        //             break;
-        //         case MazeObjectType.Pellet:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Pellet);
-        //             break;
-        //         case MazeObjectType.PowerPellet:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.PowerPellet);
-        //             break;
-        //         case MazeObjectType.Player:
-        //             _currentWorkingMaze.playerPosition = mouseWorldPosition;
-        //             break;
-        //         case MazeObjectType.Blinky:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Blinky);
-        //
-        //             break;
-        //         case MazeObjectType.Pinky:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Pinky);
-        //
-        //             break;
-        //         case MazeObjectType.Inky:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Inky);
-        //
-        //             break;
-        //         case MazeObjectType.Clyde:
-        //             _currentWorkingMaze.levelObjects.Add(mouseWorldPosition, MazeObjectType.Clyde);
-        //
-        //             break;
-        //         default:
-        //             throw new ArgumentOutOfRangeException();
-        //     }
-        // }
-
-        private void PlaceLevelObject(GameObject prefab)
+        
+        public void OnPacManButtonSelected()
         {
-            if (prefab is null) return;
-            Instantiate(prefab, _mouseWorldPosition, Quaternion.identity);
+            _selectedObjectType = MazeObjectType.PacMan;
+        }
+
         private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
         {
             Vector2Int positionV2Int = LevelGridController.VectorToVector2Int(position);
@@ -214,24 +175,19 @@ namespace UnitMan.Source.MazeEditing
         private void OnMouseMove(InputAction.CallbackContext context)
         {
             _mouseScreenPosition = context.ReadValue<Vector2>();
-            _mouseTilesetPosition = LevelGridController.Vector2ToVector3Int
-            (_mainCamera.ScreenToWorldPoint
-                (_mouseScreenPosition))  - _wallOrigin;
-            _mouseWorldPosition = (wallTilemap.CellToWorld(_mouseTilesetPosition));
+            _mouseTilesetPosition = wallTilemap.WorldToCell(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition));
+            _mouseWorldPosition = LevelGridController.Round(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition)); 
+            _mouseWorldPosition.z = 0f;
         }
-
+        
         private void Update()
         {
-            if (_isRightClicking)
             
             if (_eventSystem.IsPointerOverGameObject()) return;
+            if (_isLeftClicking)
             {
-                _mouseWorldPositionV2Int = LevelGridController.VectorToVector2Int(_mouseWorldPosition);
                 PlaceLevelObject(_selectedObjectType, _mouseWorldPosition);
             }
-
-            else if (_isLeftClicking && !_currentWorkingMaze.levelObjects.ContainsKey(_mouseWorldPositionV2Int))
-                switch (_selectedObjectType)
             
             else if (_isRightClicking)
             {
