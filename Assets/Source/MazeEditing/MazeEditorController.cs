@@ -267,7 +267,7 @@ namespace UnitMan.Source.MazeEditing
 
     public enum MazeObjectType
     {
-        Wall, Pellet, PowerPellet, Player,
+        Wall, Pellet, PowerPellet, PacMan,
         Blinky,
         Pinky,
         Inky,
