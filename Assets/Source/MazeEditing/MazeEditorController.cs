@@ -47,6 +47,8 @@ namespace UnitMan.Source.MazeEditing
         [SerializeField]
         private GameObject clydeMarkerPrefab;
 
+        private readonly Dictionary<Vector3, GameObject> _localObjects = new Dictionary<Vector3, GameObject>();
+        
 
         private EventSystem _eventSystem;
 
@@ -194,57 +196,25 @@ namespace UnitMan.Source.MazeEditing
 
             else if (_isLeftClicking && !_currentWorkingMaze.levelObjects.ContainsKey(_mouseWorldPositionV2Int))
                 switch (_selectedObjectType)
+            
+            else if (_isRightClicking)
+            {
+                if (!_currentWorkingMaze.levelObjects.ContainsKey(
+                    LevelGridController.VectorToVector2Int(_mouseWorldPosition)))
+                    return;
+                if (_selectedObjectType == MazeObjectType.Wall)
                 {
-                    case MazeObjectType.Wall when wallTilemap.GetTile(_mouseTilesetPosition) != wallRuleTile:
-                    {
-                        wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
-                        break;
-                    }
-                    case MazeObjectType.Pellet:
-                    {
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.Pellet);
-                        PlaceLevelObject(pelletMarkerPrefab);
-                        break;
-                    }
-                    case MazeObjectType.PowerPellet:
-                    {
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.PowerPellet);
-                        PlaceLevelObject(powerMarkerPrefab);
-                        break;
-                    }
-                    case MazeObjectType.Player:
-                    {
-                        _currentWorkingMaze.playerPosition = _mouseWorldPositionV2Int;
-                        // PlaceLevelObject(playerMare);
-                        break;
-                    }
-                    case MazeObjectType.Blinky:
-                    {
-                        PlaceLevelObject(blinkyMarkerPrefab);
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.Blinky);
-                    
-                        break;
-                    }
-                    case MazeObjectType.Pinky:
-                    {
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.Pinky);
-                        PlaceLevelObject(pinkyMarkerPrefab);
-                        break;
-                    }
-                    case MazeObjectType.Inky:
-                    {
-                        PlaceLevelObject(inkyMarkerPrefab);
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.Inky);
-                    
-                        break;
-                    }
-                    case MazeObjectType.Clyde:
-                    {
-                        PlaceLevelObject(clydeMarkerPrefab);
-                        _currentWorkingMaze.levelObjects.Add(_mouseWorldPositionV2Int, MazeObjectType.Clyde);
-                        break;
-                    }
+                    wallTilemap.SetTile(_mouseTilesetPosition, null);
                 }
+                else
+                {
+                    Destroy(_localObjects[_mouseWorldPosition]);
+                    _localObjects.Remove(_mouseWorldPosition);
+                    
+                }
+
+                _currentWorkingMaze.levelObjects.Remove(LevelGridController.VectorToVector2Int(_mouseWorldPosition));
+            }
         }
 
         private void OnLeftClicked(InputAction.CallbackContext context)
