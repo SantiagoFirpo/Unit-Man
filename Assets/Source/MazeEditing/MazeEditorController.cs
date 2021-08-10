@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -46,6 +47,9 @@ namespace UnitMan.Source.MazeEditing
         [SerializeField]
         private GameObject clydeMarkerPrefab;
 
+
+        private EventSystem _eventSystem;
+
         private void Awake()
         {
             _inputMap = new Gameplay();
@@ -63,6 +67,7 @@ namespace UnitMan.Source.MazeEditing
         {
             _wallOrigin = wallTilemap.origin;
             _mainCamera = Camera.main;
+            _eventSystem = EventSystem.current;
         }
 
         private void OnDisable()
@@ -179,6 +184,8 @@ namespace UnitMan.Source.MazeEditing
         private void Update()
         {
             if (_isRightClicking)
+            
+            if (_eventSystem.IsPointerOverGameObject()) return;
             {
                 _mouseWorldPositionV2Int = LevelGridController.VectorToVector2Int(_mouseWorldPosition);
                 _currentWorkingMaze.levelObjects.Remove(_mouseWorldPositionV2Int);
