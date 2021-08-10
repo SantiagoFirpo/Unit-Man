@@ -139,6 +139,16 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), 0);
         }
+        
+        public static Vector3Int Vector3ToVector3Int(Vector3 vector)
+        {
+            return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), 0);
+        }
+
+        public static Vector3 Round(Vector3 vector)
+        {
+            return new Vector3(Mathf.Round(vector.x), Mathf.Round(vector.y), Mathf.Round(vector.z));
+        }
 
         private void OnDrawGizmos() {
             InitializeGrid();
