@@ -52,6 +52,9 @@ namespace UnitMan.Source.MazeEditing
         [SerializeField]
         private Transform pacManTransform;
 
+        [SerializeField]
+        private Transform ghostHouseTransform;
+        
         private EventSystem _eventSystem;
 
         private void Awake()
@@ -123,6 +126,10 @@ namespace UnitMan.Source.MazeEditing
             _selectedObjectType = MazeObjectType.PacMan;
         }
 
+        public void OnGhostHouseButtonSelected()
+        {
+            _selectedObjectType = MazeObjectType.GhostHouse;
+        }
         private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
         {
             Vector2Int positionV2Int = LevelGridController.VectorToVector2Int(position);
@@ -132,14 +139,24 @@ namespace UnitMan.Source.MazeEditing
             switch (objectType)
             {
                 case MazeObjectType.Wall:
+                {
                     wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
                     _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
                     break;
+                }
                 case MazeObjectType.PacMan:
+                {
                     _currentWorkingMaze.playerPosition = LevelGridController.VectorToVector2Int(position);
                     pacManTransform.position = position;
                     break;
+                }
+                case MazeObjectType.GhostHouse:
+                {
+                    ghostHouseTransform.position = position;
+                    break;
+                }
                 default:
+                {
                     _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
                     _localObjects.Add(position, InstantiateLevelObject(objectType switch
                     {
@@ -152,6 +169,7 @@ namespace UnitMan.Source.MazeEditing
                         _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
                     }, position));
                     break;
+                }
             }
             
             
@@ -226,6 +244,7 @@ namespace UnitMan.Source.MazeEditing
         Blinky,
         Pinky,
         Inky,
-        Clyde
+        Clyde,
+        GhostHouse
     }
 }
