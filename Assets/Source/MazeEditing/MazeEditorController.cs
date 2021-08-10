@@ -162,6 +162,43 @@ namespace UnitMan.Source.MazeEditing
         {
             if (prefab is null) return;
             Instantiate(prefab, _mouseWorldPosition, Quaternion.identity);
+        private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
+        {
+            Vector2Int positionV2Int = LevelGridController.VectorToVector2Int(position);
+            if (_currentWorkingMaze.playerPosition == LevelGridController.VectorToVector2Int(position)) return;
+            if (_currentWorkingMaze.levelObjects.ContainsKey(positionV2Int)) return;
+            if (wallTilemap.GetTile(_mouseTilesetPosition) == wallRuleTile) return;
+            switch (objectType)
+            {
+                case MazeObjectType.Wall:
+                    wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
+                    _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
+                    break;
+                case MazeObjectType.PacMan:
+                    _currentWorkingMaze.playerPosition = LevelGridController.VectorToVector2Int(position);
+                    pacManTransform.position = position;
+                    break;
+                default:
+                    _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
+                    _localObjects.Add(position, InstantiateLevelObject(objectType switch
+                    {
+                        MazeObjectType.Blinky => blinkyMarkerPrefab,
+                        MazeObjectType.Pinky => pinkyMarkerPrefab,
+                        MazeObjectType.Inky => inkyMarkerPrefab,
+                        MazeObjectType.Clyde => clydeMarkerPrefab,
+                        MazeObjectType.Pellet => pelletMarkerPrefab,
+                        MazeObjectType.PowerPellet => powerMarkerPrefab,
+                        _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
+                    }, position));
+                    break;
+            }
+            
+            
+        }
+
+        private GameObject InstantiateLevelObject(GameObject prefab, Vector3 position)
+        {
+            return prefab is null ? null : Instantiate(prefab, position, Quaternion.identity);
         }
 
         private void OnRightClicked(InputAction.CallbackContext context)
