@@ -48,6 +48,11 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 			Debug.Log($"Saved leaderboard.json to {Application.persistentDataPath}");
 		}
 
+		public static string LoadStringFromJson(string fileName)
+		{
+			return File.ReadAllText($"{Application.persistentDataPath}/{fileName}.json");
+		}
+
 		private static int ScoreSorter(FirestoreLeaderData firestoreLeader)
 		{
 			return firestoreLeader.Score;
