@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,7 +13,8 @@ namespace UnitMan.Source.MazeEditing
     public class MazeEditorController : MonoBehaviour
     {
         private MazeObjectType _selectedObjectType = MazeObjectType.Wall;
-        private Maze _currentWorkingMaze;
+        [SerializeField]
+        private Maze currentWorkingMaze;
         private Gameplay _inputMap;
         private Vector2 _mouseScreenPosition;
         private Vector3 _mouseWorldPosition;
@@ -87,7 +89,7 @@ namespace UnitMan.Source.MazeEditing
             _inputMap.UI.Click.canceled += OnLeftUnclicked;
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
-            _currentWorkingMaze = new Maze();
+            currentWorkingMaze = ScriptableObject.CreateInstance<Maze>();
             _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
         }
 
@@ -104,7 +106,6 @@ namespace UnitMan.Source.MazeEditing
             _inputMap.UI.Click.canceled -= OnLeftUnclicked;
             _inputMap.UI.RightClick.started -= OnRightClicked;
             _inputMap.UI.RightClick.canceled -= OnRightUnclicked;
-            _currentWorkingMaze = new Maze();
         }
 
         public void OnWallButtonSelected()
@@ -163,20 +164,20 @@ namespace UnitMan.Source.MazeEditing
         private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
         {
             Vector2Int positionV2Int = LevelGridController.VectorToVector2Int(position);
-            if (_currentWorkingMaze.playerPosition == LevelGridController.VectorToVector2Int(position)) return;
-            if (_currentWorkingMaze.levelObjects.ContainsKey(positionV2Int)) return;
+            if (currentWorkingMaze.playerPosition == LevelGridController.VectorToVector2Int(position)) return;
+            if (currentWorkingMaze.levelObjects.ContainsKey(positionV2Int)) return;
             if (wallTilemap.GetTile(_mouseTilesetPosition) == wallRuleTile) return;
             switch (objectType)
             {
                 case MazeObjectType.Wall:
                 {
                     wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
-                    _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
+                    currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
                     break;
                 }
                 case MazeObjectType.PacMan:
                 {
-                    _currentWorkingMaze.playerPosition = LevelGridController.VectorToVector2Int(position);
+                    currentWorkingMaze.playerPosition = LevelGridController.VectorToVector2Int(position);
                     pacManTransform.position = position;
                     break;
                 }
@@ -213,11 +214,12 @@ namespace UnitMan.Source.MazeEditing
         private void ComputeScatterPositions()
         {
             BoundsInt cellBounds = wallTilemap.cellBounds;
-            _currentWorkingMaze.pinkyScatterTarget =
-                new Vector2Int(cellBounds.xMin, cellBounds.yMax);
-            _currentWorkingMaze.blinkyScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.max);
-            _currentWorkingMaze.clydeScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.min);
-            _currentWorkingMaze.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin);
+            currentWorkingMaze.pinkyScatterTarget =
+                new Vector2Int(cellBounds.xMin, cellBounds.yMax) + new Vector2Int(-1, 1);
+            Vector2Int vectorOne = Vector2Int.one;
+            currentWorkingMaze.blinkyScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.max) + vectorOne;
+            currentWorkingMaze.clydeScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.min) + -vectorOne;
+            currentWorkingMaze.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
         }
 
         private void OnRightClicked(InputAction.CallbackContext context)
@@ -251,7 +253,7 @@ namespace UnitMan.Source.MazeEditing
             
             else if (_isRightClicking)
             {
-                if (!_currentWorkingMaze.levelObjects.ContainsKey(
+                if (!currentWorkingMaze.levelObjects.ContainsKey(
                     LevelGridController.VectorToVector2Int(_mouseWorldPosition)))
                     return;
                 if (_selectedObjectType == MazeObjectType.Wall)
@@ -265,7 +267,6 @@ namespace UnitMan.Source.MazeEditing
                     
                 }
 
-                _currentWorkingMaze.levelObjects.Remove(LevelGridController.VectorToVector2Int(_mouseWorldPosition));
             }
         }
 
