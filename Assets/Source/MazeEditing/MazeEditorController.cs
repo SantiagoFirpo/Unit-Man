@@ -188,7 +188,11 @@ namespace UnitMan.Source.MazeEditing
                 }
                 default:
                 {
-                    _currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
+                    if (objectType == MazeObjectType.Pellet)
+                    {
+                        currentWorkingMaze.pelletCount++;
+                    }
+                    currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
                     _localObjects.Add(position, InstantiateLevelObject(objectType switch
                     {
                         MazeObjectType.Blinky => blinkyMarkerPrefab,
@@ -265,17 +269,36 @@ namespace UnitMan.Source.MazeEditing
                 if (!currentWorkingMaze.levelObjects.ContainsKey(
                     LevelGridController.VectorToVector2Int(_mouseWorldPosition)))
                     return;
-                if (_selectedObjectType == MazeObjectType.Wall)
+                switch (_selectedObjectType)
                 {
-                    wallTilemap.SetTile(_mouseTilesetPosition, null);
-                }
-                else
-                {
-                    Destroy(_localObjects[_mouseWorldPosition]);
-                    _localObjects.Remove(_mouseWorldPosition);
-                    
+                    case MazeObjectType.Wall:
+                        wallTilemap.SetTile(_mouseTilesetPosition, null);
+                        EraseObject(true, _mouseWorldPosition);
+
+                        break;
+                    case MazeObjectType.Pellet:
+                        currentWorkingMaze.pelletCount--;
+                        EraseObject(false, _mouseWorldPosition);
+                        break;
+                    default:
+                        EraseObject(false, _mouseWorldPosition);
+                        break;
                 }
 
+            }
+        }
+
+        private void EraseObject(bool isWall, Vector3 position)
+        {
+            currentWorkingMaze.levelObjects.Remove(LevelGridController.VectorToVector2Int(position));
+            if (isWall)
+            {
+                wallTilemap.SetTile(_mouseTilesetPosition, null);
+            }
+            else
+            {
+                Destroy(_localObjects[position]);
+                _localObjects.Remove(position);
             }
         }
 
