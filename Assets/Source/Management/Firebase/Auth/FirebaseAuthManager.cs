@@ -37,7 +37,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 
             }
 
-            InitializeFirebase();
 
 
         }
@@ -77,6 +76,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
                     // Firebase Unity SDK is not safe to use here.
                 }
             });
+        }
+
+        private void Start()
+        {
+            InitializeFirebase();
         }
 
         private void InitializeAuth()
