@@ -223,6 +223,13 @@ namespace UnitMan.Source.MazeEditing
             Debug.Log(prettyJson);
             FirestoreListener.SaveStringIntoJson(prettyJson, "currentWorkingMaze");
         }
+        
+        
+
+        public void Load()
+        {
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson("currentWorkingMaze"), currentWorkingMaze);
+        }
 
         private void ComputeScatterTargets()
         {
