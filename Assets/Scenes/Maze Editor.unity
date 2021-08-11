@@ -795,6 +795,88 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &382158498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 382158500}
+  - component: {fileID: 382158499}
+  m_Layer: 0
+  m_Name: Brush Preview
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &382158499
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382158498}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 1880638283396868019, guid: b0e8d15b61391084b820efbb413fb89c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.47058824}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &382158500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382158498}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &470591975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,6 +1299,16 @@ MonoBehaviour:
   clydeMarkerPrefab: {fileID: 5479799095331345069, guid: c2e5a04bd02efaa4bb153a6014df9cbe, type: 3}
   pacManTransform: {fileID: 1837499358}
   ghostHouseTransform: {fileID: 783754733743542630}
+  brushPreviewTransform: {fileID: 382158500}
+  wallIcon: {fileID: 1880638283396868019, guid: b0e8d15b61391084b820efbb413fb89c, type: 3}
+  pelletIcon: {fileID: 21300000, guid: b09e1981246c79e40ad298473e1fe665, type: 3}
+  powerPelletIcon: {fileID: 8138051047494447433, guid: 6b065ea175fdf60468f77b29b1bd07c2, type: 3}
+  blinkyIcon: {fileID: 4417702932750017844, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
+  pinkyIcon: {fileID: -7588045509802990430, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
+  inkyIcon: {fileID: 5313587486173925546, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
+  clydeIcon: {fileID: 8432596590609055841, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
+  pacManIcon: {fileID: 4022758912471522989, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
+  houseIcon: {fileID: 21300000, guid: 70abb7c30e95926439f115f6183a3906, type: 3}
 --- !u!4 &753522263
 Transform:
   m_ObjectHideFlags: 0

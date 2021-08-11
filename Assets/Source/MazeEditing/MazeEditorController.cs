@@ -57,6 +57,27 @@ namespace UnitMan.Source.MazeEditing
         
         private EventSystem _eventSystem;
 
+        [SerializeField] private Transform brushPreviewTransform;
+        private SpriteRenderer _brushPreviewSprite;
+        [SerializeField]
+        private Sprite wallIcon;
+        [SerializeField]
+        private Sprite pelletIcon;
+        [SerializeField]
+        private Sprite powerPelletIcon;
+        [SerializeField]
+        private Sprite blinkyIcon;
+        [SerializeField]
+        private Sprite pinkyIcon;
+        [SerializeField]
+        private Sprite inkyIcon;
+        [SerializeField]
+        private Sprite clydeIcon;
+        [SerializeField]
+        private Sprite pacManIcon;
+        [SerializeField]
+        private Sprite houseIcon;
+        
         private void Awake()
         {
             _inputMap = new Gameplay();
@@ -67,7 +88,7 @@ namespace UnitMan.Source.MazeEditing
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
             _currentWorkingMaze = new Maze();
-
+            _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
         }
 
         private void Start()
@@ -89,46 +110,55 @@ namespace UnitMan.Source.MazeEditing
         public void OnWallButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Wall;
+            _brushPreviewSprite.sprite = wallIcon;
         }
         
         public void OnPelletButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Pellet;
+            _brushPreviewSprite.sprite = pelletIcon;
         }
         
         public void OnBlinkyButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Blinky;
+            _brushPreviewSprite.sprite = blinkyIcon;
         }
         
         public void OnPinkyButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Pinky;
+            _brushPreviewSprite.sprite = pinkyIcon;
         }
         
         public void OnInkyButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Inky;
+            _brushPreviewSprite.sprite = inkyIcon;
         }
         
         public void OnClydeButtonSelected()
         {
             _selectedObjectType = MazeObjectType.Clyde;
+            _brushPreviewSprite.sprite = clydeIcon;
         }
         
         public void OnPowerPelletButtonSelected()
         {
             _selectedObjectType = MazeObjectType.PowerPellet;
+            _brushPreviewSprite.sprite = powerPelletIcon;
         }
         
         public void OnPacManButtonSelected()
         {
             _selectedObjectType = MazeObjectType.PacMan;
+            _brushPreviewSprite.sprite = pacManIcon;
         }
 
         public void OnGhostHouseButtonSelected()
         {
             _selectedObjectType = MazeObjectType.GhostHouse;
+            _brushPreviewSprite.sprite = houseIcon;
         }
         private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
         {
@@ -180,6 +210,16 @@ namespace UnitMan.Source.MazeEditing
             return prefab is null ? null : Instantiate(prefab, position, Quaternion.identity);
         }
 
+        private void ComputeScatterPositions()
+        {
+            BoundsInt cellBounds = wallTilemap.cellBounds;
+            _currentWorkingMaze.pinkyScatterTarget =
+                new Vector2Int(cellBounds.xMin, cellBounds.yMax);
+            _currentWorkingMaze.blinkyScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.max);
+            _currentWorkingMaze.clydeScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.min);
+            _currentWorkingMaze.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin);
+        }
+
         private void OnRightClicked(InputAction.CallbackContext context)
         {
             _isRightClicking = true;
@@ -196,6 +236,8 @@ namespace UnitMan.Source.MazeEditing
             _mouseTilesetPosition = wallTilemap.WorldToCell(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition));
             _mouseWorldPosition = LevelGridController.Round(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition)); 
             _mouseWorldPosition.z = 0f;
+            if (_eventSystem.IsPointerOverGameObject()) return;
+            brushPreviewTransform.position = _mouseWorldPosition;
         }
         
         private void Update()
