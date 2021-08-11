@@ -33,7 +33,7 @@ namespace UnitMan.Source.UI
                 .ContinueWithOnMainThread(
                     task =>
                     {
-                        Assert.IsNull(task.Exception);
+                        // Assert.IsNull(task.Exception);
                         FirestoreLeaderData userData = task.Result.ConvertTo<FirestoreLeaderData>();
                         SceneManager.LoadScene(userData.Score < SessionDataModel.Instance.score
                             ? "Score Query"
