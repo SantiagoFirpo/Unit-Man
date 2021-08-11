@@ -211,7 +211,16 @@ namespace UnitMan.Source.MazeEditing
             return prefab is null ? null : Instantiate(prefab, position, Quaternion.identity);
         }
 
-        private void ComputeScatterPositions()
+        public void Save()
+        {
+            ComputeScatterTargets();
+            currentWorkingMaze.SerializeLevelObjects();
+            string prettyJson = JsonUtility.ToJson(currentWorkingMaze, true);
+            Debug.Log(prettyJson);
+            FirestoreListener.SaveStringIntoJson(prettyJson, "currentWorkingMaze");
+        }
+
+        private void ComputeScatterTargets()
         {
             BoundsInt cellBounds = wallTilemap.cellBounds;
             currentWorkingMaze.pinkyScatterTarget =
