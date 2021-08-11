@@ -946,7 +946,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameField: {fileID: 161555531}
-  scoreField: {fileID: 0}
+  scoreField: {fileID: 2111950463}
 --- !u!4 &631288274
 Transform:
   m_ObjectHideFlags: 0
