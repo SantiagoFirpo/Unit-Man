@@ -144,6 +144,11 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             return new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), 0);
         }
+        
+        public static Vector2Int Vector3IntToVector2Int(Vector3Int vector)
+        {
+            return new Vector2Int(vector.x, vector.y);
+        }
 
         public static Vector3 Round(Vector3 vector)
         {
