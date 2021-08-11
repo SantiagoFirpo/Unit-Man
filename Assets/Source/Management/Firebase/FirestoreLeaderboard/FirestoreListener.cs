@@ -38,13 +38,13 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 			Debug.Log(_leaderboardJson);
 			
 
-			SaveStringIntoJson(_leaderboardJson);
+			SaveStringIntoJson(_leaderboardJson, "leaderboard");
 			
 
 		}
 
-		public static void SaveStringIntoJson(string json){
-			File.WriteAllText($"{Application.persistentDataPath}/leaderboard.json", json);
+		public static void SaveStringIntoJson(string json, string fileName){
+			File.WriteAllText($"{Application.persistentDataPath}/{fileName}.json", json);
 			Debug.Log($"Saved leaderboard.json to {Application.persistentDataPath}");
 		}
 
