@@ -12,8 +12,11 @@ namespace UnitMan
         private LeaderCellController[] leaderUICells;
 
         [SerializeField]
-        private GameObject threeDots;
-
+        private GameObject threeDotsUp;
+        
+        [SerializeField]
+        private GameObject threeDotsDown;
+        
         private LeaderCellController _lastLeader;
 
         private bool _isSignedIn;
@@ -30,7 +33,7 @@ namespace UnitMan
             }
 
             if (leadersLength < 5) return;
-            threeDots.SetActive(true);  
+            threeDotsUp.SetActive(true);  
             _lastLeader = leaderUICells[leaderUICells.Length - 1];
             _isSignedIn = FirebaseAuthManager.Instance != null && FirebaseAuthManager.Instance.auth != null;
             // LocalLeaderData userLeader = Array.Find(leaders, FindUserEntry);
@@ -43,6 +46,9 @@ namespace UnitMan
             {
                 _lastLeader.InjectLeaderData(Array.Find(leaders, FindUserEntry));
                 _lastLeader.MarkAsUserScore();
+                threeDotsDown.SetActive(true);
+                // threeDotsUp.SetActive(Array.IndexOf());
+                //BUG: if player is 4th the upper dots still show up
             }
             
         }
