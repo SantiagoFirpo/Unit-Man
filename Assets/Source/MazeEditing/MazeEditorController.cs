@@ -229,6 +229,15 @@ namespace UnitMan.Source.MazeEditing
         public void Load()
         {
             JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson("currentWorkingMaze"), currentWorkingMaze);
+            CreateMarkersFromMaze(currentWorkingMaze);
+        }
+
+        public void CreateMarkersFromMaze(Maze maze)
+        {
+            for (int i = 0; i < maze.objectTypes.Count; i++)
+            {
+                PlaceLevelObject(maze.objectTypes[i], LevelGridController.Vector2IntToVector3(maze.objectPositions[i]));
+            }
         }
 
         private void ComputeScatterTargets()
