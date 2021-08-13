@@ -14,7 +14,7 @@ namespace UnitMan.Source.MazeEditing
     {
         private MazeObjectType _selectedObjectType = MazeObjectType.Wall;
         [SerializeField]
-        private Maze currentWorkingMaze;
+        private Level currentWorkingLevel;
         private Gameplay _inputMap;
         private Vector2 _mouseScreenPosition;
         private Vector3 _mouseWorldPosition;
@@ -89,7 +89,7 @@ namespace UnitMan.Source.MazeEditing
             _inputMap.UI.Click.canceled += OnLeftUnclicked;
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
-            currentWorkingMaze = ScriptableObject.CreateInstance<Maze>();
+            currentWorkingLevel = ScriptableObject.CreateInstance<Level>();
             _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
         }
 
