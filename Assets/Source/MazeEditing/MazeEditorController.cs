@@ -269,16 +269,48 @@ namespace UnitMan.Source.MazeEditing
 
         public void Load()
         {
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson("currentWorkingMaze"), currentWorkingMaze);
-            CreateMarkersFromMaze(currentWorkingMaze);
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson("currentWorkingMaze"), currentWorkingLevel);
+            PopulateLevelFromLevel(currentWorkingLevel);
         }
 
-        public void CreateMarkersFromMaze(Maze maze)
+        private void PopulateLevelFromLevel(Level level)
         {
-            for (int i = 0; i < maze.objectTypes.Count; i++)
+            ClearLevel();
+            AddLocalObjects(level);
+            SetUniqueObjectPositions(level);
+        }
+
+        private void AddLocalObjects(Level level)
+        {
+            for (int i = 0; i < level.objectPositions.Count; i++)
             {
-                PlaceLevelObject(maze.objectTypes[i], LevelGridController.Vector2IntToVector3(maze.objectPositions[i]));
+                Vector3Int positionV3Int = VectorUtil.ToVector3Int(level.objectPositions[i]);
+                if (level.objectTypes[i] == LevelObjectType.Wall)
+                {
+                    wallTilemap.SetTile(positionV3Int, wallRuleTile);
+                }
+                else
+                {
+                    AddLocalLevelObject(level.objectTypes[i], VectorUtil.ToVector3(positionV3Int));
+                }
             }
+        }
+
+        private void SetUniqueObjectPositions(Level level)
+        {
+            pacManTransform.position = VectorUtil.Vector2IntToVector3(level.pacManPosition);
+            ghostHouseTransform.position = VectorUtil.Vector2IntToVector3(level.ghostHousePosition);
+        }
+
+        private void ClearLevel()
+        {
+            foreach (KeyValuePair<Vector3, GameObject> localObject in _localObjects)
+            {
+                Destroy(localObject.Value);
+            }
+
+            _localObjects.Clear();
+            wallTilemap.ClearAllTiles();
         }
 
         private void ComputeScatterTargets()
