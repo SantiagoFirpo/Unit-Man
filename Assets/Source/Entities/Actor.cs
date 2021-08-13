@@ -28,7 +28,7 @@ namespace UnitMan.Source.Entities {
 
         protected bool isInTileCenter;
 
-        protected bool IsInTileCenter => LevelGridController.VectorApproximately(thisTransform.position, gridPosition, 0.11f);
+        protected bool IsInTileCenter => VectorUtil.VectorApproximately(thisTransform.position, gridPosition, 0.11f);
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
@@ -186,12 +186,12 @@ namespace UnitMan.Source.Entities {
         
         protected bool IsCenteredAt(Vector2Int position)
         {
-            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
+            return VectorUtil.VectorApproximately(position, thisTransform.position, 0.1f);
         }
         
         protected bool IsCenteredAt(Vector3 position)
         {
-            return LevelGridController.VectorApproximately(position, thisTransform.position, 0.1f);
+            return VectorUtil.VectorApproximately(position, thisTransform.position, 0.1f);
         }
 
         protected virtual void FixedUpdate() {
