@@ -12,7 +12,7 @@ namespace UnitMan.Source.MazeEditing
 {
     public class MazeEditorController : MonoBehaviour
     {
-        private MazeObjectType _selectedObjectType = MazeObjectType.Wall;
+        private BrushType _selectedBrush = BrushType.Wall;
         [SerializeField]
         private Level currentWorkingLevel;
         private Gameplay _inputMap;
@@ -79,7 +79,9 @@ namespace UnitMan.Source.MazeEditing
         private Sprite pacManIcon;
         [SerializeField]
         private Sprite houseIcon;
-        
+
+        private Quaternion _identity;
+
         private void Awake()
         {
             _inputMap = new Gameplay();
@@ -91,6 +93,8 @@ namespace UnitMan.Source.MazeEditing
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
             currentWorkingLevel = ScriptableObject.CreateInstance<Level>();
             _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
+            
+            _identity = Quaternion.identity;
         }
 
         private void Start()
@@ -110,99 +114,94 @@ namespace UnitMan.Source.MazeEditing
 
         public void OnWallButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Wall;
+            _selectedBrush = BrushType.Wall;
             _brushPreviewSprite.sprite = wallIcon;
         }
         
         public void OnPelletButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Pellet;
+            _selectedBrush = BrushType.Pellet;
             _brushPreviewSprite.sprite = pelletIcon;
         }
         
         public void OnBlinkyButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Blinky;
+            _selectedBrush = BrushType.Blinky;
             _brushPreviewSprite.sprite = blinkyIcon;
         }
         
         public void OnPinkyButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Pinky;
+            _selectedBrush = BrushType.Pinky;
             _brushPreviewSprite.sprite = pinkyIcon;
         }
         
         public void OnInkyButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Inky;
+            _selectedBrush = BrushType.Inky;
             _brushPreviewSprite.sprite = inkyIcon;
         }
         
         public void OnClydeButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.Clyde;
+            _selectedBrush = BrushType.Clyde;
             _brushPreviewSprite.sprite = clydeIcon;
         }
         
         public void OnPowerPelletButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.PowerPellet;
+            _selectedBrush = BrushType.PowerPellet;
             _brushPreviewSprite.sprite = powerPelletIcon;
         }
         
         public void OnPacManButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.PacMan;
+            _selectedBrush = BrushType.PacMan;
             _brushPreviewSprite.sprite = pacManIcon;
         }
 
         public void OnGhostHouseButtonSelected()
         {
-            _selectedObjectType = MazeObjectType.GhostHouse;
+            _selectedBrush = BrushType.GhostHouse;
             _brushPreviewSprite.sprite = houseIcon;
         }
-        private void PlaceLevelObject(MazeObjectType objectType, Vector3 position)
+        private void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
         {
-            Vector2Int positionV2Int = LevelGridController.VectorToVector2Int(position);
-            if (currentWorkingMaze.playerPosition == LevelGridController.VectorToVector2Int(position)) return;
-            if (currentWorkingMaze.levelObjects.ContainsKey(positionV2Int)) return;
-            if (wallTilemap.GetTile(_mouseTilesetPosition) == wallRuleTile) return;
-            switch (objectType)
+            Vector2Int positionV2Int = VectorUtil.VectorToVector2Int(position);
+            Vector3Int tilesetPosition = wallTilemap.WorldToCell(position);
+            if (currentWorkingLevel.pacManPosition == positionV2Int) return;
+            if (currentWorkingLevel.objectPositions.Contains(positionV2Int)) return;
+            if (wallTilemap.GetTile(tilesetPosition) == wallRuleTile) return;
+            switch (brush)
             {
-                case MazeObjectType.Wall:
+                case BrushType.Wall:
                 {
                     wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
-                    currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
+                    currentWorkingLevel.AddLevelObject(LevelObjectType.Wall, positionV2Int);
                     break;
                 }
-                case MazeObjectType.PacMan:
+                case BrushType.PacMan:
                 {
-                    currentWorkingMaze.playerPosition = LevelGridController.VectorToVector2Int(position);
+                    currentWorkingLevel.pacManPosition = positionV2Int;
                     pacManTransform.position = position;
                     break;
                 }
-                case MazeObjectType.GhostHouse:
+                case BrushType.GhostHouse:
                 {
+                    currentWorkingLevel.ghostHousePosition = positionV2Int;
                     ghostHouseTransform.position = position;
                     break;
                 }
                 default:
                 {
-                    if (objectType == MazeObjectType.Pellet)
+                    if (brush == BrushType.Pellet)
                     {
-                        currentWorkingMaze.pelletCount++;
+                        currentWorkingLevel.pelletCount++;
                     }
-                    currentWorkingMaze.levelObjects.Add(positionV2Int, objectType);
-                    _localObjects.Add(position, InstantiateLevelObject(objectType switch
-                    {
-                        MazeObjectType.Blinky => blinkyMarkerPrefab,
-                        MazeObjectType.Pinky => pinkyMarkerPrefab,
-                        MazeObjectType.Inky => inkyMarkerPrefab,
-                        MazeObjectType.Clyde => clydeMarkerPrefab,
-                        MazeObjectType.Pellet => pelletMarkerPrefab,
-                        MazeObjectType.PowerPellet => powerMarkerPrefab,
-                        _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
-                    }, position));
+
+                    LevelObjectType brushToLevelObjectType = BrushToLevelObjectType(brush);
+                    currentWorkingLevel.AddLevelObject(brushToLevelObjectType, positionV2Int);
+                    _localObjects.Add(position, CreateGameObject(brushToLevelObjectType, position));
                     break;
                 }
             }
@@ -210,18 +209,60 @@ namespace UnitMan.Source.MazeEditing
             
         }
 
-        private GameObject InstantiateLevelObject(GameObject prefab, Vector3 position)
+        private static LevelObjectType BrushToLevelObjectType(BrushType brushType)
         {
-            return prefab is null ? null : Instantiate(prefab, position, Quaternion.identity);
+            return brushType switch
+            {
+                BrushType.Blinky => LevelObjectType.Blinky,
+                BrushType.Pinky => LevelObjectType.Pinky,
+                BrushType.Inky => LevelObjectType.Inky,
+                BrushType.Clyde => LevelObjectType.Clyde,
+                BrushType.Pellet => LevelObjectType.Pellet,
+                BrushType.PowerPellet => LevelObjectType.PowerPellet,
+                BrushType.Wall => LevelObjectType.Wall,
+                BrushType.PacMan => throw new ArgumentException(
+                                                        "This PacMan brush cannot be converted to a LevelObject type!"),
+                BrushType.GhostHouse => throw new ArgumentException(
+                                                            "This GhostHouse brush cannot be converted to a LevelObject type!"),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        private void AddLocalLevelObject(LevelObjectType objectType, Vector3 position)
+        {
+            if (objectType == LevelObjectType.Wall)
+                wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
+            else
+                _localObjects.Add(position, CreateGameObject(objectType, position));
+        }
+        
+        private GameObject CreateGameObject(LevelObjectType objectType, Vector3 position)
+        {
+            return objectType == LevelObjectType.Wall ? null :
+                                Instantiate(LevelObjectTypeToPrefab(objectType), position, _identity);
+        }
+
+        private GameObject LevelObjectTypeToPrefab(LevelObjectType objectType)
+        {
+            return objectType switch
+            {
+                LevelObjectType.Blinky => blinkyMarkerPrefab,
+                LevelObjectType.Pinky => pinkyMarkerPrefab,
+                LevelObjectType.Inky => inkyMarkerPrefab,
+                LevelObjectType.Clyde => clydeMarkerPrefab,
+                LevelObjectType.Pellet => pelletMarkerPrefab,
+                LevelObjectType.PowerPellet => powerMarkerPrefab,
+                LevelObjectType.Wall => null,
+                _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
+            };
         }
 
         public void Save()
         {
             ComputeScatterTargets();
-            currentWorkingMaze.SerializeLevelObjects();
-            string prettyJson = JsonUtility.ToJson(currentWorkingMaze, true);
-            Debug.Log(prettyJson);
-            FirestoreListener.SaveStringIntoJson(prettyJson, "currentWorkingMaze");
+            // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
+            // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
+            FirestoreListener.SaveStringIntoJson(JsonUtility.ToJson(currentWorkingLevel, false), "currentWorkingMaze");
         }
         
         
@@ -243,12 +284,12 @@ namespace UnitMan.Source.MazeEditing
         private void ComputeScatterTargets()
         {
             BoundsInt cellBounds = wallTilemap.cellBounds;
-            currentWorkingMaze.pinkyScatterTarget =
+            currentWorkingLevel.pinkyScatterTarget =
                 new Vector2Int(cellBounds.xMin, cellBounds.yMax) + new Vector2Int(-1, 1);
             Vector2Int vectorOne = Vector2Int.one;
-            currentWorkingMaze.blinkyScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.max) + vectorOne;
-            currentWorkingMaze.clydeScatterTarget = LevelGridController.Vector3IntToVector2Int(cellBounds.min) + -vectorOne;
-            currentWorkingMaze.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
+            currentWorkingLevel.blinkyScatterTarget = VectorUtil.ToVector2Int(cellBounds.max) + vectorOne;
+            currentWorkingLevel.clydeScatterTarget = VectorUtil.ToVector2Int(cellBounds.min) + -vectorOne;
+            currentWorkingLevel.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
         }
 
         private void OnRightClicked(InputAction.CallbackContext context)
@@ -265,7 +306,7 @@ namespace UnitMan.Source.MazeEditing
         {
             _mouseScreenPosition = context.ReadValue<Vector2>();
             _mouseTilesetPosition = wallTilemap.WorldToCell(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition));
-            _mouseWorldPosition = LevelGridController.Round(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition)); 
+            _mouseWorldPosition = VectorUtil.Round(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition)); 
             _mouseWorldPosition.z = 0f;
             if (_eventSystem.IsPointerOverGameObject()) return;
             brushPreviewTransform.position = _mouseWorldPosition;
@@ -277,36 +318,29 @@ namespace UnitMan.Source.MazeEditing
             if (_eventSystem.IsPointerOverGameObject()) return;
             if (_isLeftClicking)
             {
-                PlaceLevelObject(_selectedObjectType, _mouseWorldPosition);
+                PlaceLevelObjectAndUpdateMaze(_selectedBrush, _mouseWorldPosition);
             }
             
             else if (_isRightClicking)
             {
-                if (!currentWorkingMaze.levelObjects.ContainsKey(
-                    LevelGridController.VectorToVector2Int(_mouseWorldPosition)))
+                if (!currentWorkingLevel.objectPositions.Contains(
+                    VectorUtil.VectorToVector2Int(_mouseWorldPosition)))
                     return;
-                switch (_selectedObjectType)
+                if (_selectedBrush == BrushType.Pellet)
                 {
-                    case MazeObjectType.Wall:
-                        wallTilemap.SetTile(_mouseTilesetPosition, null);
-                        EraseObject(true, _mouseWorldPosition);
-
-                        break;
-                    case MazeObjectType.Pellet:
-                        currentWorkingMaze.pelletCount--;
-                        EraseObject(false, _mouseWorldPosition);
-                        break;
-                    default:
-                        EraseObject(false, _mouseWorldPosition);
-                        break;
+                    currentWorkingLevel.pelletCount--;
                 }
+
+                EraseObject(_mouseWorldPosition);
+
 
             }
         }
 
-        private void EraseObject(bool isWall, Vector3 position)
+        private void EraseObject(Vector3 position)
         {
-            currentWorkingMaze.levelObjects.Remove(LevelGridController.VectorToVector2Int(position));
+            currentWorkingLevel.RemoveLevelObject(VectorUtil.VectorToVector2Int(position));
+            bool isWall = wallTilemap.GetTile(VectorUtil.ToVector3Int(position)) != null;
             if (isWall)
             {
                 wallTilemap.SetTile(_mouseTilesetPosition, null);
@@ -329,7 +363,7 @@ namespace UnitMan.Source.MazeEditing
         }
     }
 
-    public enum MazeObjectType
+    public enum BrushType
     {
         Wall, Pellet, PowerPellet, PacMan,
         Blinky,
@@ -337,5 +371,14 @@ namespace UnitMan.Source.MazeEditing
         Inky,
         Clyde,
         GhostHouse
+    }
+    
+    public enum LevelObjectType
+    {
+        Wall, Pellet, PowerPellet,
+        Blinky,
+        Pinky,
+        Inky,
+        Clyde
     }
 }
