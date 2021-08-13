@@ -45,7 +45,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 		public static void SaveStringIntoJson(string json, string fileName){
 			File.WriteAllText($"{Application.persistentDataPath}/{fileName}.json", json);
-			Debug.Log($"Saved leaderboard.json to {Application.persistentDataPath}");
+			Debug.Log($"Saved {fileName}.json to {Application.persistentDataPath}");
 		}
 
 		public static string LoadStringFromJson(string fileName)
