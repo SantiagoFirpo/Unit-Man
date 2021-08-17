@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using UnitMan.Source.Config;
 using UnitMan.Source.Entities;
+using UnitMan.Source.LevelEditing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,22 +22,28 @@ namespace UnitMan.Source.Utilities.Pathfinding
         public static readonly Vector2 RightVector2 = Vector2.right;
         
 
-        public Tilemap walkableTilemap;
+        // public Tilemap walkableTilemap;
+        public Tilemap wallTilemap;
+        
+        [SerializeField]
+        private TileBase wallRuleTile;
+        
+        // [SerializeField]
+        // private TileBase walkableTile;
+
 
         private bool[][] _grid;
-        public MazeData mazeData;
-        
-        public bool GetGridPosition(int x, int y) {
-            // Debug.Log($"{x}, {y}");
-            return _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x];
-        }
-        
+        // public MazeData mazeData;
+        public Level level;
+
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
-            return _grid[-vector.y + mazeData.originPositionGlobal.y][vector.x - mazeData.originPositionGlobal.x];
+            return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
         }
-        private void SetGridPosition(int x, int y, bool value) {
-            _grid[-y + mazeData.originPositionGlobal.y][x - mazeData.originPositionGlobal.x] = value;
+        private void SetGridPosition(int x, int y, bool value)
+        {
+            Vector3Int cellPosition = wallTilemap.WorldToCell(new Vector3(x, y, 0f));
+            _grid[cellPosition.y][cellPosition.x] = value;
         }
 
 
@@ -49,7 +55,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             Debug.Log("Grid should be initializing now");
             Instance = this;
-            mazeData.CalculateBounds();
             InitializeGrid();
             
             //bools are canWalk
@@ -58,18 +63,30 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private void InitializeGrid()
         {
-            _grid = new bool[mazeData.mapDimensions.y][];
+            BuildTilemapFromLevelObject(level);
+            BoundsInt cellBounds = wallTilemap.cellBounds;
+            _grid = new bool[cellBounds.y][];
             
-            int mazeDataMapWidth = mazeData.mapDimensions.x;
+            int mazeDataMapWidth = cellBounds.x;
             for (int i = 0; i < _grid.Length; i++)
             {
                 
                 _grid[i] = new bool[mazeDataMapWidth];
             }
             
-            foreach (Vector2Int position in GetAllTilePositions(walkableTilemap)) {
+            foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
                 // grid.Add(position, true);
                 SetGridPosition(position.x, position.y, true);
+            }
+            
+        }
+
+        private void BuildTilemapFromLevelObject(Level levelObject)
+        {
+            for (int i = 0; i < levelObject.objectPositions.Count; i++)
+            {
+                if (levelObject.objectTypes[i] != LevelObjectType.Wall) continue;
+                wallTilemap.SetTile(VectorUtil.ToVector3Int(levelObject.objectPositions[i]), wallRuleTile);
             }
             
         }
@@ -94,18 +111,22 @@ namespace UnitMan.Source.Utilities.Pathfinding
         // }
 
         public void CheckPossibleTurns(Vector2Int position, bool[] turns) {
-            turns[(int) Actor.Direction.Up] = GetGridPosition(position.x, position.y + 1);
-            turns[(int) Actor.Direction.Down] = GetGridPosition(position.x, position.y - 1);
-            turns[(int) Actor.Direction.Left] = GetGridPosition(position.x - 1, position.y);
-            turns[(int) Actor.Direction.Right] = GetGridPosition(position.x + 1, position.y);
+            turns[(int) Actor.Direction.Up] = GetGridPosition(position + UpVector2Int);
+            turns[(int) Actor.Direction.Down] = GetGridPosition(position + DownVector2Int);
+            turns[(int) Actor.Direction.Left] = GetGridPosition(position + LeftVector2Int);
+            turns[(int) Actor.Direction.Right] = GetGridPosition(position + RightVector2Int);
             //TODO: remove redundant alloc
         }
 
         private void OnDrawGizmos() {
             InitializeGrid();
+            Vector2Int vectorPosition = new Vector2Int();
             for (int x = -11; x <= 11; x++) {
-                for (int y = -21; y <= 4; y++) {
-                    Gizmos.color = GetGridPosition(x, y) ? Color.green : Color.red;
+                for (int y = -21; y <= 4; y++)
+                {
+                    vectorPosition.x = x;
+                    vectorPosition.y = y;
+                    Gizmos.color = GetGridPosition(vectorPosition) ? Color.green : Color.red;
                     Gizmos.DrawSphere(new Vector3(x, y, 0f), 0.1f);
                 }
             }

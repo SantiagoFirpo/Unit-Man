@@ -158,17 +158,17 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
        private void ResolveMapMarkers()
        {
-           _topLeftMapBound = LevelGridController.Instance.mazeData.topLeftMapPosition;
-           _topRightMapBound = LevelGridController.Instance.mazeData.topRightMapPosition;
-           bottomLeftMapBound = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
-           _bottomRightMapBound = LevelGridController.Instance.mazeData.bottomRightMapPosition;
-           _hubPosition = LevelGridController.Instance.mazeData.hubPosition;
-           _restingTarget = LevelGridController.Instance.mazeData.restingTargetPosition;
+           _topLeftMapBound = LevelGridController.Instance.level.topLeftPosition;
+           _topRightMapBound = LevelGridController.Instance.level.topRightPosition;
+           bottomLeftMapBound = LevelGridController.Instance.level.bottomLeftPosition;
+           _bottomRightMapBound = LevelGridController.Instance.level.bottomRightPosition;
+           _hubPosition = LevelGridController.Instance.level.ghostHousePosition;
+           _restingTarget = VectorUtil.ToVector2Int(StartPosition);
            
            
-           scatterTargetPosition = LevelGridController.Instance.mazeData.topRightMapPosition;
+           scatterTargetPosition = LevelGridController.Instance.level.topRightPosition;
            
-           _hubExitTarget = LevelGridController.Instance.mazeData.hubExitMarker;
+           _hubExitTarget = LevelGridController.Instance.level.ghostHousePosition;
        }
        private void SubscribeToEvents()
        {
@@ -417,7 +417,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
           private void SetTargetAwayFromPlayer() {
            Quadrant playerQuadrant = GetQuadrant(playerController.gridPosition,
-               LevelGridController.Instance.mazeData.mapCentralPosition);
+               VectorUtil.ToVector2Int(LevelGridController.Instance.wallTilemap.cellBounds.center));
            Vector2Int finalPosition = playerQuadrant switch {
                Quadrant.UpRight => bottomLeftMapBound,
                Quadrant.UpLeft => _bottomRightMapBound,
@@ -438,7 +438,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
        }
 
-       protected void SetState(State targetState)
+          protected void SetState(State targetState)
        {
            if (state == targetState && (state != targetState || state != State.Fleeing)) return;
            previousState = state;

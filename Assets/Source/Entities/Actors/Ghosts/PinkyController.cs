@@ -8,7 +8,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
         {
             base.Initialize();
             standardMoveSpeed = PINKY_MOVE_SPEED;
-            scatterTargetPosition = LevelGridController.Instance.mazeData.topLeftMapPosition;
+            scatterTargetPosition = LevelGridController.Instance.level.topLeftPosition;
         }
 
         protected override void ResetActor()

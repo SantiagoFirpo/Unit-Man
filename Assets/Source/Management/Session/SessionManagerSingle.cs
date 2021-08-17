@@ -103,7 +103,7 @@ namespace UnitMan.Source.Management.Session
         }
 
         public static void CheckIfGameIsWon() {
-            if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.mazeData.pelletCount) return;
+            if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.level.pelletCount) return;
             // Debug.Log("You won!");
             SessionDataModel.Instance.won = true;
             

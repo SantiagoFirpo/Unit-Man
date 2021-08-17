@@ -8,7 +8,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
             standardMoveSpeed = PINKY_MOVE_SPEED * 0.8f;
             base.Initialize();
             pelletThreshold = 60;
-            scatterTargetPosition = LevelGridController.Instance.mazeData.bottomLeftMapPosition;
+            scatterTargetPosition = LevelGridController.Instance.level.bottomLeftPosition;
         }
         
         protected override void ResetActor()
