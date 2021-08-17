@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7384678430228816732}
   - component: {fileID: 7384678430228816733}
   - component: {fileID: 7384678430228816727}
+  - component: {fileID: 4076530639868747885}
   m_Layer: 3
   m_Name: Blinky
   m_TagString: Enemy
@@ -131,7 +132,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7384678430228816734}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d3eb2c9143d4657a09e08cc33cfe88e, type: 3}
   m_Name: 
@@ -139,16 +140,9 @@ MonoBehaviour:
   motion: {x: 0, y: 0}
   currentDirection: {x: 0, y: 0}
   possibleTurns: 00000000
-  animator: {fileID: 0}
   gridPosition: {x: 0, y: 0}
-  standardMoveSpeed: 4.5
-  initialTargetTransform: {fileID: 0}
-  topLeft: {fileID: 0}
-  topRight: {fileID: 0}
-  bottomLeft: {fileID: 0}
-  bottomRight: {fileID: 0}
-  eatenAnimController: {fileID: 22100000, guid: 2f9f0c6ff2077474d9b1a0bc72b994f9, type: 2}
   state: 0
+  previousState: 0
   debugColor: {r: 0.9433962, g: 0.031149892, b: 0.031149892, a: 0}
 --- !u!95 &7384678430228816733
 Animator:
@@ -198,3 +192,22 @@ PolygonCollider2D:
       - {x: -0.45, y: 0}
       - {x: 0, y: -0.45}
       - {x: 0.45, y: 0}
+--- !u!114 &4076530639868747885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7384678430228816734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d6f1dab06940b3879e3ec0bb5282d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motion: {x: 0, y: 0}
+  currentDirection: {x: 0, y: 0}
+  possibleTurns: 00000000
+  gridPosition: {x: 0, y: 0}
+  state: 0
+  previousState: 0
+  debugColor: {r: 1, g: 0, b: 0, a: 0}
