@@ -168,7 +168,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            
            scatterTargetPosition = LevelGridController.Instance.level.topRightPosition;
            
-           _hubExitTarget = LevelGridController.Instance.level.ghostHousePosition;
+           _hubExitTarget = LevelGridController.Instance.level.ghostDoorPosition;
        }
        private void SubscribeToEvents()
        {

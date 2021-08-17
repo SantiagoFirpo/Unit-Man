@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityObject = UnityEngine.Object;
 
 namespace UnitMan.Source.Utilities.Pathfinding
 {
@@ -35,15 +38,49 @@ namespace UnitMan.Source.Utilities.Pathfinding
         private bool[][] _grid;
         // public MazeData mazeData;
         public Level level;
+        [SerializeField]
+        private GameObject pelletPrefab;
 
+        [SerializeField]
+        private GameObject powerPelletPrefab;
+
+        [SerializeField]
+        private GameObject blinkyPrefab;
+
+        [SerializeField]
+        private GameObject pinkyPrefab;
+
+        [SerializeField]
+        private GameObject inkyPrefab;
+
+        [SerializeField]
+        private GameObject clydePrefab;
+
+        [SerializeField]
+        private Transform playerTransform;
+
+        [SerializeField]
+        private Transform ghostDoorTransform;
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
             return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
         }
-        private void SetGridPosition(int x, int y, bool value)
+        private void SetGridPosition(Vector2Int position, bool value)
         {
-            Vector3Int cellPosition = wallTilemap.WorldToCell(new Vector3(x, y, 0f));
-            _grid[cellPosition.y][cellPosition.x] = value;
+            Vector2Int gridOrigin = level.bottomLeftPosition + Vector2Int.one;
+            _grid[gridOrigin.y - gridOrigin.y][gridOrigin.x - gridOrigin.x] = value;
+        }
+        
+        private void SetGridCellPosition(Vector2Int position, bool value)
+        {
+            _grid[position.y][position.x] = value;
+        }
+
+        public void LoadLevelObject()
+        { 
+            level = ScriptableObject.CreateInstance<Level>(); 
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(MazeEditorController.FILE_NAME), level);
+
         }
 
 
@@ -55,28 +92,57 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             Debug.Log("Grid should be initializing now");
             Instance = this;
+            LoadLevelObject();
             InitializeGrid();
-            
+            PopulateLevel();
+            AddUniqueObjects();
+
             //bools are canWalk
-           
+
+        }
+
+        private void AddUniqueObjects()
+        {
+            playerTransform.position = VectorUtil.ToVector3(level.pacManPosition);
+            ghostDoorTransform.position = VectorUtil.ToVector3(level.ghostDoorPosition);
+        }
+
+        private void PopulateLevel()
+        {
+            Quaternion identity = Quaternion.identity;
+            for (int i = 0; i < level.objectPositions.Count; i++)
+            {
+                if (level.objectTypes[i] == LevelObjectType.Wall) continue;
+                Instantiate(level.objectTypes[i] switch
+                {
+                    LevelObjectType.Pellet => pelletPrefab,
+                    LevelObjectType.PowerPellet => powerPelletPrefab,
+                    LevelObjectType.Blinky => blinkyPrefab,
+                    LevelObjectType.Pinky => pinkyPrefab,
+                    LevelObjectType.Inky => inkyPrefab,
+                    LevelObjectType.Clyde => clydePrefab,
+                    _ => throw new ArgumentOutOfRangeException()
+                }, VectorUtil.ToVector3(level.objectPositions[i]), identity);
+            }
         }
 
         private void InitializeGrid()
         {
+            wallTilemap.ClearAllTiles();
             BuildTilemapFromLevelObject(level);
             BoundsInt cellBounds = wallTilemap.cellBounds;
-            _grid = new bool[cellBounds.y][];
+            _grid = new bool[cellBounds.size.y][];
             
-            int mazeDataMapWidth = cellBounds.x;
+            // int mazeDataMapWidth = cellBounds.size.x;
             for (int i = 0; i < _grid.Length; i++)
             {
                 
-                _grid[i] = new bool[mazeDataMapWidth];
+                _grid[i] = new bool[cellBounds.size.x];
             }
             
             foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
                 // grid.Add(position, true);
-                SetGridPosition(position.x, position.y, true);
+                SetGridPosition(position, true);
             }
             
         }
@@ -95,7 +161,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
             List<Vector2Int> positions = new List<Vector2Int>();
             foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin) {
                 if (tilemap.HasTile(position)) {
-                    positions.Add(new Vector2Int(position.x, position.y));
+                    positions.Add(VectorUtil.ToVector2Int(position));
                 }
             }
 
@@ -118,18 +184,18 @@ namespace UnitMan.Source.Utilities.Pathfinding
             //TODO: remove redundant alloc
         }
 
-        private void OnDrawGizmos() {
-            InitializeGrid();
-            Vector2Int vectorPosition = new Vector2Int();
-            for (int x = -11; x <= 11; x++) {
-                for (int y = -21; y <= 4; y++)
-                {
-                    vectorPosition.x = x;
-                    vectorPosition.y = y;
-                    Gizmos.color = GetGridPosition(vectorPosition) ? Color.green : Color.red;
-                    Gizmos.DrawSphere(new Vector3(x, y, 0f), 0.1f);
-                }
-            }
-        }
+        // private void OnDrawGizmos() {
+        //     InitializeGrid();
+        //     Vector2Int vectorPosition = new Vector2Int();
+        //     for (int x = -11; x <= 11; x++) {
+        //         for (int y = -21; y <= 4; y++)
+        //         {
+        //             vectorPosition.x = x;
+        //             vectorPosition.y = y;
+        //             Gizmos.color = GetGridPosition(vectorPosition) ? Color.green : Color.red;
+        //             Gizmos.DrawSphere(new Vector3(x, y, 0f), 0.1f);
+        //         }
+        //     }
+        // }
     }
 }
