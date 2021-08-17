@@ -59,6 +59,11 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             return new Vector2Int(vector.x, vector.y);
         }
+        
+        public static Vector2Int ToVector2Int(Vector3 vector)
+        {
+            return new Vector2Int( Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
+        }
 
         public static Vector3 ToVector3(Vector3Int vector)
         {
