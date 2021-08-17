@@ -8,20 +8,26 @@ namespace UnitMan.Source.Config
         
         [Header("Map Position and Dimensions")]
         
+        //CURRENTLY HARDCODED
         public Vector2Int mapDimensions;
-
+        
+        //CURRENTLY HARDCODED
         public Vector2Int originPositionGlobal;
         
         [Header("Ghost markers")]
         
+        //CURRENTLY HARDCODED
         public Vector2Int hubPosition;
         
-        
+        //CURRENTLY HARDCODED
         public Vector2Int hubExitMarker;
+        
+        //CURRENTLY HARDCODED
         public Vector2Int restingTargetPosition;
         
         [Header("Collectibles")]
         
+        //CURRENTLY HARDCODED
         public int pelletCount;
         
         //CALCULATED DURING RUNTIME:
