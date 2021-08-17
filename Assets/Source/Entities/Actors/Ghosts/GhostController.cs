@@ -10,8 +10,6 @@ using UnityEngine;
 
 namespace UnitMan.Source.Entities.Actors.Ghosts {
     public class GhostController : Actor {
-        //TODO: refactor/organize this class
-        //BUG: ghosts stay blue after reset
         // Power pellet animation and sound bugs
 
 
@@ -268,7 +266,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             animator.SetInteger(DirectionYAnimator, currentDirection.y);
         }
 
-        private void StateStep() //TODO: divide this method
+        private void StateStep()
         {
             switch (state)
             {
@@ -490,7 +488,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            }
        }
 
-       private void OnStateEntered() { //TODO: divide this method
+       private void OnStateEntered() {
            animator.ResetTrigger(OnFleeEndTrigger);
            animator.ResetTrigger(OnFleeNearEndTrigger);
            

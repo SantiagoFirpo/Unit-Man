@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UnitMan.Source.MazeEditing
+namespace UnitMan.Source.LevelEditing
 {
     [Serializable]
     public class Level : ScriptableObject
     {
         public Vector2Int pacManPosition = Vector2Int.zero;
         public Vector2Int ghostHousePosition = new Vector2Int(0, 3);
+        //TODO: change to Y-value and X-value lists
         public List<Vector2Int[]> screenWrapPositions = new List<Vector2Int[]>();
-        public Vector2Int blinkyScatterTarget = Vector2Int.zero;
-        public Vector2Int pinkyScatterTarget = Vector2Int.zero;
-        public Vector2Int inkyScatterTarget = Vector2Int.zero;
-        public Vector2Int clydeScatterTarget = Vector2Int.zero;
+        public Vector2Int topRightPosition = Vector2Int.zero;
+        public Vector2Int topLeftPosition = Vector2Int.zero;
+        public Vector2Int bottomRightPosition = Vector2Int.zero;
+        public Vector2Int bottomLeftPosition = Vector2Int.zero;
         public int pelletCount;
 
         public List<Vector2Int> objectPositions = new List<Vector2Int>();

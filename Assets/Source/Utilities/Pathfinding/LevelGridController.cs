@@ -89,22 +89,16 @@ namespace UnitMan.Source.Utilities.Pathfinding
             return Mathf.Abs(start.y - end.y) + Mathf.Abs(start.x - end.x);
         }
         
-        public static float TaxiCabDistanceVector3(Vector3 start, Vector3 end) {
-            return Mathf.Abs(start.y - end.y) + Mathf.Abs(start.x - end.x);
-        }
+        // public static float TaxiCabDistanceVector3(Vector3 start, Vector3 end) {
+        //     return Mathf.Abs(start.y - end.y) + Mathf.Abs(start.x - end.x);
+        // }
 
         public void CheckPossibleTurns(Vector2Int position, bool[] turns) {
-        
-            bool canTurnUp = GetGridPosition(position.x, position.y + 1);
-            bool canTurnDown = GetGridPosition(position.x, position.y - 1);
-            bool canTurnLeft = GetGridPosition(position.x - 1, position.y);
-            bool canTurnRight = GetGridPosition(position.x + 1, position.y);
-           
-            turns[(int) Actor.Direction.Up] = canTurnUp;
-            turns[(int) Actor.Direction.Down] = canTurnDown;
-            turns[(int) Actor.Direction.Left] = canTurnLeft;
-            turns[(int) Actor.Direction.Right] = canTurnRight;
-            
+            turns[(int) Actor.Direction.Up] = GetGridPosition(position.x, position.y + 1);
+            turns[(int) Actor.Direction.Down] = GetGridPosition(position.x, position.y - 1);
+            turns[(int) Actor.Direction.Left] = GetGridPosition(position.x - 1, position.y);
+            turns[(int) Actor.Direction.Right] = GetGridPosition(position.x + 1, position.y);
+            //TODO: remove redundant alloc
         }
 
         private void OnDrawGizmos() {

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-namespace UnitMan.Source.MazeEditing
+namespace UnitMan.Source.LevelEditing
 {
     public class MazeEditorController : MonoBehaviour
     {
@@ -81,6 +81,8 @@ namespace UnitMan.Source.MazeEditing
         private Sprite houseIcon;
 
         private Quaternion _identity;
+        
+        private const string FILE_NAME = "currentWorkingMaze";
 
         private void Awake()
         {
@@ -231,7 +233,7 @@ namespace UnitMan.Source.MazeEditing
         private void AddLocalLevelObject(LevelObjectType objectType, Vector3 position)
         {
             if (objectType == LevelObjectType.Wall)
-                wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
+                wallTilemap.SetTile(VectorUtil.ToVector3Int(position), wallRuleTile);
             else
                 _localObjects.Add(position, CreateGameObject(objectType, position));
         }
@@ -262,18 +264,18 @@ namespace UnitMan.Source.MazeEditing
             ComputeScatterTargets();
             // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
             // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
-            FirestoreListener.SaveStringIntoJson(JsonUtility.ToJson(currentWorkingLevel, false), "currentWorkingMaze");
+            FirestoreListener.SaveStringIntoJson(JsonUtility.ToJson(currentWorkingLevel, false), FILE_NAME);
         }
         
         
 
         public void Load()
         {
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson("currentWorkingMaze"), currentWorkingLevel);
-            PopulateLevelFromLevel(currentWorkingLevel);
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(FILE_NAME), currentWorkingLevel);
+            PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
-        private void PopulateLevelFromLevel(Level level)
+        private void PopulateEditorFromLevelObject(Level level)
         {
             ClearLevel();
             AddLocalObjects(level);
@@ -282,17 +284,16 @@ namespace UnitMan.Source.MazeEditing
 
         private void AddLocalObjects(Level level)
         {
-            for (int i = 0; i < level.objectPositions.Count; i++)
+            int objectPositionsCount = level.objectPositions.Count;
+            for (int i = 0; i < objectPositionsCount; i++)
             {
                 Vector3Int positionV3Int = VectorUtil.ToVector3Int(level.objectPositions[i]);
-                if (level.objectTypes[i] == LevelObjectType.Wall)
-                {
-                    wallTilemap.SetTile(positionV3Int, wallRuleTile);
-                }
-                else
-                {
-                    AddLocalLevelObject(level.objectTypes[i], VectorUtil.ToVector3(positionV3Int));
-                }
+                // if (level.objectTypes[i] == LevelObjectType.Wall)
+                // {
+                //     wallTilemap.SetTile(positionV3Int, wallRuleTile);
+                // }
+                AddLocalLevelObject(level.objectTypes[i], VectorUtil.ToVector3(positionV3Int));
+                
             }
         }
 
@@ -316,12 +317,12 @@ namespace UnitMan.Source.MazeEditing
         private void ComputeScatterTargets()
         {
             BoundsInt cellBounds = wallTilemap.cellBounds;
-            currentWorkingLevel.pinkyScatterTarget =
+            currentWorkingLevel.topLeftPosition =
                 new Vector2Int(cellBounds.xMin, cellBounds.yMax) + new Vector2Int(-1, 1);
             Vector2Int vectorOne = Vector2Int.one;
-            currentWorkingLevel.blinkyScatterTarget = VectorUtil.ToVector2Int(cellBounds.max) + vectorOne;
-            currentWorkingLevel.clydeScatterTarget = VectorUtil.ToVector2Int(cellBounds.min) + -vectorOne;
-            currentWorkingLevel.inkyScatterTarget = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
+            currentWorkingLevel.topRightPosition = VectorUtil.ToVector2Int(cellBounds.max) + vectorOne;
+            currentWorkingLevel.bottomLeftPosition = VectorUtil.ToVector2Int(cellBounds.min) + -vectorOne;
+            currentWorkingLevel.bottomRightPosition = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
         }
 
         private void OnRightClicked(InputAction.CallbackContext context)

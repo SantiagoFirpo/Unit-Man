@@ -48,7 +48,6 @@ namespace UnitMan
                 _lastLeader.MarkAsUserScore();
                 threeDotsDown.SetActive(true);
                 // threeDotsUp.SetActive(Array.IndexOf());
-                //BUG: if player is 4th the upper dots still show up
             }
             
         }
