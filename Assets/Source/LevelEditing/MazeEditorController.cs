@@ -81,8 +81,13 @@ namespace UnitMan.Source.LevelEditing
         private Sprite houseIcon;
 
         private Quaternion _identity;
-        
-        private const string FILE_NAME = "currentWorkingMaze";
+        [SerializeField]
+        private Transform ghostDoor;
+
+        [SerializeField]
+        private Sprite doorIcon;
+
+        public const string FILE_NAME = "currentWorkingMaze";
 
         private void Awake()
         {
@@ -167,6 +172,12 @@ namespace UnitMan.Source.LevelEditing
             _selectedBrush = BrushType.GhostHouse;
             _brushPreviewSprite.sprite = houseIcon;
         }
+        
+        public void OnDoorButtonSelected()
+        {
+            _selectedBrush = BrushType.GhostDoor;
+            _brushPreviewSprite.sprite = doorIcon;
+        }
         private void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
         {
             Vector2Int positionV2Int = VectorUtil.VectorToVector2Int(position);
@@ -192,6 +203,12 @@ namespace UnitMan.Source.LevelEditing
                 {
                     currentWorkingLevel.ghostHousePosition = positionV2Int;
                     ghostHouseTransform.position = position;
+                    break;
+                }
+                case BrushType.GhostDoor:
+                {
+                    currentWorkingLevel.ghostDoorPosition = positionV2Int;
+                    ghostDoor.position = position;
                     break;
                 }
                 default:
@@ -299,8 +316,9 @@ namespace UnitMan.Source.LevelEditing
 
         private void SetUniqueObjectPositions(Level level)
         {
-            pacManTransform.position = VectorUtil.Vector2IntToVector3(level.pacManPosition);
-            ghostHouseTransform.position = VectorUtil.Vector2IntToVector3(level.ghostHousePosition);
+            pacManTransform.position = VectorUtil.ToVector3(level.pacManPosition);
+            ghostHouseTransform.position = VectorUtil.ToVector3(level.ghostHousePosition);
+            ghostDoor.position = VectorUtil.ToVector3(level.ghostDoorPosition);
         }
 
         private void ClearLevel()
@@ -403,7 +421,7 @@ namespace UnitMan.Source.LevelEditing
         Pinky,
         Inky,
         Clyde,
-        GhostHouse
+        GhostHouse, GhostDoor
     }
     
     public enum LevelObjectType
