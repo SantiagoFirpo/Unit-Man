@@ -4,9 +4,9 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class ClydeController : GhostController
     {
-        protected override void Initialize() {
+        protected override void ResolveDependencies() {
             standardMoveSpeed = PINKY_MOVE_SPEED * 0.8f;
-            base.Initialize();
+            base.ResolveDependencies();
             pelletThreshold = 60;
             scatterTargetPosition = LevelGridController.Instance.level.bottomLeftPosition;
         }

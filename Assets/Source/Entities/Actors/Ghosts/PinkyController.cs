@@ -4,9 +4,9 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class PinkyController : GhostController
     {
-        protected override void Initialize()
+        protected override void ResolveDependencies()
         {
-            base.Initialize();
+            base.ResolveDependencies();
             standardMoveSpeed = PINKY_MOVE_SPEED;
             scatterTargetPosition = LevelGridController.Instance.level.topLeftPosition;
         }

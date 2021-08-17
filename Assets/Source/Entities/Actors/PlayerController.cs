@@ -43,9 +43,9 @@ namespace UnitMan.Source.Entities.Actors
             
         }
 
-        protected override void Initialize()
+        protected override void ResolveDependencies()
         {
-            base.Initialize();
+            base.ResolveDependencies();
             _inputMaps = new Gameplay();
 
             invincibleTimer = new Timer(INVINCIBLE_TIME_SECONDS + 1.8f, false, true);

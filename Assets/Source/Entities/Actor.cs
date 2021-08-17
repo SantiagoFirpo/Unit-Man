@@ -1,3 +1,4 @@
+using System;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -69,34 +70,43 @@ namespace UnitMan.Source.Entities {
         thisRigidbody.simulated = true;
     }
 
-    protected virtual void Initialize() {
-            thisRigidbody = GetComponent<Rigidbody2D>();
-            animator = GetComponent<Animator>();
-            thisTransform = transform;
-            thisGameObject = gameObject;
+    protected virtual void ResolveDependencies() {
+            
             
             _rightWarpPosition = SessionManagerSingle.Instance.rightWrap.position;
             _leftWrapPosition = SessionManagerSingle.Instance.leftWrap.position;
             
-            
             SubscribeForEvents();
-            StartPosition = thisTransform.position;
+            
     }
 
     private void SubscribeForEvents()
     {
-        _resetObserver = new Observer(ResetActor);
-        _freezeObserver = new Observer(Freeze);
-        _unfreezeObserver = new Observer(Unfreeze);
-        
         SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
         SessionManagerSingle.Instance.freezeEmitter.Attach(_freezeObserver);
         SessionManagerSingle.Instance.unfreezeEmitter.Attach(_unfreezeObserver);
     }
 
-    private void Start()
+    private void Awake()
     {
         Initialize();
+    }
+
+    protected virtual void Initialize()
+    {
+        _resetObserver = new Observer(ResetActor);
+        _freezeObserver = new Observer(Freeze);
+        _unfreezeObserver = new Observer(Unfreeze);
+        thisRigidbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        thisTransform = transform;
+        StartPosition = thisTransform.position;
+        thisGameObject = gameObject;
+    }
+
+    private void Start()
+    {
+        ResolveDependencies();
         ResetActor();
         
     }

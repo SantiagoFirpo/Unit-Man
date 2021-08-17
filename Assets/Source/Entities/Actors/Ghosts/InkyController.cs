@@ -1,16 +1,18 @@
 ﻿using UnitMan.Source.Utilities.Pathfinding;
-using UnityEngine;
 
 namespace UnitMan.Source.Entities.Actors.Ghosts
 {
     public class InkyController : GhostController
     {
         
-        [SerializeField]
-        private GhostController blinkyController;
+        // [SerializeField]
+        private GhostController _blinkyController;
 
-        protected override void Initialize() {
-            base.Initialize();
+        protected override void ResolveDependencies() {
+            base.ResolveDependencies();
+            _blinkyController = FindObjectOfType<BlinkyController>() == null
+                ? (GhostController)this
+                : FindObjectOfType<BlinkyController>();
             standardMoveSpeed = PINKY_MOVE_SPEED * 0.9f;
             pelletThreshold = 30;
             scatterTargetPosition = LevelGridController.Instance.level.bottomRightPosition;
@@ -23,10 +25,11 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
             SetState(State.Resting);
         }
 
+
         protected override void PollChaseTarget()
         {
-            currentTargetPosition = blinkyController.gridPosition +
-                                    (playerController.gridPosition - blinkyController.gridPosition) * 2;
+            currentTargetPosition = _blinkyController.gridPosition +
+                                    (playerController.gridPosition - _blinkyController.gridPosition) * 2;
         }
     }
 }

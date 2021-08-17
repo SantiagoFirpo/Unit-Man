@@ -122,10 +122,10 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         private static readonly int OnEatenTrigger = Animator.StringToHash("OnEaten");
 
 
-        protected override void Initialize() {
-           base.Initialize();
+        protected override void ResolveDependencies() {
+           base.ResolveDependencies();
 
-           ResolveDependencies();
+           ResolveGhostDependencies();
             
             SubscribeToEvents();
 
@@ -133,16 +133,21 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             _slowMoveSpeed = standardMoveSpeed/2f;
             pelletThreshold = 1;
         }
-       private void ResolveDependencies()
+       private void ResolveGhostDependencies()
        {
+           CreateTimers();
+           ResolveMapMarkers();
+       }
+
+       protected override void Initialize()
+       {
+           base.Initialize();
+           playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
            _inactiveLayer = LayerMask.NameToLayer("Dead");
            _defaultLayer = LayerMask.NameToLayer("Enemies");
 
-           playerController = SessionManagerSingle.Instance.player.GetComponent<PlayerController>();
-           CreateTimers();
            _pelletEatenObserver = new Observer(PollThreshold);
            _powerPelletObserver = new Observer(OnPowerPelletCollect);
-           ResolveMapMarkers();
        }
 
        private void CreateTimers()
