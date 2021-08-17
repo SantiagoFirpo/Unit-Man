@@ -5,7 +5,6 @@ using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
 
 namespace UnitMan.Source.UI
