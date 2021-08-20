@@ -180,11 +180,11 @@ namespace UnitMan.Source.LevelEditing
         }
         private void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
         {
-            Vector2Int positionV2Int = VectorUtil.VectorToVector2Int(position);
+            Vector2Int positionV2Int = VectorUtil.ToVector2Int(position);
             Vector3Int tilesetPosition = wallTilemap.WorldToCell(position);
-            if (currentWorkingLevel.pacManPosition == positionV2Int) return;
-            if (currentWorkingLevel.objectPositions.Contains(positionV2Int)) return;
-            if (wallTilemap.GetTile(tilesetPosition) == wallRuleTile) return;
+            if (currentWorkingLevel.pacManPosition == positionV2Int ||
+                currentWorkingLevel.objectPositions.Contains(positionV2Int) ||
+                wallTilemap.GetTile(tilesetPosition) == wallRuleTile) return;
             switch (brush)
             {
                 case BrushType.Wall:
@@ -375,7 +375,7 @@ namespace UnitMan.Source.LevelEditing
             else if (_isRightClicking)
             {
                 if (!currentWorkingLevel.objectPositions.Contains(
-                    VectorUtil.VectorToVector2Int(_mouseWorldPosition)))
+                    VectorUtil.ToVector2Int(_mouseWorldPosition)))
                     return;
                 if (_selectedBrush == BrushType.Pellet)
                 {
@@ -390,7 +390,7 @@ namespace UnitMan.Source.LevelEditing
 
         private void EraseObject(Vector3 position)
         {
-            currentWorkingLevel.RemoveLevelObject(VectorUtil.VectorToVector2Int(position));
+            currentWorkingLevel.RemoveLevelObject(VectorUtil.ToVector2Int(position));
             bool isWall = wallTilemap.GetTile(VectorUtil.ToVector3Int(position)) != null;
             if (isWall)
             {
