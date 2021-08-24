@@ -9,7 +9,7 @@ using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 
 namespace UnitMan.Source.Entities.Actors.Ghosts {
-    public class GhostController : Actor {
+    public class GhostController : Actor, IStateMachine<GhostController.GhostState> {
         // Power pellet animation and sound bugs
 
 
@@ -81,13 +81,13 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         private Observer _pelletEatenObserver;
         private Observer _powerPelletObserver;
 
-        public enum State {
+        public enum GhostState {
             Resting, ExitingHub,
             Chase, Scatter, Fleeing, Eaten,
         }
 
-        public State state; //DO NOT ASSIGN DIRECTLY, USE SetState(State.TargetState)
-        public State previousState;
+        public GhostState State { get; set; } //DO NOT ASSIGN DIRECTLY, USE SetState(State.TargetState)
+        public GhostState PreviousState { get; set; }
 
         [Header("State Parameters")]
        
@@ -188,13 +188,13 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
        private void SetStateToChase()
        {
-           SetState(State.Chase);
+           SetState(GhostState.Chase);
        }
 
        private void SetStateToScatter()
        {
-           if (state != State.Chase) return;
-           SetState(State.Scatter);
+           if (State != GhostState.Chase) return;
+           SetState(GhostState.Scatter);
        }
 
        private void TargetHubExit()
@@ -203,8 +203,8 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
        }
        private void PollThreshold()
        {
-           if (SessionDataModel.Instance.pelletsEaten >= pelletThreshold && state == State.Resting)
-               SetState(State.ExitingHub);
+           if (SessionDataModel.Instance.pelletsEaten >= pelletThreshold && State == GhostState.Resting)
+               SetState(GhostState.ExitingHub);
        }
        private void StartChasePollStepTimer()
        {
@@ -221,7 +221,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         {
             base.Unfreeze();
             if (currentTargetPosition
-                != _hubExitTarget && state == State.Chase
+                != _hubExitTarget && State == GhostState.Chase
                                           && pelletThreshold >= SessionDataModel.Instance.pelletsEaten)
             {
                 StartChasePollStepTimer();
@@ -231,10 +231,10 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         
        private void OnPowerPelletCollect()
        {
-           if (state == State.Eaten) return;
+           if (State == GhostState.Eaten) return;
            animator.ResetTrigger(PowerPelletCollectTrigger);
            animator.SetTrigger(PowerPelletCollectTrigger);
-           SetState(State.Fleeing);
+           SetState(GhostState.Fleeing);
            _fleeingDurationTimer.Start();
        }
        
@@ -273,23 +273,23 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
 
         private void StateStep()
         {
-            switch (state)
+            switch (State)
             {
-                case State.ExitingHub:
+                case GhostState.ExitingHub:
                     HubExitStep();
                     break;
-                case State.Fleeing:
+                case GhostState.Fleeing:
                     FleeingStep();
 
                     break;
-                case State.Eaten:
+                case GhostState.Eaten:
                     EatenStep();
                     break;
-                case State.Resting:
+                case GhostState.Resting:
                     break;
-                case State.Chase:
+                case GhostState.Chase:
                     break;
-                case State.Scatter:
+                case GhostState.Scatter:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -321,7 +321,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         {
             if (IsCenteredAt(_hubExitTarget))
             {
-                SetState(State.Chase);
+                SetState(GhostState.Chase);
             }
         }
 
@@ -335,7 +335,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         {
             if (_isInIntersection)
             {
-                if (state == State.Resting)
+                if (State == GhostState.Resting)
                 {
                     possibleTurns[(int) Direction.Up] = false;
                 }
@@ -414,8 +414,8 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
           private void OnCollisionEnter2D(Collision2D other)
           {
               if (!other.gameObject.CompareTag("Player")) return;
-              if (state == State.Fleeing)
-                  SetState(State.Eaten);
+              if (State == GhostState.Fleeing)
+                  SetState(GhostState.Eaten);
               else
                   SessionManagerSingle.Instance.Die();
           }
@@ -443,38 +443,38 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
        }
 
-          protected void SetState(State targetState)
+          public void SetState(GhostState targetState)
        {
-           if (state == targetState && (state != targetState || state != State.Fleeing)) return;
-           previousState = state;
-           state = targetState;
+           if (State == targetState && (State != targetState || State != GhostState.Fleeing)) return;
+           PreviousState = State;
+           State = targetState;
            OnStateExit();
 
            OnStateEntered();
        }
 
-       private void OnStateExit()
+       public void OnStateExit()
        {
-           switch (previousState)
+           switch (PreviousState)
            {
-               case State.Resting:
+               case GhostState.Resting:
                    SessionManagerSingle.Instance.onPelletEatenEmitter.Detach(_pelletEatenObserver);
                    break;
-               case State.ExitingHub:
+               case GhostState.ExitingHub:
                    _hubExitTimer.Stop();
                    break;
-               case State.Chase:
+               case GhostState.Chase:
                    StopChasePollTimer();
                    break;
-               case State.Scatter:
+               case GhostState.Scatter:
                    _scatterDurationTimer.Stop();
                    break;
-               case State.Fleeing:
+               case GhostState.Fleeing:
                    _fleeingDurationTimer.Stop();
                    currentMoveSpeed = standardMoveSpeed;
                    SessionManagerSingle.Instance.fleeingGhostsTotal--;
                    break;
-               case State.Eaten:
+               case GhostState.Eaten:
                    EnableCollisionsWithPlayer();
                    currentMoveSpeed = standardMoveSpeed;
                    // animator.runtimeAnimatorController = _standardAnimController;
@@ -493,37 +493,37 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            }
        }
 
-       private void OnStateEntered() {
+       public void OnStateEntered() {
            animator.ResetTrigger(OnFleeEndTrigger);
            animator.ResetTrigger(OnFleeNearEndTrigger);
            
-           switch (state)
+           switch (State)
            {
-               case State.Resting:
+               case GhostState.Resting:
                    OnRestingEntered();
                    break;
-               case State.ExitingHub:
+               case GhostState.ExitingHub:
                    OnExitingHubEntered();
                    break;
-               case State.Chase:
+               case GhostState.Chase:
                {
                    OnChaseEntered();
                    break;
                }
 
-               case State.Scatter:
+               case GhostState.Scatter:
                {
                    currentTargetPosition = scatterTargetPosition;
                    _scatterDurationTimer.Start();
                    break;
                }
                
-               case State.Fleeing:
+               case GhostState.Fleeing:
                {
                    OnFleeingEntered();
                    break;
                }
-               case State.Eaten:
+               case GhostState.Eaten:
                {
                    OnEatenEntered();
                    break;
@@ -571,7 +571,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
                AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Retreating, 1, true);
            }
 
-           if (previousState == State.Fleeing)
+           if (PreviousState == GhostState.Fleeing)
            {
                AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
                animator.ResetTrigger(OnFleeEndTrigger);
@@ -622,7 +622,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
             base.ResetActor();
             _pathResolved = false;
             FollowPath();
-            SetState(State.ExitingHub);
+            SetState(GhostState.ExitingHub);
             SessionManagerSingle.Instance.eatenGhostsTotal = 0;
             animator.Play("Up");
         }
@@ -631,7 +631,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
         {
             base.Freeze();
             StopChasePollTimer();
-            if (state == State.Eaten) animator.enabled = true;
+            if (State == GhostState.Eaten) animator.enabled = true;
         }
     }
 }
