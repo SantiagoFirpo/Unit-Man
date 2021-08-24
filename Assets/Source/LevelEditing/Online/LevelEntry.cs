@@ -7,6 +7,9 @@ namespace UnitMan.Source.LevelEditing.Online
     {
         public Level level;
 
+        public string levelId;
+        // public LevelMeta levelMeta;
+
         public LevelEntry()
         {
             
