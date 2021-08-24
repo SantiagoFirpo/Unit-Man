@@ -8,6 +8,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
         {
             base.ResolveDependencies();
             standardMoveSpeed = PINKY_MOVE_SPEED;
+            pelletThreshold = 3;
             scatterTargetPosition = LevelGridController.Instance.level.topLeftPosition;
         }
 
