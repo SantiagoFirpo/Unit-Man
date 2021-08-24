@@ -1,7 +1,13 @@
-﻿namespace UnitMan.Source.LevelEditing.Online
+﻿using System;
+
+namespace UnitMan.Source.LevelEditing.Online
 {
-    public class LocalLevelMeta
+    [Serializable]
+    public class LevelMeta
     {
-        
+        public string authorId;
+        public string authorName;
+        public string name;
+        public string levelId;
     }
 }
