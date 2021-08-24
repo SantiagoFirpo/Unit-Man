@@ -14,7 +14,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
         protected override void ResetActor()
         {
             base.ResetActor();
-            SetState(State.Resting);
+            SetState(GhostState.Resting);
         }
         
         protected override void PollChaseTarget()
