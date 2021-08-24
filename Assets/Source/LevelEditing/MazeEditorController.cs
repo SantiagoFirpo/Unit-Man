@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using TMPro;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -18,6 +20,9 @@ namespace UnitMan.Source.LevelEditing
         private BrushType _selectedBrush = BrushType.Wall;
         [SerializeField]
         private Level currentWorkingLevel;
+
+        [SerializeField]
+        private LevelEntry levelEntry;
         private Gameplay _inputMap;
         private Vector2 _mouseScreenPosition;
         private Vector3 _mouseWorldPosition;
@@ -90,6 +95,9 @@ namespace UnitMan.Source.LevelEditing
         [SerializeField]
         private Sprite doorIcon;
 
+        [SerializeField]
+        private GameObject clipboardPingText;
+
         public const string FILE_NAME = "currentWorkingMaze";
 
         private void Awake()
@@ -102,6 +110,7 @@ namespace UnitMan.Source.LevelEditing
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
             currentWorkingLevel = ScriptableObject.CreateInstance<Level>();
+            levelEntry = new LevelEntry(currentWorkingLevel, "");
             _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
             
             _identity = Quaternion.identity;
@@ -288,16 +297,22 @@ namespace UnitMan.Source.LevelEditing
             // currentWorkingLevel.levelId = "";
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
-            ComputeAndStoreHash(json);
-            json = JsonUtility.ToJson(currentWorkingLevel, false); //GETTING JSON WITH LEVEL ID
-            FirestoreListener.SaveStringIntoJson(json, FILE_NAME);
+            levelEntry.levelId = ComputeAndStoreHash(json);
+            FirestoreListener.SaveStringIntoJson(json, levelEntry.levelId);
+            PingUserClipboard();
         }
 
-        private void ComputeAndStoreHash(string json)
+        private void PingUserClipboard()
+        {
+            clipboardPingText.SetActive(true);
+        }
+
+        private string ComputeAndStoreHash(string json)
         {
             string hash = GetLevelHashFromJson(json);
             Debug.Log(hash);
             CopyHashToClipboard(hash);
+            return hash;
         }
 
         private void CopyHashToClipboard(string hash)
