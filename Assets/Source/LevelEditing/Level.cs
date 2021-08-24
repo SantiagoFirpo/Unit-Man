@@ -7,6 +7,7 @@ namespace UnitMan.Source.LevelEditing
     [Serializable]
     public class Level : ScriptableObject
     {
+        // public string levelId;
         public Vector2Int pacManPosition = Vector2Int.zero;
         public Vector2Int ghostHousePosition = new Vector2Int(0, 3);
 
@@ -21,14 +22,7 @@ namespace UnitMan.Source.LevelEditing
 
         public List<Vector2Int> objectPositions = new List<Vector2Int>();
         public List<LevelObjectType> objectTypes = new List<LevelObjectType>();
-        
-        // public Dictionary<Vector2Int, MazeObjectType> levelObjects = new Dictionary<Vector2Int, MazeObjectType>();
 
-        // public void SerializeLevelObjects()
-        // {
-        //     objectPositions = levelObjects.Keys.ToList();
-        //     objectTypes = levelObjects.Values.ToList();
-        // }
 
         public void AddLevelObject(LevelObjectType objectType, Vector2Int position)
         {
