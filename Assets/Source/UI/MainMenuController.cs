@@ -31,6 +31,7 @@ namespace UnitMan.Source.UI
 
         private void AuthFetchTimerOnOnEnd()
         {
+            Debug.Log("Timer finished");
             loginStatusLabel.SetText(FirebaseAuthManager.Instance.AuthStatusMessage);
         }
 
