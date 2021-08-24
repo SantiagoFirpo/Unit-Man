@@ -9,10 +9,10 @@ namespace UnitMan.Source.LevelEditing.Online
 
         public string levelId;
         // public LevelMeta levelMeta;
-
-        public LevelEntry()
+        public LevelEntry(Level level, string levelId)
         {
-            
+            this.level = level;
+            this.levelId = levelId;
         }
     }
 }
