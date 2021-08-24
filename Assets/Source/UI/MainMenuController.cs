@@ -57,6 +57,11 @@ namespace UnitMan.Source.UI
             SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         }
 
+        public void OnLevelEditorSelected()
+        {
+            SceneManager.LoadScene("Level Editor", LoadSceneMode.Single);
+        }
+
         public void RegisterUser()
         {
             loginStatusLabel.SetText("FETCHING...");
