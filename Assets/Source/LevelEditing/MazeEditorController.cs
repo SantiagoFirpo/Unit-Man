@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
@@ -279,12 +282,35 @@ namespace UnitMan.Source.LevelEditing
         public void Save()
         {
             ComputeScatterTargets();
+            // currentWorkingLevel.ComputeLevelHash();
             // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
             // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
-            FirestoreListener.SaveStringIntoJson(JsonUtility.ToJson(currentWorkingLevel, false), FILE_NAME);
+            // currentWorkingLevel.levelId = "";
+            string json = JsonUtility.ToJson(currentWorkingLevel, false);
+            Debug.Log(json);
+            ComputeAndStoreHash(json);
+            json = JsonUtility.ToJson(currentWorkingLevel, false); //GETTING JSON WITH LEVEL ID
+            FirestoreListener.SaveStringIntoJson(json, FILE_NAME);
         }
-        
-        
+
+        private void ComputeAndStoreHash(string json)
+        {
+            string hash = GetLevelHashFromJson(json);
+            Debug.Log(hash);
+            CopyHashToClipboard(hash);
+        }
+
+        private void CopyHashToClipboard(string hash)
+        {
+            GUIUtility.systemCopyBuffer = hash;
+        }
+
+        private string GetLevelHashFromJson(string json)
+        {
+            return BitConverter.ToString(SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes(
+                $"{json}{FirebaseAuthManager.Instance.auth.CurrentUser.UserId}")));
+        }
+
 
         public void Load()
         {
