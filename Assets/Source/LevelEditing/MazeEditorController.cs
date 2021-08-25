@@ -93,7 +93,7 @@ namespace UnitMan.Source.LevelEditing
         [SerializeField]
         private GameObject clipboardPingText;
 
-        public const string FILE_NAME = "currentWorkingMaze";
+        public const string FILE_NAME = "4c4b9eef-2a47-4d3d-bc48-5b7517b4cf22";
 
         private void Awake()
         {
@@ -323,7 +323,7 @@ namespace UnitMan.Source.LevelEditing
 
         public void Load()
         {
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(FILE_NAME), currentWorkingLevel);
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(GUIUtility.systemCopyBuffer), currentWorkingLevel);
             PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
@@ -331,8 +331,8 @@ namespace UnitMan.Source.LevelEditing
         {
             if (currentWorkingLevel.id == null) return;
             string path = $"levels/{currentWorkingLevel.id}";
-            LevelEntryFirestore levelEntryFirestore = new LevelEntryFirestore() { Level = currentWorkingLevel };
-            FirebaseFirestore.DefaultInstance.Document(path).SetAsync(levelEntryFirestore);
+            FirestoreLevel firestoreLevel = FirestoreLevel.FromLevel(currentWorkingLevel);
+            FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
         }
 
