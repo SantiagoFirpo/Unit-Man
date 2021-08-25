@@ -21,5 +21,10 @@ namespace UnitMan.Source.LevelEditing.Online
             };
             return firestoreVector2Int;
         }
+
+        public static Vector2Int ToVector2Int(FirestoreVector2Int firestoreVector2Int)
+        {
+            return new Vector2Int(firestoreVector2Int.X, firestoreVector2Int.Y);
+        }
     }
 }
