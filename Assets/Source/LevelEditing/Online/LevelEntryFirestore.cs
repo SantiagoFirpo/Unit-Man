@@ -5,7 +5,11 @@ namespace UnitMan.Source.LevelEditing.Online
     [FirestoreData]
     public class LevelEntryFirestore
     {
+        public LevelEntryFirestore()
+        {
+        }
+
         [FirestoreProperty]
-        public LevelEntry LevelEntry { get; set; }
+        public Level Level {get; set; }
     }
 }

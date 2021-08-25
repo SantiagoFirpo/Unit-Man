@@ -5,9 +5,9 @@ using UnityEngine;
 namespace UnitMan.Source.LevelEditing
 {
     [Serializable]
-    public class Level : ScriptableObject
+    public class Level
     {
-        // public string levelId;
+        public string id;
         public Vector2Int pacManPosition = Vector2Int.zero;
         public Vector2Int ghostHousePosition = new Vector2Int(0, 3);
 

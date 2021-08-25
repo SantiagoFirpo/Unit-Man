@@ -77,8 +77,8 @@ namespace UnitMan.Source.Utilities.Pathfinding
         }
 
         public void LoadLevelObject()
-        { 
-            level = ScriptableObject.CreateInstance<Level>(); 
+        {
+            level = new Level();
             JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(MazeEditorController.FILE_NAME), level);
 
         }
