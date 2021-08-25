@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-using TMPro;
+using Firebase.Firestore;
 using UnitMan.Source.LevelEditing.Online;
-using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
@@ -21,8 +18,6 @@ namespace UnitMan.Source.LevelEditing
         [SerializeField]
         private Level currentWorkingLevel;
 
-        [SerializeField]
-        private LevelEntry levelEntry;
         private Gameplay _inputMap;
         private Vector2 _mouseScreenPosition;
         private Vector3 _mouseWorldPosition;
@@ -109,8 +104,7 @@ namespace UnitMan.Source.LevelEditing
             _inputMap.UI.Click.canceled += OnLeftUnclicked;
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
-            currentWorkingLevel = ScriptableObject.CreateInstance<Level>();
-            levelEntry = new LevelEntry(currentWorkingLevel, "");
+            currentWorkingLevel = new Level();
             _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
             
             _identity = Quaternion.identity;
@@ -295,10 +289,10 @@ namespace UnitMan.Source.LevelEditing
             // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
             // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
             // currentWorkingLevel.levelId = "";
+            currentWorkingLevel.id = ComputeAndStoreHash();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
-            levelEntry.levelId = ComputeAndStoreHash(json);
-            FirestoreListener.SaveStringIntoJson(json, levelEntry.levelId);
+            FirestoreListener.SaveStringIntoJson(json, currentWorkingLevel.id);
             PingUserClipboard();
         }
 
@@ -307,23 +301,23 @@ namespace UnitMan.Source.LevelEditing
             clipboardPingText.SetActive(true);
         }
 
-        private string ComputeAndStoreHash(string json)
+        private string ComputeAndStoreHash()
         {
-            string hash = GetLevelHashFromJson(json);
+            string hash = GetUniqueId();
             Debug.Log(hash);
             CopyHashToClipboard(hash);
+            currentWorkingLevel.id = hash;
             return hash;
         }
 
-        private void CopyHashToClipboard(string hash)
+        private static void CopyHashToClipboard(string hash)
         {
             GUIUtility.systemCopyBuffer = hash;
         }
 
-        private string GetLevelHashFromJson(string json)
+        private static string GetUniqueId()
         {
-            return BitConverter.ToString(SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes(
-                $"{json}{FirebaseAuthManager.Instance.auth.CurrentUser.UserId}")));
+            return Guid.NewGuid().ToString();
         }
 
 
@@ -474,6 +468,7 @@ namespace UnitMan.Source.LevelEditing
         GhostHouse, GhostDoor
     }
     
+    [Serializable]
     public enum LevelObjectType
     {
         Wall, Pellet, PowerPellet,
