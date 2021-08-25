@@ -1,4 +1,3 @@
-using System;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.Pathfinding;

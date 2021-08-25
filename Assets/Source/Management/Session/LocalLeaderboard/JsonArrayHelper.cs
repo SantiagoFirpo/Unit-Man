@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
+namespace UnitMan.Source.Management.Session.LocalLeaderboard
 {
     public static class JsonArrayHelper
     {

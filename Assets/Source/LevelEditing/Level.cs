@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnitMan.Source.LevelEditing.Online;
 using UnityEngine;
 
 namespace UnitMan.Source.LevelEditing
@@ -34,6 +35,30 @@ namespace UnitMan.Source.LevelEditing
         {
             objectTypes.RemoveAt(objectPositions.IndexOf(position));
             objectPositions.Remove(position);
+        }
+
+        public static Level FromFirestoreLevel(FirestoreLevel firestoreLevel)
+        {
+            Level level = new Level()
+                {
+                    id = firestoreLevel.Id,
+                    pelletCount = firestoreLevel.PelletCount,
+                    bottomLeftPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.BottomLeftPosition),
+                    bottomRightPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.BottomRightPosition),
+                    topLeftPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.TopLeftPosition),
+                    topRightPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.TopRightPosition),
+                    ghostDoorPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostDoorPosition),
+                    ghostHousePosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostHouse),
+                    pacManPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.PacManPosition),
+                    
+                };
+            for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)
+            {
+                level.objectPositions.Add(FirestoreVector2Int.ToVector2Int(firestoreLevel.ObjectPositions[i]));
+                level.objectTypes.Add(firestoreLevel.ObjectTypes[i]);
+            }
+
+            return level;
         }
     }
 }

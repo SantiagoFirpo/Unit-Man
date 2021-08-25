@@ -79,7 +79,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         public void LoadLevelObject()
         {
             level = new Level();
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(MazeEditorController.FILE_NAME), level);
+            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(LevelEditorController.FILE_NAME), level);
 
         }
 

@@ -12,7 +12,7 @@ using UnityEngine.Tilemaps;
 
 namespace UnitMan.Source.LevelEditing
 {
-    public class MazeEditorController : MonoBehaviour
+    public class LevelEditorController : MonoBehaviour
     {
         private BrushType _selectedBrush = BrushType.Wall;
         [SerializeField]
@@ -332,6 +332,7 @@ namespace UnitMan.Source.LevelEditing
             if (currentWorkingLevel.id == null) return;
             string path = $"levels/{currentWorkingLevel.id}";
             FirestoreLevel firestoreLevel = FirestoreLevel.FromLevel(currentWorkingLevel);
+            Debug.Log("Converted level to FirestoreLevel");
             FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
         }
