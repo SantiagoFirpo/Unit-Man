@@ -333,6 +333,15 @@ namespace UnitMan.Source.LevelEditing
             PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
+        public void Upload()
+        {
+            if (currentWorkingLevel.id == null) return;
+            string path = $"levels/{currentWorkingLevel.id}";
+            LevelEntryFirestore levelEntryFirestore = new LevelEntryFirestore() { Level = currentWorkingLevel };
+            FirebaseFirestore.DefaultInstance.Document(path).SetAsync(levelEntryFirestore);
+            Debug.Log($"Saved level into {path}");
+        }
+
         private void PopulateEditorFromLevelObject(Level level)
         {
             ClearLevel();
