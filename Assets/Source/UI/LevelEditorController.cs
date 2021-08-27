@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Firebase.Firestore;
+using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -10,7 +11,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-namespace UnitMan.Source.LevelEditing
+namespace UnitMan.Source.UI
 {
     public class LevelEditorController : MonoBehaviour
     {

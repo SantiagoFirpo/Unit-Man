@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
+using UnitMan.Source.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityObject = UnityEngine.Object;
