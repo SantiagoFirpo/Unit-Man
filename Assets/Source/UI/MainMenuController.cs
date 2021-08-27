@@ -53,7 +53,7 @@ namespace UnitMan.Source.UI
         public void OnPressStart() {
             // classicalMapButton.gameObject.SetActive(true);
             // testMapButton.gameObject.SetActive(true);
-            LevelIDContainer.Instance.SetLevelID(levelIdField.text);
+            CrossSceneLevelIDContainer.Instance.SetLevelID(levelIdField.text);
             SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
 
         }
