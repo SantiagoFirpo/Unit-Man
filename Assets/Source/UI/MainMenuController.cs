@@ -17,9 +17,6 @@ namespace UnitMan.Source.UI
     public class MainMenuController : MonoBehaviour
     {
         [SerializeField]
-        private Button testMapButton;
-        
-        [SerializeField]
         private TextMeshProUGUI loginStatusLabel;
         
         [SerializeField]
@@ -66,10 +63,10 @@ namespace UnitMan.Source.UI
                 LoadLocalLevel(levelId);
                 SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
             }
-            catch (Exception e)
+            catch
             {
                 // Debug.LogException(e);
-                Debug.Log("Downloading level from firestore");
+                Debug.Log("Failed to fetch locally, Downloading level from firestore");
                 //Display "loading..."
                 DownloadFirestoreLevelWithId(levelId);
             }
@@ -98,8 +95,17 @@ namespace UnitMan.Source.UI
 
         private static void StoreLevelAndGoToGameplay(Task<DocumentSnapshot> task)
         {
-            CrossSceneLevelContainer.Instance.SetLevel(Level.FromFirestoreLevel(task.Result.ConvertTo<FirestoreLevel>()));
+            Level levelFromJson = LevelJsonWrapper(task.Result.ConvertTo<FirestoreLevel>());
+            CrossSceneLevelContainer.Instance.SetLevel(levelFromJson);
             SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+        }
+
+        private static Level LevelJsonWrapper(FirestoreLevel firestoreLevel)
+        {
+            string levelJson = JsonUtility.ToJson(Level.FromFirestoreLevel(firestoreLevel));
+            Debug.Log(levelJson);
+            Level levelFromJson = JsonUtility.FromJson<Level>(levelJson);
+            return levelFromJson;
         }
 
         public void LoadLocalLevel(string levelId)
