@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Firebase.Firestore;
+using TMPro;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.Pathfinding;
+using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -96,6 +98,16 @@ namespace UnitMan.Source.UI
 
         public const string FILE_NAME = "4c4b9eef-2a47-4d3d-bc48-5b7517b4cf22";
 
+        private bool _isUIActive = true;
+
+        private Timer _clipboardPingTimer;
+        
+        [SerializeField]
+        private GameObject uiCanvas;
+
+        [SerializeField]
+        private TMP_InputField levelIdField;
+
         private void Awake()
         {
             _inputMap = new Gameplay();
@@ -113,8 +125,16 @@ namespace UnitMan.Source.UI
 
         private void Start()
         {
+            _clipboardPingTimer = new Timer(3f, false, true);
+            _clipboardPingTimer.OnEnd += ClipboardPingTimerOnOnEnd;
+            
             _mainCamera = Camera.main;
             _eventSystem = EventSystem.current;
+        }
+
+        private void ClipboardPingTimerOnOnEnd()
+        {
+            clipboardPingText.SetActive(false);
         }
 
         private void OnDisable()
@@ -124,6 +144,12 @@ namespace UnitMan.Source.UI
             _inputMap.UI.Click.canceled -= OnLeftUnclicked;
             _inputMap.UI.RightClick.started -= OnRightClicked;
             _inputMap.UI.RightClick.canceled -= OnRightUnclicked;
+        }
+
+        public void OnToggleUI()
+        {
+            _isUIActive = !_isUIActive;
+            uiCanvas.SetActive(_isUIActive);
         }
 
         public void OnWallButtonSelected()
@@ -324,7 +350,16 @@ namespace UnitMan.Source.UI
 
         public void Load()
         {
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(GUIUtility.systemCopyBuffer), currentWorkingLevel);
+            try
+            {
+                JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(levelIdField.text), currentWorkingLevel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
@@ -336,6 +371,7 @@ namespace UnitMan.Source.UI
             Debug.Log("Converted level to FirestoreLevel");
             FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
+            _clipboardPingTimer.Start();
         }
 
         private void PopulateEditorFromLevelObject(Level level)
