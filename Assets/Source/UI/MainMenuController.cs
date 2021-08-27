@@ -1,5 +1,12 @@
+using System;
+using System.Threading.Tasks;
+using Firebase.Extensions;
+using Firebase.Firestore;
 using TMPro;
+using UnitMan.Source.LevelEditing;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -53,9 +60,51 @@ namespace UnitMan.Source.UI
         public void OnPressStart() {
             // classicalMapButton.gameObject.SetActive(true);
             // testMapButton.gameObject.SetActive(true);
-            CrossSceneLevelIDContainer.Instance.SetLevelID(levelIdField.text);
-            SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+            string levelId = levelIdField.text;
+            try
+            {
+                LoadLocalLevel(levelId);
+                SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+            }
+            catch (Exception e)
+            {
+                // Debug.LogException(e);
+                Debug.Log("Downloading level from firestore");
+                //Display "loading..."
+                DownloadFirestoreLevelWithId(levelId);
+            }
+            
+            
 
+        }
+        
+        private static void DownloadFirestoreLevelWithId(string levelId)
+        {
+            FirebaseFirestore.DefaultInstance.Document($"levels/{levelId}")
+                .GetSnapshotAsync()
+                .ContinueWithOnMainThread(task =>
+                {
+                    AggregateException aggregateException = task.Exception;
+                    if (aggregateException == null)
+                    {
+                        StoreLevelAndGoToGameplay(task);
+                    }
+                    else
+                    {
+                        Debug.LogException(aggregateException);
+                    }
+                });
+        }
+
+        private static void StoreLevelAndGoToGameplay(Task<DocumentSnapshot> task)
+        {
+            CrossSceneLevelContainer.Instance.SetLevel(Level.FromFirestoreLevel(task.Result.ConvertTo<FirestoreLevel>()));
+            SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+        }
+
+        public void LoadLocalLevel(string levelId)
+        {
+            CrossSceneLevelContainer.Instance.SetLevel(JsonUtility.FromJson<Level>(FirestoreListener.LoadStringFromJson(levelId)));
         }
 
         public void OnSelectTestMap()

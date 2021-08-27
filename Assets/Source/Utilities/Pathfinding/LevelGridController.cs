@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Firebase.Extensions;
-using Firebase.Firestore;
 using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
-using UnitMan.Source.LevelEditing.Online;
-using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -66,7 +62,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
         [SerializeField]
         private Transform ghostDoorTransform;
 
-        private string _levelId;
         public bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
             return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
@@ -80,34 +75,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
         private void SetGridCellPosition(Vector2Int position, bool value)
         {
             _grid[position.y][position.x] = value;
-        }
-        
-        private void DownloadFirestoreLevelWithId(string levelId)
-        {
-            FirebaseFirestore.DefaultInstance.Document($"levels/{levelId}")
-                .GetSnapshotAsync()
-                .ContinueWithOnMainThread(task =>
-                {
-                    AggregateException aggregateException = task.Exception;
-                    if (aggregateException == null)
-                    {
-                        level = Level.FromFirestoreLevel(task.Result.ConvertTo<FirestoreLevel>());
-                        LoadLevel();
-                    }
-                    else
-                    {
-                        Debug.LogException(aggregateException);
-                    }
-                });
-        }
-
-        public void LoadLocalLevel(string levelId)
-        {
-            level = new Level();
-            JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(levelId), level);
-
-
-
         }
 
 
@@ -125,18 +92,8 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private void Start()
         {
-            CrossSceneLevelIDContainer.Instance.GetLevelIdAndDispose(out _levelId);
-            try
-            {
-                LoadLocalLevel(_levelId);
-                LoadLevel();
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-                Debug.Log("Couldn't load local level, attempting to download level from Firestore");
-                DownloadFirestoreLevelWithId(_levelId);
-            }
+            CrossSceneLevelContainer.Instance.GetLevelAndDispose(out level);
+            LoadLevel();
         }
 
         private void LoadLevel()
