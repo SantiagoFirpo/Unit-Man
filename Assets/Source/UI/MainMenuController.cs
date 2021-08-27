@@ -14,8 +14,10 @@ using UnityEngine.UI;
 
 namespace UnitMan.Source.UI
 {
+    
     public class MainMenuController : MonoBehaviour
     {
+        
         [SerializeField]
         private TextMeshProUGUI loginStatusLabel;
         
@@ -32,6 +34,11 @@ namespace UnitMan.Source.UI
 
         private void Awake()
         {
+            #if UNITY_EDITOR
+                        Debug.unityLogger.logEnabled = true;
+            #else
+                         Debug.unityLogger.logEnabled=false;
+            #endif
             Debug.Log("Main Menu should initialize");
         }
 
@@ -43,6 +50,7 @@ namespace UnitMan.Source.UI
 
         private void Start()
         {
+            
             // if (FirebaseAuthManager.Instance.auth == null) return;
             _authFetchTimer = new Timer(1f, false, true);
             _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
@@ -63,9 +71,9 @@ namespace UnitMan.Source.UI
                 LoadLocalLevel(levelId);
                 SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
             }
-            catch
+            catch (Exception e)
             {
-                // Debug.LogException(e);
+                Debug.LogException(e);
                 Debug.Log("Failed to fetch locally, Downloading level from firestore");
                 //Display "loading..."
                 DownloadFirestoreLevelWithId(levelId);
