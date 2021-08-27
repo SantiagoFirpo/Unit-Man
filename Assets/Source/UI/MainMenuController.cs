@@ -22,6 +22,8 @@ namespace UnitMan.Source.UI
         private TMP_InputField passwordField;
 
         private Timer _authFetchTimer;
+        [SerializeField]
+        private TMP_InputField levelIdField;
 
 
         private void Awake()
@@ -50,12 +52,14 @@ namespace UnitMan.Source.UI
         
         public void OnPressStart() {
             // classicalMapButton.gameObject.SetActive(true);
-            testMapButton.gameObject.SetActive(true);
+            // testMapButton.gameObject.SetActive(true);
+            LevelIDContainer.Instance.SetLevelID(levelIdField.text);
+            SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+
         }
 
         public void OnSelectTestMap()
         {
-            SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         }
 
         public void OnLevelEditorSelected()
