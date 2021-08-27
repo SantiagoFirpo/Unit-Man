@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4936443786804668152}
   - component: {fileID: 4936443786804668155}
+  - component: {fileID: 4833538150552694318}
+  - component: {fileID: 318876499440369170}
   m_Layer: 0
   m_Name: Session Manager
   m_TagString: Untagged
@@ -47,11 +49,77 @@ MonoBehaviour:
   leftWrap: {fileID: 0}
   rightWrap: {fileID: 0}
   player: {fileID: 0}
-  actors:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  pelletsEaten: 0
-  readyText: {fileID: 0}
+  eatenGhostsTotal: 0
+  fleeingGhostsTotal: 0
+--- !u!1839735485 &4833538150552694318
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4936443786804668154}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+--- !u!114 &318876499440369170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4936443786804668154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00ea76551c9653249adcdc97aa2234af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallTilemap: {fileID: 0}
+  wallRuleTile: {fileID: 11400000, guid: 71fcd36843baa804c8dfad0633df2066, type: 2}
+  level:
+    id: 
+    pacManPosition: {x: 0, y: 0}
+    ghostHousePosition: {x: 0, y: 3}
+    ghostDoorPosition: {x: 0, y: 1}
+    topRightPosition: {x: 0, y: 0}
+    topLeftPosition: {x: 0, y: 0}
+    bottomRightPosition: {x: 0, y: 0}
+    bottomLeftPosition: {x: 0, y: 0}
+    pelletCount: 0
+    objectPositions: []
+    objectTypes: 
+  pelletPrefab: {fileID: 0}
+  powerPelletPrefab: {fileID: 385068253680773091, guid: 4b7c927ef6fdc8c4291fac8325d6266e, type: 3}
+  blinkyPrefab: {fileID: 7384678430228816734, guid: 77f8af6b8866e44468f830dc4c630815, type: 3}
+  pinkyPrefab: {fileID: 4894149964428276163, guid: 7c31a040e1c90ae4799e693611842c88, type: 3}
+  inkyPrefab: {fileID: 5740050409853212784, guid: bac126e64df22ba47a4b2c7a5cbe2c3b, type: 3}
+  clydePrefab: {fileID: 5977149411128850882, guid: 3c6b18dde2e7988408ee373f75488c9d, type: 3}
+  playerTransform: {fileID: 0}
+  ghostDoorTransform: {fileID: 0}
