@@ -10,6 +10,7 @@ using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
@@ -345,6 +346,11 @@ namespace UnitMan.Source.UI
         private static string GetUniqueId()
         {
             return Guid.NewGuid().ToString();
+        }
+
+        public void OnMainMenuSelected()
+        {
+            SceneManager.LoadScene("Main Menu");
         }
 
 
