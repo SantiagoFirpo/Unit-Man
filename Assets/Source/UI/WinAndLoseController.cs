@@ -48,9 +48,10 @@ namespace UnitMan.Source.UI
         private static void LeaderboardCallback(Task<DocumentSnapshot> task)
         {
             if (task.Exception is { }) return;
-            if (task.Result.Exists)
+            DocumentSnapshot leaderSnapshot = task.Result;
+            if (leaderSnapshot.Exists)
             {
-                FirestoreLeaderData firestoreLeader = task.Result.ConvertTo<FirestoreLeaderData>();
+                FirestoreLeaderData firestoreLeader = leaderSnapshot.ConvertTo<FirestoreLeaderData>();
                 Debug.Log("Will now switch scenes");
                 SceneManager.LoadScene(firestoreLeader.Score >= SessionDataModel.Instance.score
                     ? "Scenes/Scoreboard"
