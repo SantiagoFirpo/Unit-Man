@@ -1,5 +1,7 @@
+using System;
 using Firebase.Extensions;
 using Firebase.Firestore;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Management.Session;
@@ -18,26 +20,41 @@ namespace UnitMan.Source.UI
         {
             Debug.Log("Starting timer!");
 
-            _returnTimer = new Timer(1f, false, true);
+            _returnTimer = new Timer(1f, true, true);
             _returnTimer.OnEnd += ReturnToMainScreen;
-            _returnTimer.Start();
         }
 
-        private void ReturnToMainScreen() {
+        private static void ReturnToMainScreen() {
             // Debug.Log("Timer ended!");
-            _returnTimer.Stop();
-            
-            FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-            firestore.Document($"leaders/{FirebaseAuthManager.Instance.auth.CurrentUser.UserId}").GetSnapshotAsync()
-                .ContinueWithOnMainThread(
-                    task =>
-                    {
-                        // Assert.IsNull(task.Exception);
-                        FirestoreLeaderData userData = task.Result.ConvertTo<FirestoreLeaderData>();
-                        SceneManager.LoadScene(userData.Score < SessionDataModel.Instance.score
-                            ? "Score Query"
-                            : "Scoreboard");
-                    });
+            // _returnTimer.Stop();
+            Debug.Log("Will now attempt to get player score");
+            try
+            {
+                FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
+                firestore.Document($"leaderboards/{CrossSceneLevelContainer.Instance.GetLevel().id}/leaders/{FirebaseAuthManager.Instance.auth.CurrentUser.UserId}").GetSnapshotAsync()
+                    .ContinueWithOnMainThread(
+                        task =>
+                        {
+                            // Assert.IsNull(task.Exception);
+                            AggregateException aggregateException = task.Exception;
+                            if (aggregateException != null)
+                            {
+                                Debug.LogException(aggregateException);
+                            }
+                            Debug.Log("Success!");
+                            FirestoreLeaderData userData = task.Result.ConvertTo<FirestoreLeaderData>();
+                            SceneManager.LoadScene(userData.Score < SessionDataModel.Instance.score
+                                ? "Score Query"
+                                : "Scoreboard");
+                            Debug.Log("WHAT?");
+                        });
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Error! Entry probably doesn't exist!");
+                Debug.LogException(e);
+                SceneManager.LoadScene("Score Query");
+            }
         }
     }
 }

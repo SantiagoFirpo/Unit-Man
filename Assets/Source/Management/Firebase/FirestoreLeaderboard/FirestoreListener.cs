@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Firebase.Firestore;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
+using UnitMan.Source.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -24,7 +26,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		private void Start()
 		{
 			FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-			firestore.Collection("leaders").Listen(ListenCallback);
+			firestore.Collection($"leaderboards/{CrossSceneLevelContainer.Instance.GetLevel().id}/leaders").Listen(ListenCallback);
 		}
 
 		private void ListenCallback(QuerySnapshot dataSnapshot)

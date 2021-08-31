@@ -1,13 +1,13 @@
 using Firebase.Auth;
 using Firebase.Firestore;
 using TMPro;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
-using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Management.Session;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
+namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
     public class FirestoreWriter : MonoBehaviour
     {
@@ -33,7 +33,7 @@ namespace UnitMan.Source.Management.Firebase.Firestore_Leaderboard
                                         SessionDataModel.Instance.won, currentUser.UserId);
             Debug.Log("Should write to db");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-            firestore.Document($"leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
+            firestore.Document($"leaderboards/{CrossSceneLevelContainer.Instance.GetLevel().id}/leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
             GoToScoreboard();
             
         }
