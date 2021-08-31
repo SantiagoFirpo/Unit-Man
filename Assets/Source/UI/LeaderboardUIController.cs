@@ -4,7 +4,7 @@ using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace UnitMan
+namespace UnitMan.Source.UI
 {
     public class LeaderboardUIController : MonoBehaviour
     {

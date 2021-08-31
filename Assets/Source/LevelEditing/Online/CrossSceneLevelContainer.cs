@@ -1,13 +1,14 @@
-using UnitMan.Source.LevelEditing;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.LevelEditing.Online
 {
     public class CrossSceneLevelContainer : MonoBehaviour
     {
         public static CrossSceneLevelContainer Instance { get; private set; }
 
         private Level _level;
+
+        // public string id;
         // Start is called before the first frame update
         private void Awake()
         {
@@ -36,6 +37,12 @@ namespace UnitMan
         {
             levelOut = this._level;
             DestroyGameObject();
+        }
+
+        public Level GetLevel()
+        {
+            return this._level;
+
         }
     }
 }
