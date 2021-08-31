@@ -10,7 +10,6 @@ using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace UnitMan.Source.UI
 {
@@ -116,7 +115,7 @@ namespace UnitMan.Source.UI
             return levelFromJson;
         }
 
-        public void LoadLocalLevel(string levelId)
+        public static void LoadLocalLevel(string levelId)
         {
             CrossSceneLevelContainer.Instance.SetLevel(JsonUtility.FromJson<Level>(FirestoreListener.LoadStringFromJson(levelId)));
         }
