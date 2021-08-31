@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
+using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -71,12 +72,6 @@ namespace UnitMan.Source.Utilities.Pathfinding
             Vector2Int gridOrigin = level.bottomLeftPosition + Vector2Int.one;
             _grid[position.y - gridOrigin.y][position.x - gridOrigin.x] = value;
         }
-        
-        private void SetGridCellPosition(Vector2Int position, bool value)
-        {
-            _grid[position.y][position.x] = value;
-        }
-
 
 
         public static LevelGridController Instance { get; private set; }
@@ -92,7 +87,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private void Start()
         {
-            CrossSceneLevelContainer.Instance.GetLevelAndDispose(out level);
+            level = CrossSceneLevelContainer.Instance.GetLevel();
             LoadLevel();
         }
 
