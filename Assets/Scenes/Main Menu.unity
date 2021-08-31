@@ -724,6 +724,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2021906473}
     m_Modifications:
+    - target: {fileID: 968790933116026164, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_text
+      value: ENTER LEVEL ID TO PLAY
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933116026164, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 968790933868362667, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_Name
       value: Level ID Field
@@ -814,7 +822,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_Text
-      value: ENTER LEVEL ID TO PLAY
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790934010146271, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_text
+      value: "ENTER LEVEL ID TO PLAY\u200B"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
@@ -2763,7 +2775,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448bd2e543eed934d9c53e6851c9c579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testMapButton: {fileID: 58593149}
   loginStatusLabel: {fileID: 729535695}
   emailField: {fileID: 249961232}
   passwordField: {fileID: 1839167319}
@@ -3253,6 +3264,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6ba465c2b485ef41a60ac23f7c19732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level:
+    id: 
+    pacManPosition: {x: 0, y: 0}
+    ghostHousePosition: {x: 0, y: 3}
+    ghostDoorPosition: {x: 0, y: 1}
+    topRightPosition: {x: 0, y: 0}
+    topLeftPosition: {x: 0, y: 0}
+    bottomRightPosition: {x: 0, y: 0}
+    bottomLeftPosition: {x: 0, y: 0}
+    pelletCount: 0
+    objectPositions: []
+    objectTypes: 
 --- !u!4 &1843560078
 Transform:
   m_ObjectHideFlags: 0
