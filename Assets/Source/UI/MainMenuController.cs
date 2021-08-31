@@ -103,7 +103,7 @@ namespace UnitMan.Source.UI
         private static void StoreLevelAndGoToGameplay(Task<DocumentSnapshot> task)
         {
             Level levelFromJson = LevelJsonWrapper(task.Result.ConvertTo<FirestoreLevel>());
-            CrossSceneLevelContainer.Instance.SetLevel(levelFromJson);
+            CrossSceneLevelContainer.Instance.level = levelFromJson;
             SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
         }
 
@@ -117,7 +117,7 @@ namespace UnitMan.Source.UI
 
         public static void LoadLocalLevel(string levelId)
         {
-            CrossSceneLevelContainer.Instance.SetLevel(JsonUtility.FromJson<Level>(FirestoreListener.LoadStringFromJson(levelId)));
+            CrossSceneLevelContainer.Instance.level = JsonUtility.FromJson<Level>(FirestoreListener.LoadStringFromJson(levelId));
         }
 
         public void OnSelectTestMap()

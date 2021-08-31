@@ -87,7 +87,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private void Start()
         {
-            level = CrossSceneLevelContainer.Instance.GetLevel();
+            level = CrossSceneLevelContainer.Instance.level;
             LoadLevel();
         }
 

@@ -26,7 +26,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		private void Start()
 		{
 			FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-			firestore.Collection($"leaderboards/{CrossSceneLevelContainer.Instance.GetLevel().id}/leaders").Listen(ListenCallback);
+			firestore.Collection($"leaderboards/{CrossSceneLevelContainer.Instance.level.id}/leaders").Listen(ListenCallback);
 		}
 
 		private void ListenCallback(QuerySnapshot dataSnapshot)

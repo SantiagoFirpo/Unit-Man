@@ -6,7 +6,7 @@ namespace UnitMan.Source.LevelEditing.Online
     {
         public static CrossSceneLevelContainer Instance { get; private set; }
 
-        private Level _level;
+        public Level level;
 
         // public string id;
         // Start is called before the first frame update
@@ -26,23 +26,6 @@ namespace UnitMan.Source.LevelEditing.Online
         private void DestroyGameObject()
         {
             Destroy(gameObject);
-        }
-
-        public void SetLevel(Level levelIn)
-        {
-            this._level = levelIn;
-        }
-
-        public void GetLevelAndDispose(out Level levelOut)
-        {
-            levelOut = this._level;
-            DestroyGameObject();
-        }
-
-        public Level GetLevel()
-        {
-            return this._level;
-
         }
     }
 }

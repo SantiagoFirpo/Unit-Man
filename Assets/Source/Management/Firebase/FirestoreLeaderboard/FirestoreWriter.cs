@@ -33,7 +33,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
                                         SessionDataModel.Instance.won, currentUser.UserId);
             Debug.Log("Should write to db");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-            firestore.Document($"leaderboards/{CrossSceneLevelContainer.Instance.GetLevel().id}/leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
+            firestore.Document($"leaderboards/{CrossSceneLevelContainer.Instance.level.id}/leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
             GoToScoreboard();
             
         }
