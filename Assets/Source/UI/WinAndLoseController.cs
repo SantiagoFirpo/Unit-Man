@@ -26,21 +26,29 @@ namespace UnitMan.Source.UI
 
         private static void CheckScores()
         {
-            Debug.Log("Starting check...");
-            CollectionReference remoteLeaderboard = FirebaseFirestore.DefaultInstance.Collection(
-                $"leaderboards/{CrossSceneLevelContainer.Instance.level.id}/leaders");
-            if (remoteLeaderboard is null)
+            if (FirebaseAuthManager.Instance.auth is null)
             {
-                Debug.Log("Leaderboard is null!");
-                GoToScoreQuery();
+                SceneManager.LoadScene("Scenes/Scoreboard");
             }
             else
             {
-                Debug.Log("Leaderboard is not null! Proceeding...");
-                remoteLeaderboard.Document(FirebaseAuthManager.Instance.auth.CurrentUser.UserId).GetSnapshotAsync()
-                    .ContinueWithOnMainThread(
-                        LeaderboardCallback);    
+                Debug.Log("Starting check...");
+                CollectionReference remoteLeaderboard = FirebaseFirestore.DefaultInstance.Collection(
+                    $"leaderboards/{CrossSceneLevelContainer.Instance.level.id}/leaders");
+                if (remoteLeaderboard is null)
+                {
+                    Debug.Log("Leaderboard is null!");
+                    GoToScoreQuery();
+                }
+                else
+                {
+                    Debug.Log("Leaderboard is not null! Proceeding...");
+                    remoteLeaderboard.Document(FirebaseAuthManager.Instance.auth.CurrentUser.UserId).GetSnapshotAsync()
+                        .ContinueWithOnMainThread(
+                            LeaderboardCallback);    
+                }
             }
+            
 
             
         }
