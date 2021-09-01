@@ -73,11 +73,11 @@ namespace UnitMan.Source.Utilities.Pathfinding
             try
             {
                 Vector2Int gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
-                Debug.Log($"Origin: {gridOrigin}");
-                Debug.Log(worldPosition);
-                Vector2Int gridPosition = new Vector2Int(worldPosition.x - gridOrigin.x, -worldPosition.y + gridOrigin.y - 1);
-                Debug.Log($"Result: {gridPosition}");
-                _grid[gridPosition.y][gridPosition.x] = value;
+                // Debug.Log($"Origin: {gridOrigin}");
+                // Debug.Log(worldPosition);
+                // Vector2Int gridPosition = new Vector2Int(, );
+                // Debug.Log($"Result: {gridPosition}");
+                _grid[-worldPosition.y + gridOrigin.y - 1][worldPosition.x - gridOrigin.x] = value;
             }
             catch (Exception e)
             {
