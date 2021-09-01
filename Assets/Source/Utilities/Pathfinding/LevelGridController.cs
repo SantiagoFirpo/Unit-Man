@@ -64,26 +64,14 @@ namespace UnitMan.Source.Utilities.Pathfinding
         [SerializeField]
         private Transform ghostDoorTransform;
 
-        public bool GetGridPosition(Vector2Int vector) {
+        private bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
             return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
         }
         private void SetGridPosition(Vector2Int worldPosition, bool value)
         {
-            try
-            {
-                Vector2Int gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
-                // Debug.Log($"Origin: {gridOrigin}");
-                // Debug.Log(worldPosition);
-                // Vector2Int gridPosition = new Vector2Int(, );
-                // Debug.Log($"Result: {gridPosition}");
-                _grid[-worldPosition.y + gridOrigin.y - 1][worldPosition.x - gridOrigin.x] = value;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(worldPosition);
-                throw;
-            }
+            Vector2Int gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
+            _grid[-worldPosition.y + gridOrigin.y - 1][worldPosition.x - gridOrigin.x] = value;
         }
 
 

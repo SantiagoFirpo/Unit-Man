@@ -115,7 +115,7 @@ namespace UnitMan.Source.UI
             return levelFromJson;
         }
 
-        public static void LoadLocalLevel(string levelId)
+        private static void LoadLocalLevel(string levelId)
         {
             CrossSceneLevelContainer.Instance.level = JsonUtility.FromJson<Level>(FirestoreListener.LoadStringFromJson(levelId));
         }

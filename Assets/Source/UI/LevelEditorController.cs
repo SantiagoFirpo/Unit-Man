@@ -345,7 +345,7 @@ namespace UnitMan.Source.UI
             _clipboardPingTimer.Start();
         }
 
-        public void PingLevelUpload()
+        private void PingLevelUpload()
         {
             uploadPingText.SetActive(true);
             _uploadPingTimer.Start();

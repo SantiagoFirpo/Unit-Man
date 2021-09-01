@@ -15,7 +15,7 @@ namespace UnitMan.Source.Entities {
 
         protected Rigidbody2D thisRigidbody;
 
-        protected Transform thisTransform;
+        private Transform _thisTransform;
 
         protected GameObject thisGameObject;
 
@@ -28,7 +28,7 @@ namespace UnitMan.Source.Entities {
 
         protected bool isInTileCenter;
 
-        protected bool IsInTileCenter => VectorUtil.VectorApproximately(thisTransform.position, gridPosition, 0.11f);
+        protected bool IsInTileCenter => VectorUtil.VectorApproximately(_thisTransform.position, gridPosition, 0.11f);
 
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
@@ -98,14 +98,14 @@ namespace UnitMan.Source.Entities {
         _unfreezeObserver = new Observer(Unfreeze);
         thisRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        thisTransform = transform;
+        _thisTransform = transform;
         AssignStartPosition();
         thisGameObject = gameObject;
     }
 
     public void AssignStartPosition()
     {
-        StartPosition = thisTransform.position;
+        StartPosition = _thisTransform.position;
     }
 
     private void Start()
@@ -132,11 +132,11 @@ namespace UnitMan.Source.Entities {
         }
 
         private void ResetPosition() {
-            thisTransform.position = StartPosition;
+            _thisTransform.position = StartPosition;
         }
 
         protected void UpdateGridPosition() {
-           gridPosition = Vector2Int.RoundToInt(thisTransform.position);
+           gridPosition = Vector2Int.RoundToInt(_thisTransform.position);
        }
 
         protected static int VectorToInt(Vector2Int vector) {
@@ -200,12 +200,12 @@ namespace UnitMan.Source.Entities {
         
         protected bool IsCenteredAt(Vector2Int position)
         {
-            return VectorUtil.VectorApproximately(position, thisTransform.position, 0.1f);
+            return VectorUtil.VectorApproximately(position, _thisTransform.position, 0.1f);
         }
-        
-        protected bool IsCenteredAt(Vector3 position)
+
+        private bool IsCenteredAt(Vector3 position)
         {
-            return VectorUtil.VectorApproximately(position, thisTransform.position, 0.1f);
+            return VectorUtil.VectorApproximately(position, _thisTransform.position, 0.1f);
         }
 
         protected virtual void FixedUpdate() {
@@ -216,14 +216,14 @@ namespace UnitMan.Source.Entities {
             if (IsCenteredAt(_rightWarpPosition)
                 && !_isWrapping)
             {
-                thisTransform.position = _leftWrapPosition;
+                _thisTransform.position = _leftWrapPosition;
                 _isWrapping = true;
             }
             
             else if (IsCenteredAt(_leftWrapPosition)
                      && !_isWrapping)
             {
-                thisTransform.position = _rightWarpPosition;
+                _thisTransform.position = _rightWarpPosition;
                 _isWrapping = true;
             }
 
