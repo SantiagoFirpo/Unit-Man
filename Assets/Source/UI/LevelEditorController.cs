@@ -217,6 +217,8 @@ namespace UnitMan.Source.UI
             Vector2Int positionV2Int = VectorUtil.ToVector2Int(position);
             Vector3Int tilesetPosition = wallTilemap.WorldToCell(position);
             if (currentWorkingLevel.pacManPosition == positionV2Int ||
+                currentWorkingLevel.ghostDoorPosition == positionV2Int ||
+                currentWorkingLevel.ghostHousePosition == positionV2Int ||
                 currentWorkingLevel.objectPositions.Contains(positionV2Int) ||
                 wallTilemap.GetTile(tilesetPosition) == wallRuleTile) return;
             switch (brush)
@@ -427,7 +429,7 @@ namespace UnitMan.Source.UI
                 new Vector2Int(cellBounds.xMin, cellBounds.yMax) + new Vector2Int(-1, 1);
             Vector2Int vectorOne = Vector2Int.one;
             currentWorkingLevel.topRightPosition = VectorUtil.ToVector2Int(cellBounds.max) + vectorOne;
-            currentWorkingLevel.bottomLeftPosition = VectorUtil.ToVector2Int(cellBounds.min) + -vectorOne;
+            currentWorkingLevel.bottomLeftPosition = VectorUtil.ToVector2Int(cellBounds.min) - vectorOne;
             currentWorkingLevel.bottomRightPosition = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
         }
 
