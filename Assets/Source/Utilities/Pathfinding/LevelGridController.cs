@@ -68,10 +68,22 @@ namespace UnitMan.Source.Utilities.Pathfinding
             // Debug.Log($"{x}, {y}");
             return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
         }
-        private void SetGridPosition(Vector2Int position, bool value)
+        private void SetGridPosition(Vector2Int worldPosition, bool value)
         {
-            Vector2Int gridOrigin = level.bottomLeftPosition + Vector2Int.one;
-            _grid[position.y - gridOrigin.y][position.x - gridOrigin.x] = value;
+            try
+            {
+                Vector2Int gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
+                Debug.Log($"Origin: {gridOrigin}");
+                Debug.Log(worldPosition);
+                Vector2Int gridPosition = new Vector2Int(worldPosition.x - gridOrigin.x, -worldPosition.y + gridOrigin.y - 1);
+                Debug.Log($"Result: {gridPosition}");
+                _grid[gridPosition.y][gridPosition.x] = value;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(worldPosition);
+                throw;
+            }
         }
 
 
@@ -129,13 +141,13 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             wallTilemap.ClearAllTiles();
             BuildTilemapFromLevelObject(level);
+            wallTilemap.CompressBounds();
             BoundsInt cellBounds = wallTilemap.cellBounds;
             _grid = new bool[cellBounds.size.y][];
             
             // int mazeDataMapWidth = cellBounds.size.x;
             for (int i = 0; i < _grid.Length; i++)
             {
-                
                 _grid[i] = new bool[cellBounds.size.x];
             }
             
@@ -158,6 +170,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         private static Vector2Int[] GetAllTilePositions(Tilemap tilemap) {
             List<Vector2Int> positions = new List<Vector2Int>();
+            // tilemap.CompressBounds();
             foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin) {
                 if (tilemap.HasTile(position)) {
                     positions.Add(VectorUtil.ToVector2Int(position));
