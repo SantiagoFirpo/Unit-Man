@@ -102,12 +102,17 @@ namespace UnitMan.Source.UI
         private bool _isUIActive = true;
 
         private Timer _clipboardPingTimer;
+        private Timer _uploadPingTimer;
+
         
         [SerializeField]
         private GameObject uiCanvas;
 
         [SerializeField]
         private TMP_InputField levelIdField;
+
+        [SerializeField]
+        private GameObject uploadPingText;
 
         private void Awake()
         {
@@ -128,9 +133,17 @@ namespace UnitMan.Source.UI
         {
             _clipboardPingTimer = new Timer(3f, false, true);
             _clipboardPingTimer.OnEnd += ClipboardPingTimerOnOnEnd;
+
+            _uploadPingTimer = new Timer(3f, false, true);
+            _uploadPingTimer.OnEnd += UploadPingTimerOnOnEnd;
             
             _mainCamera = Camera.main;
             _eventSystem = EventSystem.current;
+        }
+
+        private void UploadPingTimerOnOnEnd()
+        {
+            uploadPingText.SetActive(false);
         }
 
         private void ClipboardPingTimerOnOnEnd()
@@ -329,6 +342,13 @@ namespace UnitMan.Source.UI
         private void PingUserClipboard()
         {
             clipboardPingText.SetActive(true);
+            _clipboardPingTimer.Start();
+        }
+
+        public void PingLevelUpload()
+        {
+            uploadPingText.SetActive(true);
+            _uploadPingTimer.Start();
         }
 
         private string ComputeAndStoreHash()
@@ -379,7 +399,7 @@ namespace UnitMan.Source.UI
             Debug.Log("Converted level to FirestoreLevel");
             FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
-            _clipboardPingTimer.Start();
+            PingLevelUpload();
         }
 
         private void PopulateEditorFromLevelObject(Level level)
