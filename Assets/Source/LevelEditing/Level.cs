@@ -13,7 +13,7 @@ namespace UnitMan.Source.LevelEditing
         public Vector2Int pacManPosition = Vector2Int.zero;
         public Vector2Int ghostHousePosition = new Vector2Int(0, 3);
 
-        public Vector2Int ghostDoorPosition = new Vector2Int(0, 1);
+        public Vector2Int ghostDoorPosition = new Vector2Int(0, 4);
         //TODO: change to Y-value and X-value lists
         public List<Vector2Int[]> screenWrapPositions = new List<Vector2Int[]>();
         public Vector2Int topRightPosition = Vector2Int.zero;
