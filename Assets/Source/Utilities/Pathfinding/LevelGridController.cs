@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
+using UnitMan.Source.Management.Session;
 using UnitMan.Source.UI;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -101,6 +102,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         private void AddUniqueObjects()
         {
             playerTransform.position = VectorUtil.ToVector3(level.pacManPosition);
+            SessionManagerSingle.Instance.playerController.AssignStartPosition();
             ghostDoorTransform.position = VectorUtil.ToVector3(level.ghostDoorPosition);
         }
 

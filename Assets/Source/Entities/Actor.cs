@@ -99,8 +99,13 @@ namespace UnitMan.Source.Entities {
         thisRigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         thisTransform = transform;
-        StartPosition = thisTransform.position;
+        AssignStartPosition();
         thisGameObject = gameObject;
+    }
+
+    public void AssignStartPosition()
+    {
+        StartPosition = thisTransform.position;
     }
 
     private void Start()
