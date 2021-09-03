@@ -332,10 +332,17 @@ namespace UnitMan.Source.UI
             // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
             // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
             // currentWorkingLevel.levelId = "";
-            currentWorkingLevel.id = ComputeAndStoreHash();
+            ComputeAndStoreHash();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
             FirestoreListener.SaveStringIntoJson(json, currentWorkingLevel.id);
+            // PingUserClipboard();
+        }
+
+        public void CopyIdToClipboard()
+        {
+            if (currentWorkingLevel.id is null) return;
+            CopyStringToClipboard(currentWorkingLevel.id);
             PingUserClipboard();
         }
 
@@ -351,16 +358,15 @@ namespace UnitMan.Source.UI
             _uploadPingTimer.Start();
         }
 
-        private string ComputeAndStoreHash()
+        private void ComputeAndStoreHash()
         {
             string hash = GetUniqueId();
             Debug.Log(hash);
-            CopyHashToClipboard(hash);
             currentWorkingLevel.id = hash;
-            return hash;
+            CopyIdToClipboard();
         }
 
-        private static void CopyHashToClipboard(string hash)
+        private static void CopyStringToClipboard(string hash)
         {
             GUIUtility.systemCopyBuffer = hash;
         }
