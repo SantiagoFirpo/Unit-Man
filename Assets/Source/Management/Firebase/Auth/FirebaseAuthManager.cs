@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Extensions;
 using UnityEngine;
 
 namespace UnitMan.Source.Management.Firebase.Auth
@@ -124,14 +125,14 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 TryLoginUser(email, password);
             }
 
-            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(RegisterTask);
+            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
             _authStatus = LoginStatus.Fetching;
         }
 
         public void TryLoginUser(string email, string password)
         {
             _authStatus = LoginStatus.Fetching;
-            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(LoginTask);
+            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
             
         }
 
