@@ -123,8 +123,7 @@ namespace UnitMan.Source.UI
         {
             string levelJson = JsonUtility.ToJson(Level.FromFirestoreLevel(firestoreLevel));
             Debug.Log(levelJson);
-            Level levelFromJson = JsonUtility.FromJson<Level>(levelJson);
-            return levelFromJson;
+            return JsonUtility.FromJson<Level>(levelJson);
         }
 
         private static void LoadLocalLevel(string levelId)
