@@ -1241,7 +1241,7 @@ GameObject:
   - component: {fileID: 729535696}
   - component: {fileID: 729535695}
   m_Layer: 5
-  m_Name: Login Status
+  m_Name: Auth Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2775,7 +2775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 448bd2e543eed934d9c53e6851c9c579, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginStatusLabel: {fileID: 729535695}
+  authStatusLabel: {fileID: 729535695}
   emailField: {fileID: 249961232}
   passwordField: {fileID: 1839167319}
   levelIdField: {fileID: 342520293}
