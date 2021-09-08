@@ -7,6 +7,7 @@ using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
+using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,7 @@ namespace UnitMan.Source.UI
     {
         
         [SerializeField]
-        private TextMeshProUGUI loginStatusLabel;
+        private TextMeshProUGUI authStatusLabel;
         
         [SerializeField]
         private TMP_InputField emailField;
@@ -26,9 +27,10 @@ namespace UnitMan.Source.UI
         [SerializeField]
         private TMP_InputField passwordField;
 
-        private Timer _authFetchTimer;
         [SerializeField]
         private TMP_InputField levelIdField;
+
+        public Observer<FirebaseAuthManager.AuthStatus> onAuthStatusChangedObserver;
 
 
         private void Awake()
@@ -41,19 +43,29 @@ namespace UnitMan.Source.UI
             Debug.Log("Main Menu should initialize");
         }
 
-        private void AuthFetchTimerOnOnEnd()
-        {
-            Debug.Log("Timer finished");
-            loginStatusLabel.SetText(FirebaseAuthManager.Instance.AuthStatusMessage);
-        }
-
         private void Start()
         {
+            onAuthStatusChangedObserver = new Observer<FirebaseAuthManager.AuthStatus>(SetAuthStatusLabel);
+            FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(onAuthStatusChangedObserver);
+        }
+
+
+        private void SetAuthStatusLabel(Emitter<FirebaseAuthManager.AuthStatus> source, FirebaseAuthManager.AuthStatus authStatus)
+        {
             
-            // if (FirebaseAuthManager.Instance.auth == null) return;
-            _authFetchTimer = new Timer(1f, false, true);
-            _authFetchTimer.OnEnd += AuthFetchTimerOnOnEnd;
-            loginStatusLabel.SetText(FirebaseAuthManager.Instance.AuthStatusMessage);
+            authStatusLabel.SetText(authStatus switch
+            {
+                FirebaseAuthManager.AuthStatus.Fetching => "FETCHING",
+                FirebaseAuthManager.AuthStatus.WaitingForUser => "PLEASE REGISTER/LOGIN BELOW:",
+                FirebaseAuthManager.AuthStatus.RegisterCanceled => "REGISTER WAS CANCELED",
+                FirebaseAuthManager.AuthStatus.RegisterError => "REGISTER ERROR",
+                FirebaseAuthManager.AuthStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL! REGISTERED AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
+                FirebaseAuthManager.AuthStatus.LoginCanceled => "LOGIN WAS CANCELED",
+                FirebaseAuthManager.AuthStatus.LoginError => "LOGIN ERROR",
+                FirebaseAuthManager.AuthStatus.LoginSuccessful => $"LOGIN SUCCESSFUL! LOGGED IN AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
+                FirebaseAuthManager.AuthStatus.SignedOut => "SIGNED OUT",
+                _ => throw new ArgumentOutOfRangeException(nameof(authStatus), authStatus, null)
+            });
         }
 
         public void GoToLeaderboard()
@@ -131,24 +143,25 @@ namespace UnitMan.Source.UI
 
         public void RegisterUser()
         {
-            loginStatusLabel.SetText("FETCHING...");
+            // SetAuthStatusMessageToFetching();
             FirebaseAuthManager.Instance.TryRegisterUser(emailField.text, passwordField.text);
-            _authFetchTimer.Start();
         }
 
         public void LoginUser()
         {
-            loginStatusLabel.SetText("FETCHING...");
+            // SetAuthStatusMessageToFetching();
             FirebaseAuthManager.Instance.TryLoginUser(emailField.text, passwordField.text);
-            _authFetchTimer.Start();
+        }
 
+        private void SetAuthStatusMessageToFetching()
+        {
+            authStatusLabel.SetText("FETCHING...");
         }
 
         public void SignOut()
         {
-            loginStatusLabel.SetText("FETCHING...");
+            // SetAuthStatusMessageToFetching();
             FirebaseAuthManager.Instance.SignOutUser();
-            _authFetchTimer.Start();
         }
     }
 }
