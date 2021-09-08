@@ -153,6 +153,11 @@ namespace UnitMan.Source.UI
             FirebaseAuthManager.Instance.TryLoginUser(emailField.text, passwordField.text);
         }
 
+        public void Quit()
+        {
+            Application.Quit();
+        }
+
         private void SetAuthStatusMessageToFetching()
         {
             authStatusLabel.SetText("FETCHING...");
