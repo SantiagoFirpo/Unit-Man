@@ -19,7 +19,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public enum AuthStatus
         {
             WaitingForUser, Fetching,
-            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut
+            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut,
+            Empty
         }
 
         private AuthStatus _authStatus;
