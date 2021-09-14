@@ -2,7 +2,7 @@
 
 namespace UnitMan.Source.UI.MVVM
 {
-    public abstract class ViewModel<TState>
+    public abstract class ViewModel<TState> where TState : struct
     {
         private TState _state;
         public readonly Emitter<TState> emitter = new Emitter<TState>();

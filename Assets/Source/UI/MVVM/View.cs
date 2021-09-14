@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace UnitMan.Source.UI.MVVM
 {
-    public abstract class View<TState, TViewModel> : MonoBehaviour where TViewModel : ViewModel<TState>
+    public abstract class View<TState, TViewModel> : MonoBehaviour where TViewModel : ViewModel<TState> where TState : struct
     {
         private Observer<TState> _observer;
         private readonly Emitter<TState> _emitter = new Emitter<TState>();
-        private TViewModel _viewModel;
+        protected TViewModel _viewModel;
 
         protected abstract void Render(TState state);
 

@@ -2,7 +2,9 @@
 
 namespace UnitMan.Source.UI.MVVM
 {
-    public abstract class Model<TState, TViewModel> : MonoBehaviour where TViewModel : ViewModel<TState>
+    public abstract class Model<TState, TViewModel> : MonoBehaviour
+        where TViewModel : ViewModel<TState>
+        where TState : struct
     {
         protected TViewModel viewModel;
 
