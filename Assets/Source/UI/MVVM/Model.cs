@@ -4,6 +4,11 @@ namespace UnitMan.Source.UI.MVVM
 {
     public abstract class Model<TState, TViewModel> : MonoBehaviour where TViewModel : ViewModel<TState>
     {
-        private TViewModel _viewModel;
+        protected TViewModel viewModel;
+
+        public void ProvideViewModel(TViewModel targetViewModel)
+        {
+            viewModel = targetViewModel;
+        }
     }
 }
