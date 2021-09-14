@@ -1,6 +1,6 @@
 ﻿using UnitMan.Source.Utilities.ObserverSystem;
 
-namespace UnitMan.Source.UI.MVVC
+namespace UnitMan.Source.UI.MVVM
 {
     public abstract class ViewModel<TState>
     {
@@ -18,7 +18,7 @@ namespace UnitMan.Source.UI.MVVC
         public void SetState(TState targetState)
         {
             this._state = targetState;
-            emitter.EmitNotification(targetState);
+            emitter.EmitNotification(_state);
         }
     }
 }
