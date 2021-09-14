@@ -8,7 +8,6 @@ using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.Utilities.ObserverSystem;
-using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -69,6 +68,7 @@ namespace UnitMan.Source.UI
                 FirebaseAuthManager.AuthStatus.LoginError => "LOGIN ERROR",
                 FirebaseAuthManager.AuthStatus.LoginSuccessful => $"LOGIN SUCCESSFUL! LOGGED IN AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
                 FirebaseAuthManager.AuthStatus.SignedOut => "SIGNED OUT",
+                FirebaseAuthManager.AuthStatus.Empty => "",
                 _ => throw new ArgumentOutOfRangeException(nameof(authStatus), authStatus, null)
             };
         }
