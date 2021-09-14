@@ -47,7 +47,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         
     }
 
-    private void OnNotified(Emitter<float> source, float deltaTime)
+    private void OnNotified(float deltaTime)
     {
         if (!Active) return;
         if (currentTime < _waitTime) {

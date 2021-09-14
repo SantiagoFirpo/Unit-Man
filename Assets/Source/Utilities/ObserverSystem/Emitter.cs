@@ -21,7 +21,7 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 														//this but generates a lot of garbage
 														//happens in PelletController and TimerManager
 			{
-				observer.OnNotified(this);
+				observer.OnNotified();
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 		{
 			foreach (Observer<TDataContainer> observer in _observers)
 			{
-				observer.OnNotified(this, dataContainer);
+				observer.OnNotified(dataContainer);
 			}
 		}
 

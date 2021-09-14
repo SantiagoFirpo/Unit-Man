@@ -50,10 +50,15 @@ namespace UnitMan.Source.UI
         }
 
 
-        private void SetAuthStatusLabel(Emitter<FirebaseAuthManager.AuthStatus> source, FirebaseAuthManager.AuthStatus authStatus)
+        private void SetAuthStatusLabel(FirebaseAuthManager.AuthStatus authStatus)
         {
             
-            authStatusLabel.SetText(authStatus switch
+            authStatusLabel.SetText(AuthStatusToMessage(authStatus));
+        }
+
+        public static string AuthStatusToMessage(FirebaseAuthManager.AuthStatus authStatus)
+        {
+            return authStatus switch
             {
                 FirebaseAuthManager.AuthStatus.Fetching => "FETCHING",
                 FirebaseAuthManager.AuthStatus.WaitingForUser => "PLEASE REGISTER/LOGIN BELOW:",
@@ -65,7 +70,7 @@ namespace UnitMan.Source.UI
                 FirebaseAuthManager.AuthStatus.LoginSuccessful => $"LOGIN SUCCESSFUL! LOGGED IN AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
                 FirebaseAuthManager.AuthStatus.SignedOut => "SIGNED OUT",
                 _ => throw new ArgumentOutOfRangeException(nameof(authStatus), authStatus, null)
-            });
+            };
         }
 
         public void GoToLeaderboard()

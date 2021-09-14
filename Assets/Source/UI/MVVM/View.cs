@@ -9,7 +9,7 @@ namespace UnitMan.Source.UI.MVVM
         private readonly Emitter<TState> _emitter = new Emitter<TState>();
         private TViewModel _viewModel;
 
-        protected abstract void Render(Emitter<TState> source, TState state);
+        protected abstract void Render(TState state);
 
         public void Initialize(TViewModel viewModel)
         {

@@ -9,23 +9,23 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 		{
 			_onNotified = onNotified;
 		}
-		public void OnNotified(Emitter source)
+		public void OnNotified()
 		{
 			_onNotified.Invoke();
 		}
 	}
 	public class Observer<TDataContainer>
 	{
-		private readonly Action<Emitter<TDataContainer>, TDataContainer> _onNotified;
+		private readonly Action<TDataContainer> _onNotified;
 
-		public Observer(Action<Emitter<TDataContainer>, TDataContainer> onNotified)
+		public Observer(Action< TDataContainer> onNotified)
 		{
 			_onNotified = onNotified;
 		}
 
-		public void OnNotified(Emitter<TDataContainer> source, TDataContainer dataContainer)
+		public void OnNotified(TDataContainer dataContainer)
 		{
-			_onNotified.Invoke(source, dataContainer);
+			_onNotified.Invoke(dataContainer);
 		}
 	}
 	

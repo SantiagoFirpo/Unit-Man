@@ -10,10 +10,10 @@ namespace UnitMan.Source.UI.MVVM
 
         protected ViewModel()
         {
-            this.observer = new Observer<TState>(OnStateChangeByUser);
+            this.observer = new Observer<TState>(OnStateChangeFromView);
         }
 
-        protected abstract void OnStateChangeByUser(Emitter<TState> source, TState newState);
+        protected abstract void OnStateChangeFromView(TState newState);
 
         public void SetState(TState targetState)
         {
