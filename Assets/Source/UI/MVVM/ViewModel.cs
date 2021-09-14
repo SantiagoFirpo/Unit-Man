@@ -20,5 +20,10 @@ namespace UnitMan.Source.UI.MVVM
             this._state = targetState;
             emitter.EmitNotification(_state);
         }
+
+        public TState GetState()
+        {
+            return _state;
+        }
     }
 }
