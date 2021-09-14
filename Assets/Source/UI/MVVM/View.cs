@@ -11,12 +11,13 @@ namespace UnitMan.Source.UI.MVVM
 
         protected abstract void Render(TState state);
 
-        public void Initialize(TViewModel viewModel)
+        public void Initialize(TViewModel viewModel, TState initialState)
         {
             _observer = new Observer<TState>(Render);
             _viewModel = viewModel;
             _viewModel.emitter.Attach(_observer);
             _emitter.Attach(_viewModel.observer);
+            Render(initialState);
         }
     }
 }

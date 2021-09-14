@@ -1,5 +1,5 @@
-using System;
 using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.UI.Components.AuthStatusMessage;
 using UnityEngine;
 
 namespace UnitMan.Source.UI.MVVM
@@ -21,7 +21,7 @@ namespace UnitMan.Source.UI.MVVM
         {
             authStatusMessage =
                 new MVVMComponent<FirebaseAuthManager.AuthStatus, AuthStatusMessageView, AuthStatusMessageViewModel,
-                    AuthStatusMessageModel>(_authStatusMessageView, _authStatusMessageModel);
+                    AuthStatusMessageModel>(_authStatusMessageView, _authStatusMessageModel, FirebaseAuthManager.AuthStatus.Empty);
         }
     }
 }
