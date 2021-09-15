@@ -1,10 +1,14 @@
-﻿using UnitMan.Source.Management.Firebase.Auth;
+﻿using System;
+using UnitMan.Source.Management.Firebase.Auth;
+using UnityEngine;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
-    public struct MainMenuState
+    [Serializable]
+    public class MainMenuState
     {
         public string _email;
+        [HideInInspector]
         public string _password;
         public FirebaseAuthManager.AuthStatus _authStatus;
         public bool _isLoggedIn;
@@ -15,6 +19,11 @@ namespace UnitMan.Source.UI.Components.MainMenu
             _password = password;
             _authStatus = authStatus;
             _isLoggedIn = isLoggedIn;
+        }
+
+        public MainMenuState()
+        {
+            
         }
     }
 }

@@ -19,10 +19,13 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public enum AuthStatus
         {
             WaitingForUser,
-            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut,
+            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignOut,
             Empty,
             LoggingIn,
-            Registering
+            Registering,
+            RegisterRequested,
+            LoginRequested,
+            SignOutRequested
         }
 
         private AuthStatus _authStatus;
@@ -86,7 +89,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public void SignOutUser()
         {
             auth.SignOut();
-            SetAuthStatus(AuthStatus.SignedOut);
+            SetAuthStatus(AuthStatus.SignOut);
         }
 
         public void TryRegisterUser(string email, string password)
@@ -145,7 +148,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             FirebaseUser loggedUser = task.Result;
-            Debug.LogFormat($"User logged in successfully: {loggedUser.DisplayName} ({loggedUser.UserId})");
+            Debug.Log($"User logged in successfully: {loggedUser.DisplayName} ({loggedUser.UserId})");
             // logStatus.gameObject.SetActive(false);
             SetAuthStatus(AuthStatus.LoginSuccessful);
         }

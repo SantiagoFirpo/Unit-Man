@@ -745,7 +745,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 729535694}
-  - {fileID: 1647128131}
   m_Father: {fileID: 2021906473}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1277,7 +1276,6 @@ GameObject:
   - component: {fileID: 729535694}
   - component: {fileID: 729535696}
   - component: {fileID: 729535695}
-  - component: {fileID: 729535697}
   m_Layer: 5
   m_Name: Auth Message View
   m_TagString: Untagged
@@ -1401,19 +1399,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729535693}
   m_CullTransparentMesh: 1
---- !u!114 &729535697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 729535693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2697adffb0c144b490c2862e88b74041, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModel: {fileID: 1647128132}
 --- !u!1 &763797259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1763,9 +1748,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
-        m_MethodName: SignOut
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnSignOutButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2167,9 +2153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c168ac071492472d8811e6781b74e81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _emitter:
+    _observers: []
   viewModel: {fileID: 1780112290}
   emailField: {fileID: 249961232}
   passwordField: {fileID: 1839167319}
+  authMessage: {fileID: 729535695}
 --- !u!4 &1240049231
 Transform:
   m_ObjectHideFlags: 0
@@ -2408,6 +2397,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43a275e8effa8364abd49a4a916c1547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  authStateChangedEmitter:
+    _observers: []
 --- !u!4 &1421268320
 Transform:
   m_ObjectHideFlags: 0
@@ -2711,50 +2702,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
---- !u!1 &1647128130
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1647128131}
-  - component: {fileID: 1647128132}
-  m_Layer: 0
-  m_Name: Auth Message View Model
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1647128131
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647128130}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -98.55316, y: -45.730408, z: -65.425644}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 336078809}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1647128132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647128130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: kkkk
 --- !u!1 &1660119856
 GameObject:
   m_ObjectHideFlags: 0
@@ -3099,7 +3046,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc97edaf9c014b2eb1470a4a96e6b934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authMessage: {fileID: 1647128132}
+  state:
+    _email: 
+    _password: 
+    _authStatus: 1
+    _isLoggedIn: 0
+  emitter:
+    _observers: []
 --- !u!4 &1780112291
 Transform:
   m_ObjectHideFlags: 0

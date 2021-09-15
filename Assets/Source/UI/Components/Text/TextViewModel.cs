@@ -5,9 +5,9 @@ namespace UnitMan.Source.UI.Components.Text
     // [Serializable]
     public class TextViewModel : ViewModel<string>
     {
-        protected override void OnStateChangeFromView(string newState)
+        protected override void InitializeState()
         {
-            
+            OverwriteState("");
         }
     }
 }

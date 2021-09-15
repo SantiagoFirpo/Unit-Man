@@ -68,8 +68,11 @@ namespace UnitMan.Source.UI
                 FirebaseAuthManager.AuthStatus.LoginCanceled => "LOGIN WAS CANCELED",
                 FirebaseAuthManager.AuthStatus.LoginError => "LOGIN ERROR",
                 FirebaseAuthManager.AuthStatus.LoginSuccessful => $"LOGIN SUCCESSFUL! LOGGED IN AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
-                FirebaseAuthManager.AuthStatus.SignedOut => "SIGNED OUT",
+                FirebaseAuthManager.AuthStatus.SignOut => "SIGNED OUT",
                 FirebaseAuthManager.AuthStatus.Empty => "",
+                FirebaseAuthManager.AuthStatus.RegisterRequested => "REGISTERING",
+                FirebaseAuthManager.AuthStatus.LoginRequested => "LOGGING IN",
+                FirebaseAuthManager.AuthStatus.SignOutRequested => "SIGNING OUT",
                 _ => throw new ArgumentOutOfRangeException(nameof(authStatus), authStatus, null)
             };
         }

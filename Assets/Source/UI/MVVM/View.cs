@@ -1,5 +1,4 @@
 ﻿using System;
-using UnitMan.Source.UI.Components.Text;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
@@ -10,7 +9,9 @@ namespace UnitMan.Source.UI.MVVM
     public abstract class View<TState> : MonoBehaviour
     {
         private Observer<TState> _observer;
-        private readonly Emitter<TState> _emitter = new Emitter<TState>();
+        
+        [SerializeField]
+        protected Emitter<TState> _emitter;
         // [SerializeField]
         // protected TextViewModel textViewModel;
         public ViewModel<TState> viewModel;
@@ -19,6 +20,7 @@ namespace UnitMan.Source.UI.MVVM
 
         private void Awake()
         {
+            _emitter = new Emitter<TState>();
             _observer = new Observer<TState>(Render);
         }
 
@@ -31,6 +33,7 @@ namespace UnitMan.Source.UI.MVVM
         {
             viewModel.emitter.Attach(_observer);
             _emitter.Attach(viewModel.observer);
+            Debug.Log($"{gameObject.name} is now coupled to its ViewModel {viewModel.gameObject.name}");
             // Render(initialState);
         }
     }

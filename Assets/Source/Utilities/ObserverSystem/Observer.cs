@@ -2,6 +2,7 @@
 
 namespace UnitMan.Source.Utilities.ObserverSystem
 {
+	[Serializable]
 	public class Observer
 	{
 		private readonly Action _onNotified;
@@ -14,11 +15,12 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 			_onNotified.Invoke();
 		}
 	}
+	[Serializable]
 	public class Observer<TDataContainer>
 	{
 		private readonly Action<TDataContainer> _onNotified;
 
-		public Observer(Action< TDataContainer> onNotified)
+		public Observer(Action<TDataContainer> onNotified)
 		{
 			_onNotified = onNotified;
 		}

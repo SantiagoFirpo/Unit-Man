@@ -9,25 +9,37 @@ namespace UnitMan.Source.UI.MVVM
         [SerializeField]
         private TState state;
         
-        public readonly Emitter<TState> emitter = new Emitter<TState>();
-        public readonly Observer<TState> observer;
+        [SerializeField]
+        public Emitter<TState> emitter;
+        public Observer<TState> observer;
 
-        protected ViewModel()
+        private void Awake()
         {
-            this.observer = new Observer<TState>(OnStateChangeFromView);
+            emitter = new Emitter<TState>();
+            InitializeState();
         }
 
-        protected abstract void OnStateChangeFromView(TState newState);
-
-        public void SetState(TState targetState)
+        protected virtual void OnStateChange(TState stateFromView)
         {
-            this.state = targetState;
+            
+        }
+
+        protected abstract void InitializeState();
+
+        public void OverwriteState(TState targetState)
+        {
+            state = targetState;
             emitter.EmitNotification(state);
         }
         
-        public void SetState(Action<TState> stateAction)
+        public virtual void ChangeState(Action<TState> stateAction)
         {
             stateAction.Invoke(state);
+            OnStateChange(state);
+        }
+
+        protected void EmitNewState()
+        {
             emitter.EmitNotification(state);
         }
 

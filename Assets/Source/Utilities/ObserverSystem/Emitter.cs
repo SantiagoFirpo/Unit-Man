@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnitMan.Source.Utilities.ObserverSystem
 {
+	[Serializable]
 	public class Emitter
 	{
-		private readonly List<Observer> _observers;
+		[SerializeField]
+		private List<Observer> _observers;
 		
 		public Emitter()
 		{
@@ -39,10 +43,13 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 			}
 		}
 	}
+	[Serializable]
+
 	
 	public class Emitter<TDataContainer>
 	{
-		private readonly List<Observer<TDataContainer>> _observers;
+		[SerializeField]
+		private List<Observer<TDataContainer>> _observers;
 		public Emitter()
 		{
 			_observers = new List<Observer<TDataContainer>>();
