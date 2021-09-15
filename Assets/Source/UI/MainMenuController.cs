@@ -59,7 +59,8 @@ namespace UnitMan.Source.UI
         {
             return authStatus switch
             {
-                FirebaseAuthManager.AuthStatus.Fetching => "FETCHING",
+                FirebaseAuthManager.AuthStatus.LoggingIn => "LOGGING IN",
+                FirebaseAuthManager.AuthStatus.Registering => "REGISTERING",
                 FirebaseAuthManager.AuthStatus.WaitingForUser => "PLEASE REGISTER/LOGIN BELOW:",
                 FirebaseAuthManager.AuthStatus.RegisterCanceled => "REGISTER WAS CANCELED",
                 FirebaseAuthManager.AuthStatus.RegisterError => "REGISTER ERROR",

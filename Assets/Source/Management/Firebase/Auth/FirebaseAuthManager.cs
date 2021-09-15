@@ -18,9 +18,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public enum AuthStatus
         {
-            WaitingForUser, Fetching,
+            WaitingForUser,
             RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut,
-            Empty
+            Empty,
+            LoggingIn,
+            Registering
         }
 
         private AuthStatus _authStatus;
@@ -89,7 +91,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public void TryRegisterUser(string email, string password)
         {
-            SetAuthStatus(AuthStatus.Fetching);
+            SetAuthStatus(AuthStatus.Registering);
             void RegisterTask(Task<FirebaseUser> task)
             {
                 if (task.IsCanceled)
@@ -116,12 +118,12 @@ namespace UnitMan.Source.Management.Firebase.Auth
             }
 
             auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
-            SetAuthStatus(AuthStatus.Fetching);
+            SetAuthStatus(AuthStatus.Registering);
         }
 
         public void TryLoginUser(string email, string password)
         {
-            SetAuthStatus(AuthStatus.Fetching);
+            SetAuthStatus(AuthStatus.LoggingIn);
             auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
             
         }

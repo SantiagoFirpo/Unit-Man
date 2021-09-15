@@ -1,10 +1,14 @@
-﻿using UnitMan.Source.Utilities.ObserverSystem;
+﻿using System;
+using UnitMan.Source.Utilities.ObserverSystem;
+using UnityEngine;
 
 namespace UnitMan.Source.UI.MVVM
 {
-    public abstract class ViewModel<TState> where TState : struct
+    public abstract class ViewModel<TState> : MonoBehaviour
     {
-        private TState _state;
+        [SerializeField]
+        private TState state;
+        
         public readonly Emitter<TState> emitter = new Emitter<TState>();
         public readonly Observer<TState> observer;
 
@@ -17,13 +21,19 @@ namespace UnitMan.Source.UI.MVVM
 
         public void SetState(TState targetState)
         {
-            this._state = targetState;
-            emitter.EmitNotification(_state);
+            this.state = targetState;
+            emitter.EmitNotification(state);
+        }
+        
+        public void SetState(Action<TState> stateAction)
+        {
+            stateAction.Invoke(state);
+            emitter.EmitNotification(state);
         }
 
         public TState GetState()
         {
-            return _state;
+            return state;
         }
     }
 }
