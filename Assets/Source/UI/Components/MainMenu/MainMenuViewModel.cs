@@ -39,7 +39,11 @@ namespace UnitMan.Source.UI.Components.MainMenu
         public void Register(AuthFormData formData)
         {
             FirebaseAuthManager.Instance.TryRegisterUser(formData.email, formData.password);
+        }
 
+        public void SignOut()
+        {
+            FirebaseAuthManager.Instance.SignOutUser();
         }
 
 
