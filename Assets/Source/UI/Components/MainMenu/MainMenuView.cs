@@ -8,6 +8,15 @@ namespace UnitMan.Source.UI.Components.MainMenu
 {
     public class MainMenuView : View
     {
+        public Binding<string> emailBinding;
+        public Binding<string> passwordBinding;
+
+        [SerializeField]
+        private Binding loginBinding;
+        [SerializeField]
+        private Binding registerBinding;
+        [SerializeField]
+        private Binding signOutBinding;
         [SerializeField]
         private TMP_InputField emailField;
 
@@ -17,35 +26,19 @@ namespace UnitMan.Source.UI.Components.MainMenu
         [SerializeField]
         private TMP_Text authMessage;
 
-        [SerializeField]
-        private AuthEvent loginButtonEvent;
-        
-        [SerializeField]
-        private AuthEvent registerButtonEvent;
-
-        [SerializeField]
-        private UnityEvent signOutEvent;
-
         public void OnLoginButtonPressed()
         {
-            loginButtonEvent.Invoke(new AuthFormData(emailField.text, passwordField.text));
+            loginBinding.Call();
         }
 
         public void OnRegisterButtonPressed()
         {
-            registerButtonEvent.Invoke(new AuthFormData(emailField.text, passwordField.text));
+            registerBinding.Call();
         }
 
         public void OnSignOutButtonPressed()
         {
-            signOutEvent.Invoke();
-        }
-
-        public void SetAuthToSignedOut(MainMenuState state)
-        {
-            state._email = "";
-            state._password = "";
-            state._authStatus = FirebaseAuthManager.AuthStatus.SignOutRequested;
+            signOutBinding.Call();
         }
 
         protected override void Render()

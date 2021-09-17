@@ -5,31 +5,8 @@ using UnitMan.Source.Utilities.ObserverSystem;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
-    public class MainMenuViewModel : ViewModel<MainMenuState>
+    public class MainMenuViewModel : ViewModel
     {
-        private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
-
-        protected override void InitializeState()
-        {
-            _authObserver = new Observer<FirebaseAuthManager.AuthStatus>(OnAuthChange);
-            OverwriteState(new MainMenuState());
-        }
-
-        private void OnAuthChange(FirebaseAuthManager.AuthStatus authStatus)
-        {
-            ChangeState(SetAuthStatus);
-            
-            void SetAuthStatus(MainMenuState state)
-            {
-                state._authStatus = authStatus;
-            }
-        }
-
-        public override void ChangeState(Action<MainMenuState> stateAction)
-        {
-            base.ChangeState(stateAction);
-            EmitNewState();
-        }
 
         public void Login(AuthFormData formData)
         {
@@ -49,12 +26,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         private void Start()
         {
-            FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(_authObserver);
-        }
-
-        protected override void OnStateChange(MainMenuState newState)
-        {
-            base.OnStateChange(newState);
+            // FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(_authObserver);
         }
     }
 }

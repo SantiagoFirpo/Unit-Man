@@ -3,11 +3,8 @@
 namespace UnitMan.Source.UI.Components.Text
 {
     // [Serializable]
-    public class TextViewModel : ViewModel<string>
+    public class TextViewModel : ViewModel
     {
-        protected override void InitializeState()
-        {
-            OverwriteState("");
-        }
+        public Binding<string> textBinding;
     }
 }
