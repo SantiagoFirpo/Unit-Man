@@ -8,17 +8,17 @@ namespace UnitMan.Source.UI.MVVM
     public class Binding<T> : UnityEvent<T>
     {
         [SerializeField]
-        private T _value;
+        private T value;
 
-        public void SetValue(T value)
+        public void SetValue(T newValue)
         {
-            _value = value;
-            this.Invoke(value);
+            value = newValue;
+            Invoke(newValue);
         }
 
         public T GetValue()
         {
-            return _value;
+            return value;
         }
     }
     [Serializable]
@@ -26,7 +26,7 @@ namespace UnitMan.Source.UI.MVVM
     {
         public void Call()
         {
-            this.Invoke();
+            Invoke();
         }
     }
 }
