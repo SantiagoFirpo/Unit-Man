@@ -28,7 +28,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
             SignOutRequested
         }
 
-        private AuthStatus _authStatus;
         public Emitter<AuthStatus> authStateChangedEmitter;
 
         // Start is called before the first frame update
@@ -155,7 +154,6 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public void SetAuthStatus(AuthStatus authStatus)
         {
-            _authStatus = authStatus;
             authStateChangedEmitter.EmitNotification(authStatus);
         }
     }
