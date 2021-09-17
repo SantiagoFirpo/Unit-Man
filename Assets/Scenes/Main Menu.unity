@@ -186,7 +186,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnitMan.Source.Management.MainMenu, Assembly-CSharp
         m_MethodName: OnSelectTestMap
         m_Mode: 1
@@ -739,8 +739,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 336078809}
+  - component: {fileID: 336078810}
   m_Layer: 5
-  m_Name: Auth Status Message
+  m_Name: Auth Status Message ViewModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -766,6 +767,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &336078810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336078808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 729535697}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.Text.TextView, Assembly-CSharp
+        m_MethodName: OnTextChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 
 --- !u!1001 &342520291
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -795,7 +824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_AnchorMax.x
@@ -873,6 +902,34 @@ PrefabInstance:
       propertyPath: m_Text
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1240049230}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnLevelIdChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnitMan.Source.UI.Components.MainMenu.MainMenuView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 968790934010146271, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_text
       value: "ENTER LEVEL ID TO PLAY\u200B"
@@ -884,17 +941,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
   m_PrefabInstance: {fileID: 342520291}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &342520293 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
-  m_PrefabInstance: {fileID: 342520291}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &411447166
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,7 +1106,7 @@ GameObject:
   - component: {fileID: 502182487}
   - component: {fileID: 502182486}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Pac-Man logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1289,6 +1335,7 @@ GameObject:
   - component: {fileID: 729535694}
   - component: {fileID: 729535696}
   - component: {fileID: 729535695}
+  - component: {fileID: 729535697}
   m_Layer: 5
   m_Name: Auth Message View
   m_TagString: Untagged
@@ -1412,6 +1459,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729535693}
   m_CullTransparentMesh: 1
+--- !u!114 &729535697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729535693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2697adffb0c144b490c2862e88b74041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &763797259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1425,7 +1484,7 @@ GameObject:
   - component: {fileID: 763797262}
   - component: {fileID: 763797261}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Play Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1495,9 +1554,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
-        m_TargetAssemblyTypeName: UnitMan.Source.Management.MainMenu, Assembly-CSharp
-        m_MethodName: OnPressStart
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnPlayButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1544,139 +1604,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 763797259}
-  m_CullTransparentMesh: 1
---- !u!1 &951595558
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 951595559}
-  - component: {fileID: 951595562}
-  - component: {fileID: 951595561}
-  - component: {fileID: 951595560}
-  m_Layer: 5
-  m_Name: Leaderboard button
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &951595559
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951595558}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1573506137}
-  m_Father: {fileID: 2021906473}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.7241529, y: 0.09148326}
-  m_AnchorMax: {x: 0.96425045, y: 0.20940769}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &951595560
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951595558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 502182486}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1664926318}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
-        m_MethodName: GoToLeaderboard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &951595561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951595558}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &951595562
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951595558}
   m_CullTransparentMesh: 1
 --- !u!1 &1065028286
 GameObject:
@@ -1955,7 +1882,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8255124953772564275, guid: 4812897f391625d43a73f5f0f0cba1c5, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8255124953772564275, guid: 4812897f391625d43a73f5f0f0cba1c5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2166,6 +2093,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c168ac071492472d8811e6781b74e81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  emailField: {fileID: 249961232}
+  passwordField: {fileID: 1839167319}
+  levelIdField: {fileID: 0}
   emailBinding:
     m_PersistentCalls:
       m_Calls:
@@ -2206,7 +2136,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1780112290}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
-        m_MethodName: Login
+        m_MethodName: OnLoginPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2222,7 +2152,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1780112290}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
-        m_MethodName: Register
+        m_MethodName: OnRegisterPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2238,7 +2168,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1780112290}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
-        m_MethodName: SignOut
+        m_MethodName: OnSignOutPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2248,9 +2178,72 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  emailField: {fileID: 249961232}
-  passwordField: {fileID: 1839167319}
   authMessage: {fileID: 729535695}
+  quitButtonBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnQuitPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  playButtonBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnPlayButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  levelEditorButtonBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnLevelEditorPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  levelIdBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnLevelIdChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 
 --- !u!4 &1240049231
 Transform:
   m_ObjectHideFlags: 0
@@ -2504,7 +2497,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1457370054
 GameObject:
@@ -2663,85 +2656,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1472505666}
-  m_CullTransparentMesh: 1
---- !u!1 &1573506136
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1573506137}
-  - component: {fileID: 1573506139}
-  - component: {fileID: 1573506138}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1573506137
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573506136}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 951595559}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1573506138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573506136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: 9382573740ed42843b212029e0b54c83, type: 3}
-    m_FontSize: 16
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 4
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: LEADERBOARD
---- !u!222 &1573506139
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573506136}
   m_CullTransparentMesh: 1
 --- !u!1 &1573752601
 GameObject:
@@ -2929,53 +2843,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660119856}
   m_CullTransparentMesh: 1
---- !u!1 &1664926317
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1664926319}
-  - component: {fileID: 1664926318}
-  m_Layer: 0
-  m_Name: Main Menu Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1664926318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664926317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 448bd2e543eed934d9c53e6851c9c579, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  authStatusLabel: {fileID: 729535695}
-  emailField: {fileID: 249961232}
-  passwordField: {fileID: 1839167319}
-  levelIdField: {fileID: 342520293}
---- !u!4 &1664926319
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664926317}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1746204057
 GameObject:
   m_ObjectHideFlags: 0
@@ -3141,13 +3008,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   email: 
   password: 
-  authStatusBinding:
+  levelId: 
+  authStatusMessageBinding:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1240049230}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+      - m_Target: {fileID: 336078810}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.Text.TextViewModel,
           Assembly-CSharp
-        m_MethodName: OnAuthStatusChanged
+        m_MethodName: Set
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3157,7 +3025,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    value: 0
+    value: 
+  authViewModel: {fileID: 0}
 --- !u!4 &1780112291
 Transform:
   m_ObjectHideFlags: 0
@@ -3170,7 +3039,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839167317
 GameObject:
@@ -3392,7 +3261,7 @@ RectTransform:
   m_Children:
   - {fileID: 1337520493}
   m_Father: {fileID: 2021906473}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30936426, y: 0.2}
   m_AnchorMax: {x: 0.696377, y: 0.30010313}
@@ -3443,9 +3312,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
-        m_MethodName: OnLevelEditorSelected
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnLevelEditorButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3546,7 +3416,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1878411392
 GameObject:
@@ -3669,7 +3539,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnitMan.Source.Management.MainMenu, Assembly-CSharp
         m_MethodName: OnSelectClassicMap
         m_Mode: 1
@@ -3861,7 +3731,6 @@ RectTransform:
   - {fileID: 1660119857}
   - {fileID: 1065028287}
   - {fileID: 336078809}
-  - {fileID: 951595559}
   - {fileID: 1841822808}
   - {fileID: 2024858369}
   - {fileID: 342520292}
@@ -3905,7 +3774,7 @@ RectTransform:
   m_Children:
   - {fileID: 2009620891}
   m_Father: {fileID: 2021906473}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30936426, y: 0.063679814}
   m_AnchorMax: {x: 0.696377, y: 0.18135963}
@@ -3956,9 +3825,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1664926318}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.MainMenuController, Assembly-CSharp
-        m_MethodName: Quit
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnQuitButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
