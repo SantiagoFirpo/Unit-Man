@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
-    public class MainMenuView : View<MainMenuState>
+    public class MainMenuView : View
     {
         [SerializeField]
         private TMP_InputField emailField;
@@ -41,18 +41,15 @@ namespace UnitMan.Source.UI.Components.MainMenu
             signOutEvent.Invoke();
         }
 
-        private void SetAuthToSignedOut(MainMenuState state)
+        public void SetAuthToSignedOut(MainMenuState state)
         {
             state._email = "";
             state._password = "";
             state._authStatus = FirebaseAuthManager.AuthStatus.SignOutRequested;
         }
 
-        protected override void Render(MainMenuState state)
+        protected override void Render()
         {
-            authMessage.SetText(MainMenuController.AuthStatusToMessage(state._authStatus));
-            emailField.SetTextWithoutNotify(state._email);
-            passwordField.SetTextWithoutNotify(state._password);
         }
     }
 }
