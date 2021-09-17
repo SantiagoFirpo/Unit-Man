@@ -14,8 +14,14 @@ namespace UnitMan.Source.UI.Components.Text
             _text = GetComponent<TMP_Text>();
         }
 
-        protected override void Render()
+        public void OnTextChanged(string newText)
         {
+            Render(newText);
+        }
+
+        private void Render(string newText)
+        {
+            _text.SetText(newText);
         }
     }
 }

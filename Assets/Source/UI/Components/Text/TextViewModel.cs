@@ -5,6 +5,11 @@ namespace UnitMan.Source.UI.Components.Text
     // [Serializable]
     public class TextViewModel : ViewModel
     {
-        public Binding<string> textBinding;
+        public OneWayBinding<string> textBinding;
+
+        public void Set(string value)
+        {
+            textBinding.SetValue(value);
+        }
     }
 }
