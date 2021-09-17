@@ -2,20 +2,50 @@
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.Utilities.ObserverSystem;
+using UnityEngine;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
     public class MainMenuViewModel : ViewModel
     {
+        [SerializeField]
+        private string email;
+        [SerializeField]
+        private string password;
 
-        public void Login(AuthFormData formData)
+        [SerializeField]
+        private Binding<FirebaseAuthManager.AuthStatus> authStatusBinding;
+
+        private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
+
+        private void Awake()
         {
-            FirebaseAuthManager.Instance.TryLoginUser(formData.email, formData.password);
+            _authObserver = new Observer<FirebaseAuthManager.AuthStatus>(OnAuthChanged);
+        }
+
+        private void OnAuthChanged(FirebaseAuthManager.AuthStatus authStatus)
+        {
+            authStatusBinding.SetValue(authStatus);
+        }
+
+        public void OnEmailChanged(string newEmail)
+        {
+            this.email = newEmail;
+        }
+
+        public void OnPasswordChanged(string newPassword)
+        {
+            this.password = newPassword;
+        }
+
+        public void Login()
+        {
+            FirebaseAuthManager.Instance.TryLoginUser(email, password);
         }
         
-        public void Register(AuthFormData formData)
+        public void Register()
         {
-            FirebaseAuthManager.Instance.TryRegisterUser(formData.email, formData.password);
+            FirebaseAuthManager.Instance.TryRegisterUser(email, password);
         }
 
         public void SignOut()
@@ -26,7 +56,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         private void Start()
         {
-            // FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(_authObserver);
+            FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(_authObserver);
         }
     }
 }

@@ -505,7 +505,20 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnEmailChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -782,7 +795,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
       propertyPath: m_AnchorMax.x
@@ -2153,17 +2166,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c168ac071492472d8811e6781b74e81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emailField: {fileID: 249961232}
-  passwordField: {fileID: 1839167319}
-  authMessage: {fileID: 729535695}
-  loginButtonEvent:
+  emailBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnEmailChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 
+  passwordBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1780112290}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnPasswordChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 
+  loginBinding:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1780112290}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: Login
-        m_Mode: 0
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2172,14 +2216,14 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  registerButtonEvent:
+  registerBinding:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1780112290}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: Register
-        m_Mode: 0
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2188,7 +2232,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  signOutEvent:
+  signOutBinding:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1780112290}
@@ -2204,6 +2248,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  emailField: {fileID: 249961232}
+  passwordField: {fileID: 1839167319}
+  authMessage: {fileID: 729535695}
 --- !u!4 &1240049231
 Transform:
   m_ObjectHideFlags: 0
@@ -2211,12 +2258,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1240049229}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 284.57184, y: 169.76959, z: -65.425644}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 2021906473}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1329024641
 GameObject:
@@ -3091,13 +3139,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc97edaf9c014b2eb1470a4a96e6b934, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state:
-    _email: 
-    _password: 
-    _authStatus: 1
-    _isLoggedIn: 0
-  emitter:
-    _observers: []
+  email: 
+  password: 
+  authStatusBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnAuthStatusChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 0
 --- !u!4 &1780112291
 Transform:
   m_ObjectHideFlags: 0
@@ -3110,7 +3170,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1839167317
 GameObject:
@@ -3230,7 +3290,20 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1240049230}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuView,
+          Assembly-CSharp
+        m_MethodName: OnPasswordChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3790,10 +3863,10 @@ RectTransform:
   - {fileID: 336078809}
   - {fileID: 951595559}
   - {fileID: 1841822808}
-  - {fileID: 342520292}
   - {fileID: 2024858369}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
+  - {fileID: 342520292}
+  m_Father: {fileID: 1240049231}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3832,7 +3905,7 @@ RectTransform:
   m_Children:
   - {fileID: 2009620891}
   m_Father: {fileID: 2021906473}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.30936426, y: 0.063679814}
   m_AnchorMax: {x: 0.696377, y: 0.18135963}

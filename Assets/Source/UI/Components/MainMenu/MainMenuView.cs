@@ -26,6 +26,21 @@ namespace UnitMan.Source.UI.Components.MainMenu
         [SerializeField]
         private TMP_Text authMessage;
 
+        public void OnEmailChanged(string email)
+        {
+            emailBinding.SetValue(email);
+        }
+
+        public void OnAuthStatusChanged(FirebaseAuthManager.AuthStatus authStatus)
+        {
+            authMessage.SetText(MainMenuController.AuthStatusToMessage(authStatus));
+        }
+        
+        public void OnPasswordChanged(string password)
+        {
+            passwordBinding.SetValue(password);
+        }
+
         public void OnLoginButtonPressed()
         {
             loginBinding.Call();
