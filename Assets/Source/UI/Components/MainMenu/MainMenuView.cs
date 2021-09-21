@@ -47,7 +47,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         [Header("Custom Level Input Bindings")]
         [SerializeField]
-        private OneWayBinding<string> levelIdBinding;
+        private OneWayBinding<string> levelIdBinding = new OneWayBinding<string>();
         public void OnEmailChanged(string email)
         {
             emailBinding.SetValue(email);
