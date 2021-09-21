@@ -14,7 +14,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 	public class FirestoreListener : MonoBehaviour
 	{
 		[FormerlySerializedAs("_leaderboardUIController")] [SerializeField]
-		private LeaderboardUIController leaderboardUIController;
+		private LeaderboardViewModel leaderboardViewModel;
 
 		private string _leaderboardJson;
 
@@ -36,7 +36,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 			_localLeaderboard = JsonUtility.FromJson<Leaderboard>(_leaderboardJson);
 			
-			leaderboardUIController.InjectLeaderboard(_localLeaderboard);
+			leaderboardViewModel.InjectLeaderboard(_localLeaderboard);
 			Debug.Log(_leaderboardJson);
 			
 

@@ -61,7 +61,7 @@ namespace UnitMan.Source.UI
             {
                 FirestoreLeaderData firestoreLeader = leaderSnapshot.ConvertTo<FirestoreLeaderData>();
                 Debug.Log("Will now switch scenes");
-                SceneManager.LoadScene(firestoreLeader.Score >= SessionDataModel.Instance.score
+                SceneManager.LoadScene(firestoreLeader.Score >= SessionViewModel.Instance.score
                     ? "Scenes/Scoreboard"
                     : "Scenes/Score Query");
             }

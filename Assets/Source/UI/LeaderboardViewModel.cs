@@ -1,12 +1,13 @@
 using System;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
+using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace UnitMan.Source.UI
 {
-    public class LeaderboardUIController : MonoBehaviour
+    public class LeaderboardViewModel : ViewModel
     {
         [FormerlySerializedAs("leaderCells")] [SerializeField]
         private LeaderCellController[] leaderUICells;

@@ -69,9 +69,9 @@ namespace UnitMan.Source.Management.Session
 
         private void DeathAnimationTimerOnOnEnd()
         {
-            SessionDataModel.Instance.LoseLife();
+            SessionViewModel.Instance.LoseLife();
             playerController.ResetAnimation();
-            if (SessionDataModel.Instance.lives < 0) {
+            if (SessionViewModel.Instance.lives < 0) {
                 GameOver();
             }
             else {
@@ -103,11 +103,11 @@ namespace UnitMan.Source.Management.Session
         }
 
         public static void CheckIfGameIsWon() {
-            if (SessionDataModel.Instance.pelletsEaten < LevelGridController.Instance.level.pelletCount) return;
+            if (SessionViewModel.Instance.pelletsEaten < LevelGridController.Instance.level.pelletCount) return;
             // Debug.Log("You won!");
-            SessionDataModel.Instance.won = true;
+            SessionViewModel.Instance.won = true;
             
-            SessionDataModel.Instance.score += SessionDataModel.Instance.lives * POINT_PER_LIFE_REMAINING;
+            SessionViewModel.Instance.score += SessionViewModel.Instance.lives * POINT_PER_LIFE_REMAINING;
             SceneManager.LoadScene("You Won", LoadSceneMode.Single);
         }
 

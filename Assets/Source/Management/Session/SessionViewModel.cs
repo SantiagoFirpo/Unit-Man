@@ -1,24 +1,27 @@
 using TMPro;
+using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 
 namespace UnitMan.Source.Management.Session
 {
-    public class SessionDataModel : MonoBehaviour
+    public class SessionViewModel : MonoBehaviour
     {
         //TODO: add lives icons
-
-        // Start is called before the first frame update
+        
         public int pelletsEaten;
         public int lives = 3;
         public int score = 0;
         public bool won = false;
 
         [SerializeField]
-        private TMP_Text livesLabel;
+        private OneWayBinding<string> livesBinding;
+
+        [SerializeField]
+        private OneWayBinding<string> scoreBinding;
         
         [SerializeField]
         private TMP_Text scoreLabel;
-        public static SessionDataModel Instance
+        public static SessionViewModel Instance
         {
             get;
             private set;
@@ -44,11 +47,11 @@ namespace UnitMan.Source.Management.Session
 
         private void UpdateScoreLabel()
         {
-            scoreLabel.text = $"Score: \n {score}";
+            scoreBinding.SetValue($"Score: \n {score}"); 
         }
 
         private void UpdateLivesLabel() {
-            livesLabel.text = $"Lives: \n {lives}";
+            livesBinding.SetValue($"Lives: \n {lives}"); 
             // _scoreLabel.text = $"Score: {_score}";
         }
     }

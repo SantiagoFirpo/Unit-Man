@@ -22,15 +22,15 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
         private void Start()
         {
-            scoreField.SetText($"Score: {SessionDataModel.Instance.score}");
+            scoreField.SetText($"Score: {SessionViewModel.Instance.score}");
         }
 
         public void SubmitScore()
         {
             FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
             _firestoreLeaderData = new FirestoreLeaderData(nameField.text.ToUpper(),
-                                        SessionDataModel.Instance.score,
-                                        SessionDataModel.Instance.won, currentUser.UserId);
+                                        SessionViewModel.Instance.score,
+                                        SessionViewModel.Instance.won, currentUser.UserId);
             Debug.Log("Should write to db");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
             firestore.Document($"leaderboards/{CrossSceneLevelContainer.Instance.level.id}/leaders/{currentUser.UserId}").SetAsync(_firestoreLeaderData);
