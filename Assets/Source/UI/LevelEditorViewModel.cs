@@ -67,7 +67,9 @@ namespace UnitMan.Source.UI
         
         private EventSystem _eventSystem;
 
-        [SerializeField] private Transform brushPreviewTransform;
+        [SerializeField]
+        private Transform brushPreviewTransform;
+        
         private SpriteRenderer _brushPreviewSprite;
         [SerializeField]
         private Sprite wallIcon;
@@ -123,8 +125,6 @@ namespace UnitMan.Source.UI
             _inputMap.UI.RightClick.started += OnRightClicked;
             _inputMap.UI.RightClick.canceled += OnRightUnclicked;
             currentWorkingLevel = new Level();
-            _brushPreviewSprite = brushPreviewTransform.GetComponent<SpriteRenderer>();
-            
             _identity = Quaternion.identity;
         }
 
