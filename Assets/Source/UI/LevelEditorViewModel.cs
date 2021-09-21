@@ -5,6 +5,7 @@ using TMPro;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
+using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
@@ -16,7 +17,7 @@ using UnityEngine.Tilemaps;
 
 namespace UnitMan.Source.UI
 {
-    public class LevelEditorController : MonoBehaviour
+    public class LevelEditorViewModel : ViewModel
     {
         private BrushType _selectedBrush = BrushType.Wall;
         [SerializeField]
@@ -96,8 +97,6 @@ namespace UnitMan.Source.UI
 
         [SerializeField]
         private GameObject clipboardPingText;
-
-        public const string FILE_NAME = "4c4b9eef-2a47-4d3d-bc48-5b7517b4cf22";
 
         private bool _isUIActive = true;
 
@@ -328,15 +327,10 @@ namespace UnitMan.Source.UI
         public void Save()
         {
             ComputeScatterTargets();
-            // currentWorkingLevel.ComputeLevelHash();
-            // string prettyJson = JsonUtility.ToJson(currentWorkingLevel, false);
-            // Debug.Log(JsonUtility.ToJson(currentWorkingLevel, true));
-            // currentWorkingLevel.levelId = "";
             ComputeAndStoreHash();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
             FirestoreListener.SaveStringIntoJson(json, currentWorkingLevel.id);
-            // PingUserClipboard();
         }
 
         public void CopyIdToClipboard()
@@ -393,7 +387,6 @@ namespace UnitMan.Source.UI
                 Console.WriteLine(e);
                 throw;
             }
-            
             PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
