@@ -33,9 +33,9 @@ namespace UnitMan.Source.UI
         [SerializeField]
         private TileBase wallRuleTile;
         
-        private Camera _mainCamera;
-        private bool _isLeftClicking;
-        private bool _isRightClicking;
+        // private Camera _mainCamera;
+        // private bool _isLeftClicking;
+        // private bool _isRightClicking;
         
         [SerializeField]
         private GameObject pelletMarkerPrefab;
@@ -65,55 +65,55 @@ namespace UnitMan.Source.UI
         [SerializeField]
         private Transform ghostHouseTransform;
         
-        private EventSystem _eventSystem;
+        // private EventSystem _eventSystem;
 
-        [SerializeField]
-        private Transform brushPreviewTransform;
+        // [SerializeField]
+        // private Transform brushPreviewTransform;
         
-        private SpriteRenderer _brushPreviewSprite;
-        [SerializeField]
-        private Sprite wallIcon;
-        [SerializeField]
-        private Sprite pelletIcon;
-        [SerializeField]
-        private Sprite powerPelletIcon;
-        [SerializeField]
-        private Sprite blinkyIcon;
-        [SerializeField]
-        private Sprite pinkyIcon;
-        [SerializeField]
-        private Sprite inkyIcon;
-        [SerializeField]
-        private Sprite clydeIcon;
-        [SerializeField]
-        private Sprite pacManIcon;
-        [SerializeField]
-        private Sprite houseIcon;
+        // private SpriteRenderer _brushPreviewSprite;
+        // [SerializeField]
+        // private Sprite wallIcon;
+        // [SerializeField]
+        // private Sprite pelletIcon;
+        // [SerializeField]
+        // private Sprite powerPelletIcon;
+        // [SerializeField]
+        // private Sprite blinkyIcon;
+        // [SerializeField]
+        // private Sprite pinkyIcon;
+        // [SerializeField]
+        // private Sprite inkyIcon;
+        // [SerializeField]
+        // private Sprite clydeIcon;
+        // [SerializeField]
+        // private Sprite pacManIcon;
+        // [SerializeField]
+        // private Sprite houseIcon;
 
         private Quaternion _identity;
         [SerializeField]
         private Transform ghostDoor;
 
-        [SerializeField]
-        private Sprite doorIcon;
+        // [SerializeField]
+        // private Sprite doorIcon;
 
-        [SerializeField]
-        private GameObject clipboardPingText;
+        // [SerializeField]
+        // private GameObject clipboardPingText;
 
-        private bool _isUIActive = true;
+        // private bool _isUIActive = true;
 
-        private Timer _clipboardPingTimer;
-        private Timer _uploadPingTimer;
+        // private Timer _clipboardPingTimer;
+        // private Timer _uploadPingTimer;
 
         
-        [SerializeField]
-        private GameObject uiCanvas;
-
-        [SerializeField]
-        private TMP_InputField levelIdField;
-
-        [SerializeField]
-        private GameObject uploadPingText;
+        // [SerializeField]
+        // private GameObject uiCanvas;
+        //
+        // [SerializeField]
+        // private TMP_InputField levelIdField;
+        //
+        // [SerializeField]
+        // private GameObject uploadPingText;
 
         private void Awake()
         {
@@ -165,65 +165,83 @@ namespace UnitMan.Source.UI
             uiCanvas.SetActive(_isUIActive);
         }
 
-        public void OnWallButtonSelected()
+        // public void OnWallButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Wall;
+        //     _brushPreviewSprite.sprite = wallIcon;
+        // }
+        //
+        // public void OnPelletButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Pellet;
+        //     _brushPreviewSprite.sprite = pelletIcon;
+        // }
+        //
+        // public void OnBlinkyButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Blinky;
+        //     _brushPreviewSprite.sprite = blinkyIcon;
+        // }
+        //
+        // public void OnPinkyButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Pinky;
+        //     _brushPreviewSprite.sprite = pinkyIcon;
+        // }
+        //
+        // public void OnInkyButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Inky;
+        //     _brushPreviewSprite.sprite = inkyIcon;
+        // }
+        //
+        // public void OnClydeButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.Clyde;
+        //     _brushPreviewSprite.sprite = clydeIcon;
+        // }
+        //
+        public void OnBrushSelected(BrushType brushType)
         {
-            _selectedBrush = BrushType.Wall;
-            _brushPreviewSprite.sprite = wallIcon;
-        }
-        
-        public void OnPelletButtonSelected()
-        {
-            _selectedBrush = BrushType.Pellet;
-            _brushPreviewSprite.sprite = pelletIcon;
-        }
-        
-        public void OnBlinkyButtonSelected()
-        {
-            _selectedBrush = BrushType.Blinky;
-            _brushPreviewSprite.sprite = blinkyIcon;
-        }
-        
-        public void OnPinkyButtonSelected()
-        {
-            _selectedBrush = BrushType.Pinky;
-            _brushPreviewSprite.sprite = pinkyIcon;
-        }
-        
-        public void OnInkyButtonSelected()
-        {
-            _selectedBrush = BrushType.Inky;
-            _brushPreviewSprite.sprite = inkyIcon;
-        }
-        
-        public void OnClydeButtonSelected()
-        {
-            _selectedBrush = BrushType.Clyde;
-            _brushPreviewSprite.sprite = clydeIcon;
-        }
-        
-        public void OnPowerPelletButtonSelected()
-        {
-            _selectedBrush = BrushType.PowerPellet;
-            _brushPreviewSprite.sprite = powerPelletIcon;
-        }
-        
-        public void OnPacManButtonSelected()
-        {
-            _selectedBrush = BrushType.PacMan;
-            _brushPreviewSprite.sprite = pacManIcon;
+            _selectedBrush = brushType;
+            _brushPreviewSprite.sprite = BrushTypeToIcon(brushType);
         }
 
-        public void OnGhostHouseButtonSelected()
+        private Sprite BrushTypeToIcon(BrushType brushType)
         {
-            _selectedBrush = BrushType.GhostHouse;
-            _brushPreviewSprite.sprite = houseIcon;
+            return brushType switch
+            {
+                BrushType.Wall => wallIcon,
+                BrushType.Pellet => pelletIcon,
+                BrushType.PowerPellet => powerPelletIcon,
+                BrushType.PacMan => pacManIcon,
+                BrushType.Blinky => blinkyIcon,
+                BrushType.Pinky => pinkyIcon,
+                BrushType.Inky => inkyIcon,
+                BrushType.Clyde => clydeIcon,
+                BrushType.GhostHouse => houseIcon,
+                BrushType.GhostDoor => doorIcon,
+                _ => throw new ArgumentOutOfRangeException(nameof(brushType), brushType, null)
+            };
         }
-        
-        public void OnDoorButtonSelected()
-        {
-            _selectedBrush = BrushType.GhostDoor;
-            _brushPreviewSprite.sprite = doorIcon;
-        }
+
+        // public void OnPacManButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.PacMan;
+        //     _brushPreviewSprite.sprite = pacManIcon;
+        // }
+        //
+        // public void OnGhostHouseButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.GhostHouse;
+        //     _brushPreviewSprite.sprite = houseIcon;
+        // }
+        //
+        // public void OnDoorButtonSelected()
+        // {
+        //     _selectedBrush = BrushType.GhostDoor;
+        //     _brushPreviewSprite.sprite = doorIcon;
+        // }
         private void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
         {
             Vector2Int positionV2Int = VectorUtil.ToVector2Int(position);
