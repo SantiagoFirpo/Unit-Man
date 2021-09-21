@@ -4,7 +4,7 @@ using System.Linq;
 using Firebase.Firestore;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
-using UnitMan.Source.UI;
+using UnitMan.Source.UI.Components.Leaderboard;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;

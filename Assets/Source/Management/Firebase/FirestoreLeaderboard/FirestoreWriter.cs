@@ -1,6 +1,5 @@
 using Firebase.Auth;
 using Firebase.Firestore;
-using TMPro;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Session;
@@ -11,24 +10,12 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 {
     public class FirestoreWriter : MonoBehaviour
     {
-        [SerializeField]
-        private TMP_InputField nameField;
-        
-        [SerializeField]
-        private TMP_Text scoreField;
-
         private FirestoreLeaderData _firestoreLeaderData;
 
-
-        private void Start()
-        {
-            scoreField.SetText($"Score: {SessionViewModel.Instance.score}");
-        }
-
-        public void SubmitScore()
+        public void SubmitScore(string playerName)
         {
             FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
-            _firestoreLeaderData = new FirestoreLeaderData(nameField.text.ToUpper(),
+            _firestoreLeaderData = new FirestoreLeaderData(playerName,
                                         SessionViewModel.Instance.score,
                                         SessionViewModel.Instance.won, currentUser.UserId);
             Debug.Log("Should write to db");
@@ -38,7 +25,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
             
         }
 
-        public void GoToScoreboard()
+        public static void GoToScoreboard()
         {
             SceneManager.LoadScene("Scenes/Scoreboard");
         }
