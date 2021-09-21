@@ -10,7 +10,7 @@ namespace UnitMan.Source.UI
     public class LeaderboardViewModel : ViewModel
     {
         [FormerlySerializedAs("leaderCells")] [SerializeField]
-        private LeaderCellController[] leaderUICells;
+        private LeaderCellView[] leaderUICells;
 
         [SerializeField]
         private GameObject threeDotsUp;
@@ -18,7 +18,7 @@ namespace UnitMan.Source.UI
         [SerializeField]
         private GameObject threeDotsDown;
         
-        private LeaderCellController _lastLeader;
+        private LeaderCellView _lastLeader;
 
         private bool _isSignedIn;
 
@@ -37,7 +37,6 @@ namespace UnitMan.Source.UI
             threeDotsUp.SetActive(true);  
             _lastLeader = leaderUICells[leaderUICells.Length - 1];
             _isSignedIn = FirebaseAuthManager.Instance != null && FirebaseAuthManager.Instance.auth != null;
-            // LocalLeaderData userLeader = Array.Find(leaders, FindUserEntry);
             if (!_isSignedIn)
             {
                 _lastLeader.InjectLeaderData(leaders[leadersLength - 1]);
@@ -48,7 +47,6 @@ namespace UnitMan.Source.UI
                 _lastLeader.InjectLeaderData(Array.Find(leaders, FindUserEntry));
                 _lastLeader.MarkAsUserScore();
                 threeDotsDown.SetActive(true);
-                // threeDotsUp.SetActive(Array.IndexOf());
             }
             
         }

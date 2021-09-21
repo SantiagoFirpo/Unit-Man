@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UnitMan.Source.UI
 {
-    public class LeaderCellController : MonoBehaviour
+    public class LeaderCellView : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text positionText;
@@ -15,6 +15,20 @@ namespace UnitMan.Source.UI
         [SerializeField]
         private TMP_Text scoreText;
 
+        public void OnPositionChanged(uint newPosition)
+        {
+            positionText.SetText(newPosition.ToString());
+        }
+
+        public void OnPlayerDisplayNameChanged(string newName)
+        {
+            initialsText.SetText(newName);
+        }
+
+        public void OnScoreChanged(int newScore)
+        {
+            scoreText.SetText(newScore.ToString());
+        }
         public void InjectLeaderData(LocalLeaderData leader)
         {
             positionText.SetText(leader.position.ToString());
