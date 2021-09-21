@@ -2,7 +2,7 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 
-namespace UnitMan.Source.UI.Components.Score_Prompt
+namespace UnitMan.Source.UI.Components.ScorePrompt
 {
     public class ScorePromptView : View
 
