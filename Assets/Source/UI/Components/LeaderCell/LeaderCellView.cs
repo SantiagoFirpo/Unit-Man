@@ -2,7 +2,7 @@ using TMPro;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnityEngine;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.UI.Components.LeaderCell
 {
     public class LeaderCellView : MonoBehaviour
     {

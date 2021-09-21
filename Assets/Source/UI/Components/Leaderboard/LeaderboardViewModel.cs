@@ -1,11 +1,12 @@
 using System;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
+using UnitMan.Source.UI.Components.LeaderCell;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.UI.Components.Leaderboard
 {
     public class LeaderboardViewModel : ViewModel
     {
@@ -23,7 +24,7 @@ namespace UnitMan.Source.UI
         private bool _isSignedIn;
 
 
-        public void InjectLeaderboard(Leaderboard leaderboard)
+        public void InjectLeaderboard(Management.Session.LocalLeaderboard.Leaderboard leaderboard)
         {
             LocalLeaderData[] leaders = leaderboard.values;
             int leadersLength = leaders.Length;

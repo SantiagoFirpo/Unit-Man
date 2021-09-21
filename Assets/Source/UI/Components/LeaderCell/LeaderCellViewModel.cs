@@ -2,7 +2,7 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.UI.Components.LeaderCell
 {
     public class LeaderCellViewModel : ViewModel
     {
