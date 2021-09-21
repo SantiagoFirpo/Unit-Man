@@ -180,17 +180,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4812897f391625d43a73f5f0f0cba1c5, type: 3}
---- !u!114 &161555531 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5715071444348307569, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
-  m_PrefabInstance: {fileID: 5715071444241427514}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &551115253
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,8 +325,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72979b783ad67cf43b98c387303e3c8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameField: {fileID: 161555531}
-  scoreField: {fileID: 2111950463}
 --- !u!4 &631288274
 Transform:
   m_ObjectHideFlags: 0
@@ -351,36 +338,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1379106329
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1379106330}
-  m_Layer: 0
-  m_Name: Score Query ViewModel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1379106330
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379106329}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 476.05502, y: 177.83694, z: -6835.595}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047300657
 GameObject:
@@ -456,47 +413,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2106495274
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2106495275}
-  m_Layer: 0
-  m_Name: Score Query View
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2106495275
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2106495274}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 476.05502, y: 177.83694, z: -6835.595}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2111950463 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5715071443069100613, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
-  m_PrefabInstance: {fileID: 5715071444241427514}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5715071444241427514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -504,6 +420,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5715071442932251375, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
+      propertyPath: firestoreWriter
+      value: 
+      objectReference: {fileID: 631288273}
     - target: {fileID: 5715071442932251375, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
       propertyPath: _firestoreWriter
       value: 
@@ -514,7 +434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5715071444123638127, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5715071444123638127, guid: c27ccbd1d307ca44fab16c8753820b90, type: 3}
       propertyPath: m_LocalPosition.x
