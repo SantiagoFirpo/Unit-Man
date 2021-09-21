@@ -180,7 +180,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            _hubExitTimer.OnEnd += SetStateToChase;
            _chasePollStepTimer.OnEnd += PollChaseTarget;
            _fleeingDurationTimer.OnEnd += SetStateToChase;
-           SessionManagerSingle.Instance.powerPelletEmitter.Attach(_powerPelletObserver);
+           SessionManagerSingle.Instance.powerPelletObservable.Attach(_powerPelletObserver);
 
            _chaseDurationTimer.OnEnd += SetStateToScatter;
            _scatterDurationTimer.OnEnd += SetStateToChase;
@@ -458,7 +458,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            switch (previousState)
            {
                case GhostState.Resting:
-                   SessionManagerSingle.Instance.onPelletEatenEmitter.Detach(_pelletEatenObserver);
+                   SessionManagerSingle.Instance.onPelletEatenObservable.Detach(_pelletEatenObserver);
                    break;
                case GhostState.ExitingHub:
                    _hubExitTimer.Stop();
@@ -593,7 +593,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
        private void OnRestingEntered()
        {
            currentTargetPosition = _restingTarget;
-           SessionManagerSingle.Instance.onPelletEatenEmitter.Attach(_pelletEatenObserver);
+           SessionManagerSingle.Instance.onPelletEatenObservable.Attach(_pelletEatenObserver);
        }
 
        private void StartChaseDuration()

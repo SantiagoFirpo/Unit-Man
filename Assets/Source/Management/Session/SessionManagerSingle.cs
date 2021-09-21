@@ -34,15 +34,15 @@ namespace UnitMan.Source.Management.Session
 
         private bool _frozen = true;
 
-        public Emitter freezeEmitter;
+        public Observable freezeObservable;
 
-        public Emitter unfreezeEmitter;
+        public Observable unfreezeObservable;
 
-        public Emitter resetEmitter;
+        public Observable resetObservable;
 
-        public Emitter onPelletEatenEmitter;
+        public Observable onPelletEatenObservable;
         
-        public Emitter powerPelletEmitter;
+        public Observable powerPelletObservable;
         
         public int eatenGhostsTotal;
         public int fleeingGhostsTotal;
@@ -57,12 +57,12 @@ namespace UnitMan.Source.Management.Session
             }
             Instance = this;
 
-            freezeEmitter = new Emitter();
-            unfreezeEmitter = new Emitter();
-            resetEmitter = new Emitter();
+            freezeObservable = new Observable();
+            unfreezeObservable = new Observable();
+            resetObservable = new Observable();
             
-            onPelletEatenEmitter = new Emitter();
-            powerPelletEmitter = new Emitter();
+            onPelletEatenObservable = new Observable();
+            powerPelletObservable = new Observable();
         }
         
         
@@ -98,7 +98,7 @@ namespace UnitMan.Source.Management.Session
         private void StartLevel() {
             // Debug.Log("StartingLevel!");
             Unfreeze();
-            resetEmitter.EmitNotification();
+            resetObservable.EmitNotification();
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
         }
 
@@ -124,18 +124,18 @@ namespace UnitMan.Source.Management.Session
         public void Freeze()
         {
             if (_frozen) return;
-            freezeEmitter.EmitNotification();
+            freezeObservable.EmitNotification();
             _frozen = true;
         }
 
         private void Unfreeze()
         {
             if (!_frozen) return;
-            unfreezeEmitter.EmitNotification();
+            unfreezeObservable.EmitNotification();
             _frozen = false;
         }
         private void ResetSession() {
-            resetEmitter.EmitNotification();
+            resetObservable.EmitNotification();
             Freeze();
             _startupTimer.Start();
             _readyText.SetActive(true);

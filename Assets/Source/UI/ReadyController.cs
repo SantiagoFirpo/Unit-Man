@@ -11,7 +11,7 @@ namespace UnitMan.Source.UI
 	    private void OnEnable()
 	    {
 		    _resetObserver = new Observer(DisableLabel);
-		    SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
+		    SessionManagerSingle.Instance.resetObservable.Attach(_resetObserver);
 	    }
 
 	    private void DisableLabel()
@@ -21,7 +21,7 @@ namespace UnitMan.Source.UI
 
 	    private void OnDisable()
 	    {
-		    SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
+		    SessionManagerSingle.Instance.resetObservable.Detach(_resetObserver);
 	    }
     }
     }

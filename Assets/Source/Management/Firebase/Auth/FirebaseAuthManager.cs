@@ -28,7 +28,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             SignOutRequested
         }
 
-        public Emitter<AuthStatus> authStateChangedEmitter;
+        public Observable<AuthStatus> authStateChangedObservable;
 
         // Start is called before the first frame update
         private void Awake()
@@ -42,7 +42,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                authStateChangedEmitter = new Emitter<AuthStatus>();
+                authStateChangedObservable = new Observable<AuthStatus>();
 
             }
 
@@ -154,7 +154,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public void SetAuthStatus(AuthStatus authStatus)
         {
-            authStateChangedEmitter.EmitNotification(authStatus);
+            authStateChangedObservable.EmitNotification(authStatus);
         }
     }
 }

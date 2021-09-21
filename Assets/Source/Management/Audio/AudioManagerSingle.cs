@@ -33,7 +33,7 @@ namespace UnitMan.Source.Management.Audio
             Instance = this;
             _resetObserver = new Observer(ResetTracks);
             
-            SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
+            SessionManagerSingle.Instance.resetObservable.Attach(_resetObserver);
             _tracks = GetComponents<AudioSource>();
             
 
@@ -48,7 +48,7 @@ namespace UnitMan.Source.Management.Audio
 
         private void OnDisable()
         {
-            SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
+            SessionManagerSingle.Instance.resetObservable.Detach(_resetObserver);
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop)

@@ -81,9 +81,9 @@ namespace UnitMan.Source.Entities {
 
     private void SubscribeForEvents()
     {
-        SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
-        SessionManagerSingle.Instance.freezeEmitter.Attach(_freezeObserver);
-        SessionManagerSingle.Instance.unfreezeEmitter.Attach(_unfreezeObserver);
+        SessionManagerSingle.Instance.resetObservable.Attach(_resetObserver);
+        SessionManagerSingle.Instance.freezeObservable.Attach(_freezeObserver);
+        SessionManagerSingle.Instance.unfreezeObservable.Attach(_unfreezeObserver);
     }
 
     private void Awake()
@@ -128,7 +128,7 @@ namespace UnitMan.Source.Entities {
 
         protected virtual void UnsubscribeFromEvents()
         {
-            SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
+            SessionManagerSingle.Instance.resetObservable.Detach(_resetObserver);
         }
 
         private void ResetPosition() {

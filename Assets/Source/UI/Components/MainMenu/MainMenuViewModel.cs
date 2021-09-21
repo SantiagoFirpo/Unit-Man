@@ -139,7 +139,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         private void Start()
         {
-            FirebaseAuthManager.Instance.authStateChangedEmitter.Attach(_authObserver);
+            FirebaseAuthManager.Instance.authStateChangedObservable.Attach(_authObserver);
         }
 
         public static string AuthStatusToMessage(FirebaseAuthManager.AuthStatus authStatus)

@@ -5,23 +5,23 @@ using UnityEngine;
 namespace UnitMan.Source.Utilities.ObserverSystem
 {
 	[Serializable]
-	public class Emitter
+	public class Observable
 	{
 		[SerializeField]
-		private List<Observer> _observers;
+		private List<Observer> observers;
 		
-		public Emitter()
+		public Observable()
 		{
-			_observers = new List<Observer>();
+			observers = new List<Observer>();
 		}
 		public void Attach(Observer observer)
 		{
-			_observers.Add(observer);
+			observers.Add(observer);
 		}
 
 		public void EmitNotification()
 		{
-			foreach (Observer observer in _observers.ToArray())//_observers seems to be altered in this foreach, copying it with ToList() solves
+			foreach (Observer observer in observers.ToArray())//observers seem to be altered in this foreach, copying it with ToList() solves
 														//this but generates a lot of garbage
 														//happens in PelletController and TimerManager
 			{
@@ -31,12 +31,12 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 
 		public void Detach(Observer observer)
 		{
-			_observers.Remove(observer);
+			observers.Remove(observer);
 		}
 		
-		~Emitter()
+		~Observable()
 		{
-			foreach (Observer observer in _observers.ToArray()) //intentionally copying collection to avoid unintended
+			foreach (Observer observer in observers.ToArray()) //intentionally copying collection to avoid unintended
 																//modifications
 			{
 				Detach(observer);
@@ -46,23 +46,23 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 	[Serializable]
 
 	
-	public class Emitter<TDataContainer>
+	public class Observable<TDataContainer>
 	{
 		[SerializeField]
-		private List<Observer<TDataContainer>> _observers;
-		public Emitter()
+		private List<Observer<TDataContainer>> observers;
+		public Observable()
 		{
-			_observers = new List<Observer<TDataContainer>>();
+			observers = new List<Observer<TDataContainer>>();
 		}
 
 		public void Attach(Observer<TDataContainer> observer)
 		{
-			_observers.Add(observer);
+			observers.Add(observer);
 		}
 		
 		public void EmitNotification(TDataContainer dataContainer)
 		{
-			foreach (Observer<TDataContainer> observer in _observers)
+			foreach (Observer<TDataContainer> observer in observers)
 			{
 				observer.OnNotified(dataContainer);
 			}
@@ -70,12 +70,12 @@ namespace UnitMan.Source.Utilities.ObserverSystem
 
 		public void Detach(Observer<TDataContainer> observer)
 		{
-			_observers.Remove(observer);
+			observers.Remove(observer);
 		}
 		
-		~Emitter()
+		~Observable()
 		{
-			foreach (Observer<TDataContainer> observer in _observers.ToArray())
+			foreach (Observer<TDataContainer> observer in observers.ToArray())
 			{
 				Detach(observer);
 			}
