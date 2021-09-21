@@ -1,21 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using UnitMan.Source.Entities.Actors.Ghosts;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.UI.MVVM
 {
-    public class Router : MonoBehaviour
+    public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : Enum
     {
-        // Start is called before the first frame update
-        void Start()
+        private TPageType _state;
+
+        public void OnStateEntered()
         {
-        
+            throw new NotImplementedException();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void SetState(TPageType state)
         {
-        
+           
+        }
+
+        public void OnStateExit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TPageType GetState()
+        {
+            return _state;
         }
     }
 }
