@@ -941,6 +941,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
   m_PrefabInstance: {fileID: 342520291}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &355536360 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
+  m_PrefabInstance: {fileID: 342520291}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &411447166
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,7 +2106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emailField: {fileID: 249961232}
   passwordField: {fileID: 1839167319}
-  levelIdField: {fileID: 0}
+  levelIdField: {fileID: 355536360}
   emailBinding:
     m_PersistentCalls:
       m_Calls:
@@ -2483,8 +2494,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43a275e8effa8364abd49a4a916c1547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authStateChangedEmitter:
-    _observers: []
+  authStateChangedObservable:
+    observers: []
 --- !u!4 &1421268320
 Transform:
   m_ObjectHideFlags: 0
@@ -3026,7 +3037,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     value: 
-  authViewModel: {fileID: 0}
 --- !u!4 &1780112291
 Transform:
   m_ObjectHideFlags: 0
