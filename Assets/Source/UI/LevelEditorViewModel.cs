@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Firebase.Firestore;
-using TMPro;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.Utilities.Pathfinding;
-using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -19,282 +15,113 @@ namespace UnitMan.Source.UI
 {
     public class LevelEditorViewModel : ViewModel
     {
-        private BrushType _selectedBrush = BrushType.Wall;
         [SerializeField]
-        private Level currentWorkingLevel;
+        private OneWayBinding<BrushType> selectedBrushBinding = new OneWayBinding<BrushType>(BrushType.Wall);
+        [SerializeField]
+        public Level currentWorkingLevel;
 
-        private Gameplay _inputMap;
-        private Vector2 _mouseScreenPosition;
         private Vector3 _mouseWorldPosition;
 
+
         [FormerlySerializedAs("_wallTilemap")] [SerializeField]
-        private Tilemap wallTilemap;
+        public Tilemap wallTilemap;
 
         [SerializeField]
-        private TileBase wallRuleTile;
+        public TileBase wallRuleTile;
         
         // private Camera _mainCamera;
         // private bool _isLeftClicking;
         // private bool _isRightClicking;
         
         [SerializeField]
-        private GameObject pelletMarkerPrefab;
+        public GameObject pelletMarkerPrefab;
         
         [SerializeField]
-        private GameObject powerMarkerPrefab;
+        public GameObject powerMarkerPrefab;
         
         [SerializeField]
-        private GameObject blinkyMarkerPrefab;
+        public GameObject blinkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject pinkyMarkerPrefab;
+        public GameObject pinkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject inkyMarkerPrefab;
+        public GameObject inkyMarkerPrefab;
         
         [SerializeField]
-        private GameObject clydeMarkerPrefab;
+        public GameObject clydeMarkerPrefab;
 
-        private Vector3Int _mouseTilesetPosition;
+        public Vector3Int mouseTilesetPosition;
 
-        private readonly Dictionary<Vector3, GameObject> _localObjects = new Dictionary<Vector3, GameObject>();
+        public readonly Dictionary<Vector3, GameObject> localObjects = new Dictionary<Vector3, GameObject>();
         
         [SerializeField]
-        private Transform pacManTransform;
+        public Transform pacManTransform;
 
         [SerializeField]
-        private Transform ghostHouseTransform;
-        
-        // private EventSystem _eventSystem;
+        public Transform ghostHouseTransform;
 
-        // [SerializeField]
-        // private Transform brushPreviewTransform;
-        
-        // private SpriteRenderer _brushPreviewSprite;
-        // [SerializeField]
-        // private Sprite wallIcon;
-        // [SerializeField]
-        // private Sprite pelletIcon;
-        // [SerializeField]
-        // private Sprite powerPelletIcon;
-        // [SerializeField]
-        // private Sprite blinkyIcon;
-        // [SerializeField]
-        // private Sprite pinkyIcon;
-        // [SerializeField]
-        // private Sprite inkyIcon;
-        // [SerializeField]
-        // private Sprite clydeIcon;
-        // [SerializeField]
-        // private Sprite pacManIcon;
-        // [SerializeField]
-        // private Sprite houseIcon;
-
-        private Quaternion _identity;
+        public Quaternion identity;
         [SerializeField]
-        private Transform ghostDoor;
+        public Transform ghostDoor;
 
-        // [SerializeField]
-        // private Sprite doorIcon;
+        [SerializeField]
+        private OneWayBinding<bool> isUIActiveBinding = new OneWayBinding<bool>(true);
 
-        // [SerializeField]
-        // private GameObject clipboardPingText;
+        [SerializeField]
+        private OneWayBinding clipboardPingBinding;
 
-        // private bool _isUIActive = true;
+        private string _levelId;
+        [SerializeField]
+        private OneWayBinding levelUploadPing;
 
-        // private Timer _clipboardPingTimer;
-        // private Timer _uploadPingTimer;
+        private bool _isRightClicking;
+        private bool _isLeftClicking;
+        private bool _isPointerOverGameObject;
+        private readonly LevelEditManager _levelEditManager;
 
+        public LevelEditorViewModel()
+        {
+            _levelEditManager = new LevelEditManager(this);
+        }
         
-        // [SerializeField]
-        // private GameObject uiCanvas;
-        //
-        // [SerializeField]
-        // private TMP_InputField levelIdField;
-        //
-        // [SerializeField]
-        // private GameObject uploadPingText;
-
         private void Awake()
         {
-            _inputMap = new Gameplay();
-            _inputMap.Enable();
-            _inputMap.UI.Point.performed += OnMouseMove;
-            _inputMap.UI.Click.started += OnLeftClicked;
-            _inputMap.UI.Click.canceled += OnLeftUnclicked;
-            _inputMap.UI.RightClick.started += OnRightClicked;
-            _inputMap.UI.RightClick.canceled += OnRightUnclicked;
             currentWorkingLevel = new Level();
-            _identity = Quaternion.identity;
-        }
-
-        private void Start()
-        {
-            _clipboardPingTimer = new Timer(3f, false, true);
-            _clipboardPingTimer.OnEnd += ClipboardPingTimerOnOnEnd;
-
-            _uploadPingTimer = new Timer(3f, false, true);
-            _uploadPingTimer.OnEnd += UploadPingTimerOnOnEnd;
-            
-            _mainCamera = Camera.main;
-            _eventSystem = EventSystem.current;
-        }
-
-        private void UploadPingTimerOnOnEnd()
-        {
-            uploadPingText.SetActive(false);
-        }
-
-        private void ClipboardPingTimerOnOnEnd()
-        {
-            clipboardPingText.SetActive(false);
-        }
-
-        private void OnDisable()
-        {
-            _inputMap.UI.Point.performed -= OnMouseMove;
-            _inputMap.UI.Click.started -= OnLeftClicked;
-            _inputMap.UI.Click.canceled -= OnLeftUnclicked;
-            _inputMap.UI.RightClick.started -= OnRightClicked;
-            _inputMap.UI.RightClick.canceled -= OnRightUnclicked;
+            identity = Quaternion.identity;
         }
 
         public void OnToggleUI()
         {
-            _isUIActive = !_isUIActive;
-            uiCanvas.SetActive(_isUIActive);
+            isUIActiveBinding.SetValue(!isUIActiveBinding.GetValue());
         }
 
-        // public void OnWallButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Wall;
-        //     _brushPreviewSprite.sprite = wallIcon;
-        // }
-        //
-        // public void OnPelletButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Pellet;
-        //     _brushPreviewSprite.sprite = pelletIcon;
-        // }
-        //
-        // public void OnBlinkyButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Blinky;
-        //     _brushPreviewSprite.sprite = blinkyIcon;
-        // }
-        //
-        // public void OnPinkyButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Pinky;
-        //     _brushPreviewSprite.sprite = pinkyIcon;
-        // }
-        //
-        // public void OnInkyButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Inky;
-        //     _brushPreviewSprite.sprite = inkyIcon;
-        // }
-        //
-        // public void OnClydeButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.Clyde;
-        //     _brushPreviewSprite.sprite = clydeIcon;
-        // }
-        //
+        public void OnLevelIdChanged(string newValue)
+        {
+            _levelId = newValue;
+        }
+        
         public void OnBrushSelected(BrushType brushType)
         {
-            _selectedBrush = brushType;
-            _brushPreviewSprite.sprite = BrushTypeToIcon(brushType);
+            selectedBrushBinding.SetValue(brushType);
         }
 
-        private Sprite BrushTypeToIcon(BrushType brushType)
+        public void OnMouseTilesetPositionChanged(Vector3Int newValue)
         {
-            return brushType switch
-            {
-                BrushType.Wall => wallIcon,
-                BrushType.Pellet => pelletIcon,
-                BrushType.PowerPellet => powerPelletIcon,
-                BrushType.PacMan => pacManIcon,
-                BrushType.Blinky => blinkyIcon,
-                BrushType.Pinky => pinkyIcon,
-                BrushType.Inky => inkyIcon,
-                BrushType.Clyde => clydeIcon,
-                BrushType.GhostHouse => houseIcon,
-                BrushType.GhostDoor => doorIcon,
-                _ => throw new ArgumentOutOfRangeException(nameof(brushType), brushType, null)
-            };
+            mouseTilesetPosition = newValue;
         }
 
-        // public void OnPacManButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.PacMan;
-        //     _brushPreviewSprite.sprite = pacManIcon;
-        // }
-        //
-        // public void OnGhostHouseButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.GhostHouse;
-        //     _brushPreviewSprite.sprite = houseIcon;
-        // }
-        //
-        // public void OnDoorButtonSelected()
-        // {
-        //     _selectedBrush = BrushType.GhostDoor;
-        //     _brushPreviewSprite.sprite = doorIcon;
-        // }
-        private void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
+        public bool IsPositionValid(Vector2Int positionV2Int)
         {
-            Vector2Int positionV2Int = VectorUtil.ToVector2Int(position);
-            Vector3Int tilesetPosition = wallTilemap.WorldToCell(position);
-            if (currentWorkingLevel.pacManPosition == positionV2Int ||
-                currentWorkingLevel.ghostDoorPosition == positionV2Int ||
-                currentWorkingLevel.ghostHousePosition == positionV2Int ||
-                currentWorkingLevel.objectPositions.Contains(positionV2Int) ||
-                wallTilemap.GetTile(tilesetPosition) == wallRuleTile) return;
-            switch (brush)
-            {
-                case BrushType.Wall:
-                {
-                    wallTilemap.SetTile(_mouseTilesetPosition, wallRuleTile);
-                    currentWorkingLevel.AddLevelObject(LevelObjectType.Wall, positionV2Int);
-                    break;
-                }
-                case BrushType.PacMan:
-                {
-                    currentWorkingLevel.pacManPosition = positionV2Int;
-                    pacManTransform.position = position;
-                    break;
-                }
-                case BrushType.GhostHouse:
-                {
-                    currentWorkingLevel.ghostHousePosition = positionV2Int;
-                    ghostHouseTransform.position = position;
-                    break;
-                }
-                case BrushType.GhostDoor:
-                {
-                    currentWorkingLevel.ghostDoorPosition = positionV2Int;
-                    ghostDoor.position = position;
-                    break;
-                }
-                default:
-                {
-                    if (brush == BrushType.Pellet)
-                    {
-                        currentWorkingLevel.pelletCount++;
-                    }
-
-                    LevelObjectType brushToLevelObjectType = BrushToLevelObjectType(brush);
-                    currentWorkingLevel.AddLevelObject(brushToLevelObjectType, positionV2Int);
-                    _localObjects.Add(position, CreateGameObject(brushToLevelObjectType, position));
-                    break;
-                }
-            }
-            
-            
+            Vector3Int tilesetPosition = wallTilemap.WorldToCell(VectorUtil.ToVector3(positionV2Int));
+            return currentWorkingLevel.pacManPosition != positionV2Int &&
+                    currentWorkingLevel.ghostDoorPosition != positionV2Int &&
+                    currentWorkingLevel.ghostHousePosition != positionV2Int &&
+                    !currentWorkingLevel.objectPositions.Contains(positionV2Int) &&
+                    wallTilemap.GetTile(tilesetPosition) != wallRuleTile;
         }
 
-        private static LevelObjectType BrushToLevelObjectType(BrushType brushType)
+        public static LevelObjectType BrushToLevelObjectType(BrushType brushType)
         {
             return brushType switch
             {
@@ -313,38 +140,9 @@ namespace UnitMan.Source.UI
             };
         }
 
-        private void AddLocalLevelObject(LevelObjectType objectType, Vector3 position)
-        {
-            if (objectType == LevelObjectType.Wall)
-                wallTilemap.SetTile(VectorUtil.ToVector3Int(position), wallRuleTile);
-            else
-                _localObjects.Add(position, CreateGameObject(objectType, position));
-        }
-        
-        private GameObject CreateGameObject(LevelObjectType objectType, Vector3 position)
-        {
-            return objectType == LevelObjectType.Wall ? null :
-                                Instantiate(LevelObjectTypeToPrefab(objectType), position, _identity);
-        }
-
-        private GameObject LevelObjectTypeToPrefab(LevelObjectType objectType)
-        {
-            return objectType switch
-            {
-                LevelObjectType.Blinky => blinkyMarkerPrefab,
-                LevelObjectType.Pinky => pinkyMarkerPrefab,
-                LevelObjectType.Inky => inkyMarkerPrefab,
-                LevelObjectType.Clyde => clydeMarkerPrefab,
-                LevelObjectType.Pellet => pelletMarkerPrefab,
-                LevelObjectType.PowerPellet => powerMarkerPrefab,
-                LevelObjectType.Wall => null,
-                _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
-            };
-        }
-
         public void Save()
         {
-            ComputeScatterTargets();
+            _levelEditManager.ComputeScatterTargets();
             ComputeAndStoreHash();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
@@ -355,19 +153,7 @@ namespace UnitMan.Source.UI
         {
             if (currentWorkingLevel.id is null) return;
             CopyStringToClipboard(currentWorkingLevel.id);
-            PingUserClipboard();
-        }
-
-        private void PingUserClipboard()
-        {
-            clipboardPingText.SetActive(true);
-            _clipboardPingTimer.Start();
-        }
-
-        private void PingLevelUpload()
-        {
-            uploadPingText.SetActive(true);
-            _uploadPingTimer.Start();
+            clipboardPingBinding.Call();
         }
 
         private void ComputeAndStoreHash()
@@ -398,14 +184,15 @@ namespace UnitMan.Source.UI
         {
             try
             {
-                JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(levelIdField.text), currentWorkingLevel);
+                JsonUtility.FromJsonOverwrite(FirestoreListener.LoadStringFromJson(_levelId), currentWorkingLevel);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-            PopulateEditorFromLevelObject(currentWorkingLevel);
+
+            _levelEditManager.PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
         public void Upload()
@@ -416,87 +203,26 @@ namespace UnitMan.Source.UI
             Debug.Log("Converted level to FirestoreLevel");
             FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
-            PingLevelUpload();
+            levelUploadPing.Call();
         }
 
-        private void PopulateEditorFromLevelObject(Level level)
+        public void OnMouseWorldPositionChanged(Vector3 newValue)
         {
-            ClearLevel();
-            AddLocalObjects(level);
-            SetUniqueObjectPositions(level);
+            _mouseWorldPosition = newValue;
         }
 
-        private void AddLocalObjects(Level level)
+        public void OnPointerOverGameObjectChanged(bool newValue)
         {
-            int objectPositionsCount = level.objectPositions.Count;
-            for (int i = 0; i < objectPositionsCount; i++)
-            {
-                Vector3Int positionV3Int = VectorUtil.ToVector3Int(level.objectPositions[i]);
-                // if (level.objectTypes[i] == LevelObjectType.Wall)
-                // {
-                //     wallTilemap.SetTile(positionV3Int, wallRuleTile);
-                // }
-                AddLocalLevelObject(level.objectTypes[i], VectorUtil.ToVector3(positionV3Int));
-                
-            }
+            _isPointerOverGameObject = newValue;
         }
 
-        private void SetUniqueObjectPositions(Level level)
-        {
-            pacManTransform.position = VectorUtil.ToVector3(level.pacManPosition);
-            ghostHouseTransform.position = VectorUtil.ToVector3(level.ghostHousePosition);
-            ghostDoor.position = VectorUtil.ToVector3(level.ghostDoorPosition);
-        }
-
-        private void ClearLevel()
-        {
-            foreach (KeyValuePair<Vector3, GameObject> localObject in _localObjects)
-            {
-                Destroy(localObject.Value);
-            }
-
-            _localObjects.Clear();
-            wallTilemap.ClearAllTiles();
-        }
-
-        private void ComputeScatterTargets()
-        {
-            BoundsInt cellBounds = wallTilemap.cellBounds;
-            currentWorkingLevel.topLeftPosition =
-                new Vector2Int(cellBounds.xMin, cellBounds.yMax) + new Vector2Int(-1, 1);
-            Vector2Int vectorOne = Vector2Int.one;
-            currentWorkingLevel.topRightPosition = VectorUtil.ToVector2Int(cellBounds.max) + vectorOne;
-            currentWorkingLevel.bottomLeftPosition = VectorUtil.ToVector2Int(cellBounds.min) - vectorOne;
-            currentWorkingLevel.bottomRightPosition = new Vector2Int(cellBounds.xMax, cellBounds.yMin) + new Vector2Int(1, -1);
-        }
-
-        private void OnRightClicked(InputAction.CallbackContext context)
-        {
-            _isRightClicking = true;
-        }
-        
-        private void OnRightUnclicked(InputAction.CallbackContext context)
-        {
-            _isRightClicking = false;
-        }
-        
-        private void OnMouseMove(InputAction.CallbackContext context)
-        {
-            _mouseScreenPosition = context.ReadValue<Vector2>();
-            _mouseTilesetPosition = wallTilemap.WorldToCell(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition));
-            _mouseWorldPosition = VectorUtil.Round(_mainCamera.ScreenToWorldPoint(_mouseScreenPosition)); 
-            _mouseWorldPosition.z = 0f;
-            if (_eventSystem.IsPointerOverGameObject()) return;
-            brushPreviewTransform.position = _mouseWorldPosition;
-        }
-        
         private void Update()
         {
             
-            if (_eventSystem.IsPointerOverGameObject()) return;
+            if (_isPointerOverGameObject) return;
             if (_isLeftClicking)
             {
-                PlaceLevelObjectAndUpdateMaze(_selectedBrush, _mouseWorldPosition);
+                _levelEditManager.PlaceLevelObjectAndUpdateMaze(selectedBrushBinding.GetValue(), _mouseWorldPosition);
             }
             
             else if (_isRightClicking)
@@ -504,40 +230,25 @@ namespace UnitMan.Source.UI
                 if (!currentWorkingLevel.objectPositions.Contains(
                     VectorUtil.ToVector2Int(_mouseWorldPosition)))
                     return;
-                if (_selectedBrush == BrushType.Pellet)
+                if (selectedBrushBinding.GetValue() == BrushType.Pellet)
                 {
                     currentWorkingLevel.pelletCount--;
                 }
 
-                EraseObject(_mouseWorldPosition);
+                _levelEditManager.EraseObject(_mouseWorldPosition);
 
 
             }
         }
 
-        private void EraseObject(Vector3 position)
+        public void OnLeftClickChanged(bool newValue)
         {
-            currentWorkingLevel.RemoveLevelObject(VectorUtil.ToVector2Int(position));
-            bool isWall = wallTilemap.GetTile(VectorUtil.ToVector3Int(position)) != null;
-            if (isWall)
-            {
-                wallTilemap.SetTile(_mouseTilesetPosition, null);
-            }
-            else
-            {
-                Destroy(_localObjects[position]);
-                _localObjects.Remove(position);
-            }
+            _isLeftClicking = newValue;
         }
 
-        private void OnLeftClicked(InputAction.CallbackContext context)
+        public void OnRightClickChanged(bool newValue)
         {
-            _isLeftClicking = true;
-        }
-        
-        private void OnLeftUnclicked(InputAction.CallbackContext context)
-        {
-            _isLeftClicking = false;
+            _isRightClicking = newValue;
         }
     }
 
