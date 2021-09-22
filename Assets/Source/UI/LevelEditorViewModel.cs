@@ -16,7 +16,7 @@ namespace UnitMan.Source.UI
     public class LevelEditorViewModel : ViewModel
     {
         [SerializeField]
-        private OneWayBinding<BrushType> selectedBrushBinding = new OneWayBinding<BrushType>(BrushType.Wall);
+        private OneWayBinding<BrushType> selectedBrushBinding;
         [SerializeField]
         public Level currentWorkingLevel;
 
@@ -66,7 +66,7 @@ namespace UnitMan.Source.UI
         public Transform ghostDoor;
 
         [SerializeField]
-        private OneWayBinding<bool> isUIActiveBinding = new OneWayBinding<bool>(true);
+        private OneWayBinding<bool> isUIActiveBinding;
 
         [SerializeField]
         private OneWayBinding clipboardPingBinding;

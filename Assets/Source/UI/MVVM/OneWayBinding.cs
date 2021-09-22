@@ -10,11 +10,6 @@ namespace UnitMan.Source.UI.MVVM
         [SerializeField]
         private T value;
 
-        public OneWayBinding(T value)
-        {
-            this.value = value;
-        }
-
         public void SetValue(T newValue)
         {
             value = newValue;

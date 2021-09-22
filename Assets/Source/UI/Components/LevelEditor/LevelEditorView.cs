@@ -121,20 +121,20 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         
         private Gameplay _inputMap;
         [SerializeField]
-        private OneWayBinding<bool> leftClickBinding = new OneWayBinding<bool>(false);
+        private OneWayBinding<bool> leftClickBinding;
 
         private bool _wasPointerOverUI;
         [SerializeField]
-        private OneWayBinding<bool> pointerOverUIBinding = new OneWayBinding<bool>(false);
+        private OneWayBinding<bool> pointerOverUIBinding;
 
         [SerializeField]
-        private OneWayBinding<bool> rightClickBinding = new OneWayBinding<bool>(false);
+        private OneWayBinding<bool> rightClickBinding;
 
         [SerializeField]
-        private OneWayBinding<Vector3Int> _mouseTilesetPosition = new OneWayBinding<Vector3Int>(Vector3Int.zero);
+        private OneWayBinding<Vector3Int> _mouseTilesetPosition;
 
         [SerializeField]
-        private OneWayBinding<Vector3> _mouseWorldPosition = new OneWayBinding<Vector3>(Vector3.zero);
+        private OneWayBinding<Vector3> _mouseWorldPosition;
 
         private void Start()
         {
@@ -263,7 +263,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             _brushPreviewSprite.sprite = BrushTypeToIcon(newValue);
         }
 
-        public void OnUIToggle(bool newValue)
+        public void ToggleUI(bool newValue)
         {
             uiCanvas.SetActive(newValue);
         }

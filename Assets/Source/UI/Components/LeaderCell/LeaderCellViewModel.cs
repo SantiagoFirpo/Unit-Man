@@ -7,12 +7,12 @@ namespace UnitMan.Source.UI.Components.LeaderCell
     public class LeaderCellViewModel : ViewModel
     {
         [SerializeField]
-        private OneWayBinding<uint> positionBinding = new OneWayBinding<uint>(0);
+        private OneWayBinding<uint> positionBinding;
         [SerializeField]
-        private OneWayBinding<string> playerDisplayNameBinding = new OneWayBinding<string>("");
+        private OneWayBinding<string> playerDisplayNameBinding;
         
         [SerializeField]
-        private OneWayBinding<int> scoreBinding = new OneWayBinding<int>(0);
+        private OneWayBinding<int> scoreBinding;
 
         [SerializeField]
         private OneWayBinding isLastBinding = new OneWayBinding();
