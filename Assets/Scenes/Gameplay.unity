@@ -32513,7 +32513,6 @@ MonoBehaviour:
   lives: 3
   score: 0
   won: 0
-  livesLabel: {fileID: 164071301}
   livesBinding:
     m_PersistentCalls:
       m_Calls:
