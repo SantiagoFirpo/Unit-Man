@@ -11,7 +11,7 @@ namespace UnitMan.Source.UI.Components.ScorePrompt
         private TMP_Text scoreLabel;
 
         [SerializeField]
-        private OneWayBinding<string> nameBinding = new OneWayBinding<string>("");
+        private OneWayBinding<string> nameBinding;
 
         [SerializeField]
         private OneWayBinding yesButtonBinding = new OneWayBinding();
