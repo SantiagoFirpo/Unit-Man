@@ -443,11 +443,11 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            return isRight ? Quadrant.DownRight : Quadrant.DownLeft;
        }
 
-          public void SetState(GhostState targetState)
+          public void SetState(GhostState newState)
        {
-           if (_state == targetState && (_state != targetState || _state != GhostState.Fleeing)) return;
+           if (_state == newState && (_state != newState || _state != GhostState.Fleeing)) return;
            previousState = _state;
-           _state = targetState;
+           _state = newState;
            OnStateExit();
 
            OnStateEntered();
