@@ -1,21 +1,33 @@
 using System;
 using UnitMan.Source.Entities.Actors.Ghosts;
+using UnitMan.Source.UI.Routers;
 using UnityEngine;
 
 namespace UnitMan.Source.UI.MVVM
 {
     public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : Enum
     {
-        private TPageType _state;
+        protected TPageType state;
 
-        public void OnStateEntered()
+        [SerializeField]
+        protected Route<TPageType>[] viewsToRender;
+        
+        [SerializeField]
+        protected TPageType initialState;
+
+
+        private void Start()
         {
-            throw new NotImplementedException();
+            RenderWithValue(initialState);
         }
 
-        public void SetState(TPageType state)
+        public abstract void OnStateEntered();
+
+        public void SetState(TPageType newState)
         {
-           
+            OnStateExit();
+            this.state = newState;
+            OnStateEntered();
         }
 
         public void OnStateExit()
@@ -25,7 +37,22 @@ namespace UnitMan.Source.UI.MVVM
 
         public TPageType GetState()
         {
-            return _state;
+            return state;
+        }
+        
+        protected void RenderWithValue(TPageType pageValue)
+        {
+            foreach (Route<TPageType> route in viewsToRender)
+            {
+                if (route.GetValue().Equals(state)) return;
+                if (route.GetValue().Equals(pageValue))
+                {
+                    route.Render();
+                    continue;
+                }
+                route.Hide();
+                
+            }
         }
     }
 }
