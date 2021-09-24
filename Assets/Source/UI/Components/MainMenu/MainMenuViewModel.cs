@@ -6,8 +6,9 @@ using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
-using UnitMan.Source.UI.Components.Text;
+using UnitMan.Source.UI.Components.Auth;
 using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.UI.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,17 +18,12 @@ namespace UnitMan.Source.UI.Components.MainMenu
     public class MainMenuViewModel : ViewModel
     {
         [SerializeField]
-        private string email;
-        [SerializeField]
-        private string password;
-
-        [SerializeField]
         private string levelId;
+        
+        private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
 
         [SerializeField]
-        private OneWayBinding<string> authStatusMessageBinding;
-
-        private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
+        private OneWayBinding<string> authStatus = new OneWayBinding<string>();
 
         private void Awake()
         {
@@ -36,38 +32,22 @@ namespace UnitMan.Source.UI.Components.MainMenu
             #else
                                      Debug.unityLogger.logEnabled=false;
             #endif
-                        Debug.Log("Main Menu should initialize");
+            Debug.Log("Main Menu should initialize");
             _authObserver = new Observer<FirebaseAuthManager.AuthStatus>(OnAuthChanged);
         }
 
-        private void OnAuthChanged(FirebaseAuthManager.AuthStatus authStatus)
+        private void Start()
         {
-            authStatusMessageBinding.SetValue(AuthStatusToMessage(authStatus));
+            FirebaseAuthManager.Instance.authStateChangedObservable.Attach(_authObserver);
         }
 
-        public void OnEmailChanged(string newEmail)
+        private void OnAuthChanged(FirebaseAuthManager.AuthStatus newAuthStatus)
         {
-            this.email = newEmail;
-        }
-
-        public void OnPasswordChanged(string newPassword)
-        {
-            this.password = newPassword;
-        }
-
-        public void OnLoginPressed()
-        {
-            FirebaseAuthManager.Instance.TryLoginUser(email, password);
-        }
-        
-        public void OnRegisterPressed()
-        {
-            FirebaseAuthManager.Instance.TryRegisterUser(email, password);
-        }
-
-        public void OnSignOutPressed()
-        {
-            FirebaseAuthManager.Instance.SignOutUser();
+            this.authStatus.SetValue(AuthViewModel.AuthStatusToMessage(newAuthStatus));
+            if (newAuthStatus == FirebaseAuthManager.AuthStatus.SignedOut)
+            {
+                MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRouteValue.Auth);
+            }
         }
 
         public void OnLevelIdChanged(string newLevelId)
@@ -83,6 +63,12 @@ namespace UnitMan.Source.UI.Components.MainMenu
         public void OnQuitPressed()
         {
             Application.Quit();
+        }
+        
+        public void OnSignOutPressed()
+        {
+            FirebaseAuthManager.Instance.SignOutUser();
+            OnAuthChanged(FirebaseAuthManager.AuthStatus.SignedOut);
         }
 
         public void OnPlayButtonPressed()
@@ -135,33 +121,6 @@ namespace UnitMan.Source.UI.Components.MainMenu
                         Debug.LogException(aggregateException);
                     }
                 });
-        }
-
-        private void Start()
-        {
-            FirebaseAuthManager.Instance.authStateChangedObservable.Attach(_authObserver);
-        }
-
-        public static string AuthStatusToMessage(FirebaseAuthManager.AuthStatus authStatus)
-        {
-            return authStatus switch
-            {
-                FirebaseAuthManager.AuthStatus.LoggingIn => "LOGGING IN",
-                FirebaseAuthManager.AuthStatus.Registering => "REGISTERING",
-                FirebaseAuthManager.AuthStatus.WaitingForUser => "PLEASE REGISTER/LOGIN BELOW:",
-                FirebaseAuthManager.AuthStatus.RegisterCanceled => "REGISTER WAS CANCELED",
-                FirebaseAuthManager.AuthStatus.RegisterError => "REGISTER ERROR",
-                FirebaseAuthManager.AuthStatus.RegisterSuccessful => $"REGISTER SUCCESSFUL! REGISTERED AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
-                FirebaseAuthManager.AuthStatus.LoginCanceled => "LOGIN WAS CANCELED",
-                FirebaseAuthManager.AuthStatus.LoginError => "LOGIN ERROR",
-                FirebaseAuthManager.AuthStatus.LoginSuccessful => $"LOGIN SUCCESSFUL! LOGGED IN AS {FirebaseAuthManager.Instance.auth.CurrentUser.Email}",
-                FirebaseAuthManager.AuthStatus.SignOut => "SIGNED OUT",
-                FirebaseAuthManager.AuthStatus.Empty => "",
-                FirebaseAuthManager.AuthStatus.RegisterRequested => "REGISTERING",
-                FirebaseAuthManager.AuthStatus.LoginRequested => "LOGGING IN",
-                FirebaseAuthManager.AuthStatus.SignOutRequested => "SIGNING OUT",
-                _ => throw new ArgumentOutOfRangeException(nameof(authStatus), authStatus, null)
-            };
         }
     }
 }
