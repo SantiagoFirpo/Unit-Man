@@ -22,10 +22,5 @@ namespace UnitMan.Source.UI.Routers
         {
             Undefined, Auth, Home
         }
-
-        public override void OnStateEntered()
-        {
-            RenderWithValue(state);
-        }
     }
 }
