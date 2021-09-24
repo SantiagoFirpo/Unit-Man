@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UnitMan.Source.UI.MVVM
 {
-    public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : Enum
+    public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : struct, Enum
     {
         protected TPageType state;
 
@@ -21,7 +21,10 @@ namespace UnitMan.Source.UI.MVVM
             RenderWithValue(initialState);
         }
 
-        public abstract void OnStateEntered();
+        public void OnStateEntered()
+        {
+            RenderWithValue(state);
+        }
 
         public void SetState(TPageType newState)
         {
@@ -32,7 +35,7 @@ namespace UnitMan.Source.UI.MVVM
 
         public void OnStateExit()
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
 
         public TPageType GetState()
@@ -44,7 +47,7 @@ namespace UnitMan.Source.UI.MVVM
         {
             foreach (Route<TPageType> route in viewsToRender)
             {
-                if (route.GetValue().Equals(state)) return;
+                // if (route.GetValue().Equals(state)) return;
                 if (route.GetValue().Equals(pageValue))
                 {
                     route.Render();

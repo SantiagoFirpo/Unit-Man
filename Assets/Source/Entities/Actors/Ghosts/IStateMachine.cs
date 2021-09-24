@@ -2,7 +2,7 @@
 
 namespace UnitMan.Source.Entities.Actors.Ghosts
 {
-    public interface IStateMachine<T> //WHERE T IS ENUM
+    public interface IStateMachine<T> where T : struct, Enum
     {
         // public T State { get; set; }
         // public T PreviousState { get; set; }

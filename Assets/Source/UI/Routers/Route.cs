@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UnitMan.Source.UI.Routers
 {
     [Serializable]
-    public class Route<TEnumType>
+    public class Route<TEnumType> where TEnumType : struct, Enum
     {
         [SerializeField]
         private GameObject view;
