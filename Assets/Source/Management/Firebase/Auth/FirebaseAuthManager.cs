@@ -19,7 +19,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public enum AuthStatus
         {
             WaitingForUser,
-            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignOut,
+            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut,
             Empty,
             LoggingIn,
             Registering,
@@ -88,7 +88,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public void SignOutUser()
         {
             auth.SignOut();
-            SetAuthStatus(AuthStatus.SignOut);
+            SetAuthStatus(AuthStatus.SignedOut);
         }
 
         public void TryRegisterUser(string email, string password)
