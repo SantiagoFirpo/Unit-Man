@@ -50,6 +50,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         }
 
+        public static string GetDisplayName()
+        {
+            return Instance.auth.CurrentUser.Email.Split(char.Parse("@"))[0];
+        }
+
         private void InitializeFirebase()
         {
             
@@ -114,7 +119,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
                 // Firebase user has been created.
                 FirebaseUser newUser = task.Result;
-                Debug.Log($"Firebase user created successfully: {newUser.DisplayName} ({newUser.UserId})");
+                Debug.Log($"Firebase user created successfully: {GetDisplayName()} ({newUser.UserId})");
                 SetAuthStatus(AuthStatus.RegisterSuccessful);
                 TryLoginUser(email, password);
             }
