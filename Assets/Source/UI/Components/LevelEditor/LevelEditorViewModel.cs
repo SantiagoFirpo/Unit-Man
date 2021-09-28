@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Firebase.Firestore;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
+using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.Utilities.Pathfinding;
@@ -11,7 +12,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.UI.Components.LevelEditor
 {
     public class LevelEditorViewModel : ViewModel
     {
@@ -87,7 +88,7 @@ namespace UnitMan.Source.UI
         
         private void Awake()
         {
-            currentWorkingLevel = new Level();
+            currentWorkingLevel = new Level("New Level", FirebaseAuthManager.Instance.auth.CurrentUser.DisplayName, FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
             identity = Quaternion.identity;
         }
 
@@ -158,9 +159,9 @@ namespace UnitMan.Source.UI
 
         private void ComputeAndStoreHash()
         {
-            string hash = GetUniqueId();
-            Debug.Log(hash);
-            currentWorkingLevel.id = hash;
+            // string hash = GetUniqueId();
+            // Debug.Log(hash);
+            // currentWorkingLevel.id = hash;
             CopyIdToClipboard();
         }
 
@@ -169,7 +170,7 @@ namespace UnitMan.Source.UI
             GUIUtility.systemCopyBuffer = hash;
         }
 
-        private static string GetUniqueId()
+        public static string GetUniqueId()
         {
             return Guid.NewGuid().ToString();
         }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7664520923311736111}
   - component: {fileID: 3988622399324417044}
   m_Layer: 0
-  m_Name: Level Cell
+  m_Name: Level Cell View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,6 +194,10 @@ PrefabInstance:
     - target: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_Name
       value: Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 10.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -431,6 +435,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Play
       objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 10.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
 --- !u!224 &1475460404845133419 stripped
@@ -537,6 +545,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Edit
       objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 11.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
 --- !u!224 &4933533511144022546 stripped
@@ -642,6 +654,10 @@ PrefabInstance:
     - target: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_Name
       value: Upload
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 10.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -968,6 +984,10 @@ PrefabInstance:
     - target: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_Name
       value: Delete
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 7.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}

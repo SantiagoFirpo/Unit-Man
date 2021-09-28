@@ -5,6 +5,7 @@ using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Session;
 using UnitMan.Source.UI;
+using UnitMan.Source.UI.Components.LevelEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityObject = UnityEngine.Object;

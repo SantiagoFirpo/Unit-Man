@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.UI;
+using UnitMan.Source.UI.Components.LevelEditor;
 using UnityEngine;
 
 namespace UnitMan.Source.LevelEditing
@@ -29,6 +30,14 @@ namespace UnitMan.Source.LevelEditing
         public List<LevelObjectType> objectTypes = new List<LevelObjectType>();
 
 
+        public Level(string name, string authorName, string authorId)
+        {
+            this.name = name;
+            this.authorName = authorName;
+            this.authorId = authorId;
+            this.id = LevelEditorViewModel.GetUniqueId();
+        }
+
         public void AddLevelObject(LevelObjectType objectType, Vector2Int position)
         {
             objectTypes.Add(objectType);
@@ -43,9 +52,9 @@ namespace UnitMan.Source.LevelEditing
 
         public static Level FromFirestoreLevel(FirestoreLevel firestoreLevel)
         {
-            Level level = new Level()
+            Level level = new Level(firestoreLevel.Name, firestoreLevel.AuthorName, firestoreLevel.AuthorId)
                 {
-                    id = firestoreLevel.Id,
+                    authorName = firestoreLevel.AuthorName,
                     pelletCount = firestoreLevel.PelletCount,
                     bottomLeftPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.BottomLeftPosition),
                     bottomRightPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.BottomRightPosition),

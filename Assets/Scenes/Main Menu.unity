@@ -643,6 +643,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level:
+    name: 
+    authorName: 
+    authorId: 
     id: 
     pacManPosition: {x: 0, y: 0}
     ghostHousePosition: {x: 0, y: 3}
@@ -1229,14 +1232,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7812461380712654655, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_text
-      value: SIGN OUT
-      objectReference: {fileID: 0}
-    - target: {fileID: 7812461380712654655, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_fontSize
-      value: 14.55
-      objectReference: {fileID: 0}
     - target: {fileID: 7867308456319190817, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: _authStatus.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1296,14 +1291,6 @@ PrefabInstance:
     - target: {fileID: 8934208721930381239, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_fontSize
       value: 17.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123725473758374442, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_text
-      value: QUIT
-      objectReference: {fileID: 0}
-    - target: {fileID: 9123725473758374442, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_fontSize
-      value: 19.1
       objectReference: {fileID: 0}
     - target: {fileID: 9156846873805144995, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_Name

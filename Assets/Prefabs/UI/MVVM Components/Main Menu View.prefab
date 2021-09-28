@@ -500,6 +500,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button
       objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_text
+      value: SIGN OUT
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 12.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
 --- !u!224 &601224453558316101 stripped
@@ -614,6 +622,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level Editor Button
       objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7091628258666327654}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnLevelEditorButtonPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnitMan.Source.UI.Components.MainMenu.MainMenuView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_text
+      value: LEVEL EDITOR
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 18.45
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
 --- !u!224 &2287869498953411789 stripped
@@ -727,6 +771,14 @@ PrefabInstance:
     - target: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_Name
       value: Quit Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_text
+      value: QUIT
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 21.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -1096,6 +1148,42 @@ PrefabInstance:
     - target: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_Name
       value: Play Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7091628258666327654}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnPlayButtonPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnitMan.Source.UI.Components.MainMenu.MainMenuView, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259378342734761125, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_text
+      value: PLAY
+      objectReference: {fileID: 0}
+    - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+      propertyPath: m_fontSize
+      value: 36.95
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
