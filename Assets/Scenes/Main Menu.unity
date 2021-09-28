@@ -1040,6 +1040,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2287869498953411786, guid: 696517f929c295144a11862f56c267ee, type: 3}
+      propertyPath: m_Name
+      value: My Levels Button
+      objectReference: {fileID: 0}
     - target: {fileID: 2287869498953411789, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.7998918
@@ -1081,34 +1085,6 @@ PrefabInstance:
       value: UnitMan.Source.UI.Components.MainMenu.MainMenuView, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5310460803225847686, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1240049230}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnMyLevelsButtonPressed
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UnitMan.Source.UI.Components.MainMenu.MainMenuView, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 5536014052951460379, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
@@ -1283,10 +1259,6 @@ PrefabInstance:
     - target: {fileID: 8006081191322698343, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8934208721930381239, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_text
-      value: MY LEVELS
       objectReference: {fileID: 0}
     - target: {fileID: 8934208721930381239, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_fontSize

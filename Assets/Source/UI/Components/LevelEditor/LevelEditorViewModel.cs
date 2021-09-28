@@ -16,6 +16,8 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 {
     public class LevelEditorViewModel : ViewModel
     {
+        public const string DEFAULT_LEVEL_NAME = "New Level";
+
         [SerializeField]
         private OneWayBinding<BrushType> selectedBrushBinding;
         [SerializeField]
@@ -88,7 +90,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         
         private void Awake()
         {
-            currentWorkingLevel = new Level("New Level", FirebaseAuthManager.Instance.auth.CurrentUser.DisplayName, FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
+            currentWorkingLevel = new Level(DEFAULT_LEVEL_NAME, FirebaseAuthManager.GetDisplayName(), FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
             identity = Quaternion.identity;
         }
 
