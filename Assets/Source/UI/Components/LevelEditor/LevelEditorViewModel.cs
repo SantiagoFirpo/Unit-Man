@@ -6,6 +6,7 @@ using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,8 @@ namespace UnitMan.Source.UI.Components.LevelEditor
     public class LevelEditorViewModel : ViewModel
     {
         public const string DEFAULT_LEVEL_NAME = "New Level";
+
+        private bool _isLevelDirty = true;
 
         [SerializeField]
         private OneWayBinding<BrushType> selectedBrushBinding;
@@ -109,6 +112,12 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             selectedBrushBinding.SetValue(brushType);
         }
 
+        public void OnLevelSaved(string levelName)
+        {
+            currentWorkingLevel.name = levelName;
+            OnSaveButtonPressed();
+        }
+
         public void OnMouseTilesetPositionChanged(Vector3Int newValue)
         {
             mouseTilesetPosition = newValue;
@@ -143,10 +152,25 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             };
         }
 
-        public void Save()
+        public void OnSaveButtonPressed()
+        {
+            Debug.Log("Save button pressed!");
+            if (currentWorkingLevel.name == DEFAULT_LEVEL_NAME)
+            {
+                LevelEditorRouter.Instance.SetState(LevelEditorRoute.SaveAs);
+            }
+            else
+            {
+                _isLevelDirty = false;
+                SaveLevelToDisk();
+            }
+
+        }
+
+        private void SaveLevelToDisk()
         {
             _levelEditManager.ComputeScatterTargets();
-            ComputeAndStoreHash();
+            CopyIdToClipboard();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
             FirestoreListener.SaveStringIntoJson(json, currentWorkingLevel.id);
@@ -157,14 +181,6 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             if (currentWorkingLevel.id is null) return;
             CopyStringToClipboard(currentWorkingLevel.id);
             clipboardPingBinding.Call();
-        }
-
-        private void ComputeAndStoreHash()
-        {
-            // string hash = GetUniqueId();
-            // Debug.Log(hash);
-            // currentWorkingLevel.id = hash;
-            CopyIdToClipboard();
         }
 
         private static void CopyStringToClipboard(string hash)

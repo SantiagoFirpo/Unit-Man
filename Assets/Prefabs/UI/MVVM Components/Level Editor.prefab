@@ -2482,7 +2482,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8894800112901858987}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.LevelEditorViewModel, Assembly-CSharp
-        m_MethodName: Save
+        m_MethodName: OnSaveButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
