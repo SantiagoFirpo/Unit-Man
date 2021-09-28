@@ -36,9 +36,9 @@ namespace UnitMan.Source.UI.Components.Auth
             _redirectDelayTimer.OnEnd += RedirectDelayTimerOnOnEnd;
         }
 
-        private void RedirectDelayTimerOnOnEnd()
+        private static void RedirectDelayTimerOnOnEnd()
         {
-            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRouteValue.Home);
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
         }
 
         private void OnAuthChanged(FirebaseAuthManager.AuthStatus authStatus)

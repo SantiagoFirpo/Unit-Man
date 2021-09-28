@@ -46,7 +46,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
             this.authStatus.SetValue(AuthViewModel.AuthStatusToMessage(newAuthStatus));
             if (newAuthStatus == FirebaseAuthManager.AuthStatus.SignedOut)
             {
-                MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRouteValue.Auth);
+                MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Auth);
             }
         }
 
@@ -89,7 +89,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         public void OnMyLevelsButtonPressed()
         {
-            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRouteValue.LocalLevelExplorer);
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.LocalLevelExplorer);
         }
         
         private static void LoadLocalLevel(string levelId)

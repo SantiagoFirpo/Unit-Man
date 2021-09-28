@@ -2,7 +2,7 @@
 
 namespace UnitMan.Source.UI.Routers
 {
-    public class MainMenuRouter : Router<MainMenuRouter.MainMenuRouteValue>
+    public class MainMenuRouter : Router<MainMenuRouter.MainMenuRoute>
     {
         public static MainMenuRouter Instance { get; private set; }
 
@@ -18,7 +18,7 @@ namespace UnitMan.Source.UI.Routers
             }
         }
 
-        public enum MainMenuRouteValue
+        public enum MainMenuRoute
         {
             Undefined, Auth, Home, LocalLevelExplorer
         }

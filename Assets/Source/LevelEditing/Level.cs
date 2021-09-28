@@ -9,6 +9,9 @@ namespace UnitMan.Source.LevelEditing
     [Serializable]
     public class Level
     {
+        public string name;
+        public string authorName;
+        public string authorId;
         public string id;
         public Vector2Int pacManPosition = Vector2Int.zero;
         public Vector2Int ghostHousePosition = new Vector2Int(0, 3);
