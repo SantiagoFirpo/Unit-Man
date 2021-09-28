@@ -22,7 +22,7 @@ namespace UnitMan.Source.UI.Components.Auth
         private Timer _redirectDelayTimer;
         
         [SerializeField]
-        private OneWayBinding _clearFormsBinding = new OneWayBinding();
+        private OneWayBinding clearFormsBinding = new OneWayBinding();
 
         private void Awake()
         {
@@ -44,13 +44,14 @@ namespace UnitMan.Source.UI.Components.Auth
         private void OnAuthChanged(FirebaseAuthManager.AuthStatus authStatus)
         {
             authStatusMessageBinding.SetValue(AuthStatusToMessage(authStatus));
-            if (authStatus == FirebaseAuthManager.AuthStatus.LoginSuccessful)
+            switch (authStatus)
             {
-                _redirectDelayTimer.Start();
-            }
-            else if (authStatus == FirebaseAuthManager.AuthStatus.SignedOut)
-            {
-                _clearFormsBinding.Call();
+                case FirebaseAuthManager.AuthStatus.LoginSuccessful:
+                    _redirectDelayTimer.Start();
+                    break;
+                case FirebaseAuthManager.AuthStatus.SignedOut:
+                    clearFormsBinding.Call();
+                    break;
             }
         }
         

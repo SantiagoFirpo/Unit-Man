@@ -20,7 +20,7 @@ namespace UnitMan.Source.UI.Routers
 
         public enum MainMenuRouteValue
         {
-            Undefined, Auth, Home
+            Undefined, Auth, Home, LocalLevelExplorer
         }
     }
 }

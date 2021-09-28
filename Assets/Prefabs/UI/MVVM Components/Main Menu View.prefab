@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelId: 
-  _authStatus:
+  authStatus:
     m_PersistentCalls:
       m_Calls: []
     value: 
@@ -93,11 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c168ac071492472d8811e6781b74e81d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelIdField: {fileID: 8006081191322698342}
   quitButtonBinding:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7867308456319190817}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: OnQuitPressed
@@ -110,10 +109,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  authStatusMessage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9168020034872751309}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.Text.TextViewModel,
+          Assembly-CSharp
+        m_MethodName: Set
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    value: 
   playButtonBinding:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7867308456319190817}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: OnPlayButtonPressed
@@ -129,7 +145,7 @@ MonoBehaviour:
   levelEditorButtonBinding:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7867308456319190817}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: OnLevelEditorPressed
@@ -145,7 +161,7 @@ MonoBehaviour:
   levelIdBinding:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7867308456319190817}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
           Assembly-CSharp
         m_MethodName: OnLevelIdChanged
@@ -161,7 +177,36 @@ MonoBehaviour:
     value: 
   signOutBinding:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7867308456319190817}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnSignOutPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  myLevelsBinding:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7867308456319190817}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.MainMenu.MainMenuViewModel,
+          Assembly-CSharp
+        m_MethodName: OnMyLevelsButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7091628259481735181
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,6 +824,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 733227094964657805, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
   m_PrefabInstance: {fileID: 6706612525099834922}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9168020034872751309 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2461768237248146151, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
+  m_PrefabInstance: {fileID: 6706612525099834922}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7091628260084054475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -925,17 +981,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 968790933868362668, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
   m_PrefabInstance: {fileID: 7091628260084054475}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8006081191322698342 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 968790933868362669, guid: e2c3b8246fb388c45a731cd95b775e70, type: 3}
-  m_PrefabInstance: {fileID: 7091628260084054475}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7468300134113590615
 PrefabInstance:
   m_ObjectHideFlags: 0

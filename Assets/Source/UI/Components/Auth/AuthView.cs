@@ -34,6 +34,7 @@ namespace UnitMan.Source.UI.Components.Auth
 
         public void OnSignOutButtonPressed() => signOutBinding.Call();
 
+
         public void ClearForms()
         {
             emailField.SetTextWithoutNotify("");

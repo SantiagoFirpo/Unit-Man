@@ -29,6 +29,9 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         [SerializeField]
         private OneWayBinding signOutBinding;
+        
+        [SerializeField]
+        private OneWayBinding myLevelsBinding = new OneWayBinding();
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue(newValue);
 
@@ -41,6 +44,8 @@ namespace UnitMan.Source.UI.Components.MainMenu
         public void OnPlayButtonPressed() => playButtonBinding.Call();
         
         public void OnSignOutButtonPressed() => signOutBinding.Call();
+        
+        public void OnMyLevelsButtonPressed() => myLevelsBinding.Call();
 
 
         // public void OnLeaderboardButtonPressed() => leaderboardButtonBinding.Call();

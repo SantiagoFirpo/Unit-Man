@@ -86,6 +86,11 @@ namespace UnitMan.Source.UI.Components.MainMenu
                 DownloadFirestoreLevelWithId(levelId);
             }
         }
+
+        public void OnMyLevelsButtonPressed()
+        {
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRouteValue.LocalLevelExplorer);
+        }
         
         private static void LoadLocalLevel(string levelId)
         {
