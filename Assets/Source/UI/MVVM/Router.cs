@@ -45,12 +45,14 @@ namespace UnitMan.Source.UI.MVVM
         
         protected void RenderWithValue(TPageType pageValue)
         {
+            bool foundNewRoute = false;
             foreach (Route<TPageType> route in viewsToRender)
             {
                 // if (route.GetValue().Equals(state)) return;
-                if (route.GetValue().Equals(pageValue))
+                if (!foundNewRoute && route.GetValue().Equals(pageValue))
                 {
                     route.Render();
+                    foundNewRoute = true;
                     continue;
                 }
                 route.Hide();

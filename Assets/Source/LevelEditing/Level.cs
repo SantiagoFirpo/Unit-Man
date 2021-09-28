@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnitMan.Source.LevelEditing.Online;
-using UnitMan.Source.UI;
 using UnitMan.Source.UI.Components.LevelEditor;
 using UnityEngine;
 
@@ -35,7 +34,7 @@ namespace UnitMan.Source.LevelEditing
             this.name = name;
             this.authorName = authorName;
             this.authorId = authorId;
-            this.id = LevelEditorViewModel.GetUniqueId();
+            id = LevelEditorViewModel.GetUniqueId();
         }
 
         public void AddLevelObject(LevelObjectType objectType, Vector2Int position)
