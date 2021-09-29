@@ -1,6 +1,8 @@
-﻿using UnitMan.Source.UI.MVVM;
+﻿using System;
+using UnitMan.Source.Management.Firebase.Auth;
+using UnitMan.Source.UI.MVVM;
 
-namespace UnitMan.Source.UI.Routers
+namespace UnitMan.Source.UI.Routing.Routers
 {
     public class MainMenuRouter : Router<MainMenuRouter.MainMenuRoute>
     {
@@ -16,6 +18,12 @@ namespace UnitMan.Source.UI.Routers
             {
                 Instance = this;
             }
+        }
+
+        private void OnEnable()
+        {
+            if (FirebaseAuthManager.Instance.auth == null) return;
+            SetState(MainMenuRoute.Home);
         }
 
         public enum MainMenuRoute
