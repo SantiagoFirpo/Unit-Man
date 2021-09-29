@@ -93,7 +93,15 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         
         private void Awake()
         {
-            currentWorkingLevel = new Level(DEFAULT_LEVEL_NAME, FirebaseAuthManager.GetDisplayName(), FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
+            Level instanceLevel = CrossSceneLevelContainer.Instance.level;
+            currentWorkingLevel = instanceLevel ??
+                                  new Level(DEFAULT_LEVEL_NAME,
+                                      FirebaseAuthManager.GetDisplayName(),
+                                      FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
+            if (currentWorkingLevel == instanceLevel)
+            {
+                LoadCurrentLevelIntoEditor();
+            }
             identity = Quaternion.identity;
         }
 
@@ -211,18 +219,28 @@ namespace UnitMan.Source.UI.Components.LevelEditor
                 throw;
             }
 
+            LoadCurrentLevelIntoEditor();
+        }
+
+        private void LoadCurrentLevelIntoEditor()
+        {
             _levelEditManager.PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
         public void Upload()
         {
-            if (currentWorkingLevel.id == null) return;
-            string path = $"levels/{currentWorkingLevel.id}";
-            FirestoreLevel firestoreLevel = FirestoreLevel.FromLevel(currentWorkingLevel);
+            UploadLevelToFirestore(currentWorkingLevel);
+            levelUploadPing.Call();
+        }
+
+        public static void UploadLevelToFirestore(Level level)
+        {
+            if (level.id == null) return;
+            string path = $"levels/{level.id}";
+            FirestoreLevel firestoreLevel = FirestoreLevel.FromLevel(level);
             Debug.Log("Converted level to FirestoreLevel");
             FirebaseFirestore.DefaultInstance.Document(path).SetAsync(firestoreLevel);
             Debug.Log($"Saved level into {path}");
-            levelUploadPing.Call();
         }
 
         public void OnMouseWorldPositionChanged(Vector3 newValue)
