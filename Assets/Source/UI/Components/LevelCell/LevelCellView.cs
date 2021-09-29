@@ -23,6 +23,12 @@ namespace UnitMan.Source.UI.Components.LevelCell
         [SerializeField]
         private OneWayBinding uploadBinding;
 
+        [SerializeField]
+        private OneWayBinding leaderboardBinding;
+
+        [SerializeField]
+        private OneWayBinding deleteBinding;
+
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue($"LEVEL ID: {newValue}");
 
@@ -35,5 +41,9 @@ namespace UnitMan.Source.UI.Components.LevelCell
         public void OnEditButtonBinding() => editBinding.Call();
         
         public void OnUploadButtonPressed() => uploadBinding.Call();
+
+        public void LeaderboardPressed() => leaderboardBinding.Call();
+
+        public void DeletePressed() => deleteBinding.Call();
     }
 }

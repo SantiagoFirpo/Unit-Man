@@ -1,6 +1,9 @@
+using System.IO;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
+using UnitMan.Source.UI.Components.LevelEditor;
 using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,6 +44,22 @@ namespace UnitMan.Source.UI.Components.LevelCell
         {
             SetLoadedLevelToContainer();
             SceneManager.LoadScene("Level Editor");
+        }
+
+        public void OnUploadButtonPressed()
+        {
+            LevelEditorViewModel.UploadLevelToFirestore(_level);
+        }
+
+        public void LeaderboardPressed()
+        {
+            SetLoadedLevelToContainer();
+            SceneManager.LoadScene("Scoreboard");
+        }
+
+        public void DeletePressed()
+        {
+            File.Delete(@$"{FilePaths.LevelsPath}/{levelId.GetValue()}");
         }
     }
 }
