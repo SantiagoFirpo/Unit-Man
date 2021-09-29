@@ -1,7 +1,7 @@
 using System;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.MVVM;
-using UnitMan.Source.UI.Routers;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;

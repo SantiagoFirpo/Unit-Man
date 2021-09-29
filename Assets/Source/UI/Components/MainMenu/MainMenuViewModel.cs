@@ -8,7 +8,7 @@ using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.Management.Firebase.FirestoreLeaderboard;
 using UnitMan.Source.UI.Components.Auth;
 using UnitMan.Source.UI.MVVM;
-using UnitMan.Source.UI.Routers;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
