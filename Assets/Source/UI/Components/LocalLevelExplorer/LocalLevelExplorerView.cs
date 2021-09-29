@@ -1,7 +1,7 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.UI.Components.LocalLevelExplorer
 {
     public class LocalLevelExplorerView : View
     {
