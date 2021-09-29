@@ -64,6 +64,8 @@ namespace UnitMan.Source.Utilities.Pathfinding
 
         [SerializeField]
         private Transform ghostDoorTransform;
+        
+        private Vector2Int _gridOrigin;
 
         private bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
@@ -71,8 +73,9 @@ namespace UnitMan.Source.Utilities.Pathfinding
         }
         private void SetGridPosition(Vector2Int worldPosition, bool value)
         {
-            Vector2Int gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
-            _grid[-worldPosition.y + gridOrigin.y - 1][worldPosition.x - gridOrigin.x] = value;
+            Debug.Log(
+                $"World position: {worldPosition}, {value}, array value: ({-worldPosition.y + _gridOrigin.y - 1}, {worldPosition.x - _gridOrigin.x})");
+            _grid[-worldPosition.y + _gridOrigin.y - 1][worldPosition.x - _gridOrigin.x] = value;
         }
 
 
@@ -90,6 +93,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         private void Start()
         {
             level = CrossSceneLevelContainer.Instance.level;
+            _gridOrigin = level.topLeftPosition - new Vector2Int(-1, 1);
             LoadLevel();
         }
 
