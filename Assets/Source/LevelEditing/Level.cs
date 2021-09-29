@@ -72,5 +72,10 @@ namespace UnitMan.Source.LevelEditing
 
             return level;
         }
+        
+        public static Level FromJson(string levelJson)
+        {
+            return JsonUtility.FromJson<Level>(levelJson);
+        }
     }
 }
