@@ -500,6 +500,42 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8894800111247851392, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111375347277, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.8143102
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111375347277, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.8297681
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111375347277, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.71308446
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111816476222, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111887736686, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111887736686, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.9498026
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111887736686, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.8297681
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800111887736686, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.8396694
+      objectReference: {fileID: 0}
     - target: {fileID: 8894800111937355192, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
       propertyPath: m_Name
       value: Level Editor View
@@ -559,6 +595,26 @@ PrefabInstance:
     - target: {fileID: 8894800111937355194, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
       propertyPath: _mouseTilesetPosition.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800112226411214, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.688
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800112226411214, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.8297681
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800112226411214, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.59090406
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800112430670999, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894800112816292961, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8894800112831685092, guid: 6dfe81bddd4957042b5a8953952d16ed, type: 3}
       propertyPath: m_Name
