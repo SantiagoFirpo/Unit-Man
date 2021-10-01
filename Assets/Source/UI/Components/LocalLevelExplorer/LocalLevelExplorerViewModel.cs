@@ -11,7 +11,10 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
     public class LocalLevelExplorerViewModel : ViewModel
     {
         [SerializeField]
-        private LevelCellViewModel[] levelCells = new LevelCellViewModel[7];
+        private LevelCellViewModel[] levelCellViewModels = new LevelCellViewModel[7];
+
+        [SerializeField]
+        private GameObject[] levelCellViews = new GameObject[7];
 
         [SerializeField]
         private OneWayBinding<string> notificationBinding;
@@ -21,14 +24,21 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
         }
 
-        private void Start()
+        // private void Start()
+        // {
+        //     string[] localLevels = Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories);
+        //     RenderLevelsFromDisk(localLevels);
+        // }
+
+        private void RenderLevelsFromDisk(string[] localLevels)
         {
-            string[] localLevels = Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories);
-            for (int i = 0; i < levelCells.Length; i++)
+            Debug.Log(localLevels.Length);
+            for (int i = 0; i < localLevels.Length; i++)
             {
                 Debug.Log(i);
-                if (i == localLevels.Length) return;
-                levelCells[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
+                if (i == levelCellViewModels.Length) return;
+                levelCellViews[i].SetActive(true);
+                levelCellViewModels[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
             }
         }
 
@@ -40,6 +50,13 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         public void NotifyLevelDeletion(string levelName)
         {
             notificationBinding.SetValue($"LEVEL {levelName} WAS DELETED");
+        }
+        
+
+        public override void OnRendered()
+        {
+            Debug.Log("Should render levels!");
+            RenderLevelsFromDisk(Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories));
         }
     }
 }
