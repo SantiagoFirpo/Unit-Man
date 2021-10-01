@@ -6,7 +6,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts
     {
         // public T State { get; set; }
         // public T PreviousState { get; set; }
-        public void OnStateEntered();
+        public void OnStateEntered(T newState);
         public void SetState(T newState);
         public void OnStateExit();
 

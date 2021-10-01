@@ -450,7 +450,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            _state = newState;
            OnStateExit();
 
-           OnStateEntered();
+           OnStateEntered(newState);
        }
 
        public void OnStateExit()
@@ -498,7 +498,7 @@ namespace UnitMan.Source.Entities.Actors.Ghosts {
            return _state;
        }
 
-       public void OnStateEntered() {
+       public void OnStateEntered(GhostState newState) {
            animator.ResetTrigger(OnFleeEndTrigger);
            animator.ResetTrigger(OnFleeNearEndTrigger);
            
