@@ -1,6 +1,4 @@
-﻿using System;
-using UnitMan.Source.Management.Firebase.Auth;
-using UnitMan.Source.UI.MVVM;
+﻿using UnitMan.Source.Management.Firebase.Auth;
 
 namespace UnitMan.Source.UI.Routing.Routers
 {
@@ -20,9 +18,10 @@ namespace UnitMan.Source.UI.Routing.Routers
             }
         }
 
-        private void OnEnable()
+        protected override void Start()
         {
-            if (FirebaseAuthManager.Instance.auth == null) return;
+            base.Start();
+            if (FirebaseAuthManager.Instance.auth?.CurrentUser == null) return;
             SetState(MainMenuRoute.Home);
         }
 
