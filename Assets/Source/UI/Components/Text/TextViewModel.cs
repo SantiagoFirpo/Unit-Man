@@ -11,5 +11,9 @@ namespace UnitMan.Source.UI.Components.Text
         {
             textBinding.SetValue(value);
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }

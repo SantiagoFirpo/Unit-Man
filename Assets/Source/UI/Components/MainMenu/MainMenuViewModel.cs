@@ -127,5 +127,9 @@ namespace UnitMan.Source.UI.Components.MainMenu
                     }
                 });
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }

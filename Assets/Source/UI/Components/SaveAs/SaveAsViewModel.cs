@@ -20,5 +20,9 @@ namespace UnitMan.Source.UI.Components.SaveAs
         {
             _levelName = newValue;
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }

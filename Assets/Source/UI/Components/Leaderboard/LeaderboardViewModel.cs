@@ -57,5 +57,9 @@ namespace UnitMan.Source.UI.Components.Leaderboard
             if (!_isSignedIn) return false;
             return obj.playerId == FirebaseAuthManager.Instance.auth.CurrentUser.UserId;
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }

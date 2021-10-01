@@ -33,5 +33,9 @@ namespace UnitMan.Source.UI.Components.ScorePrompt
         {
             score.SetValue(SessionViewModel.Instance.score);
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }
