@@ -9,7 +9,7 @@ namespace UnitMan.Source.UI.MVVM
     {
         public GameObject GameObject {get; private set;}
 
-        private void Awake()
+        protected virtual void Awake()
         {
             GameObject = gameObject;
         }

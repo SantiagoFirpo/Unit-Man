@@ -9,9 +9,11 @@ namespace UnitMan.Source.UI.Components.Text
     {
         private TMP_Text _text;
 
-        private void Awake()
+        private void OnEnable()
         {
+            base.Awake();
             _text = GetComponent<TMP_Text>();
+            Debug.Log(_text != null);
         }
 
         public void OnTextChanged(string newText)
@@ -21,6 +23,8 @@ namespace UnitMan.Source.UI.Components.Text
 
         private void Render(string newText)
         {
+            Debug.Log(newText);
+            Debug.Log(_text != null);
             _text.SetText(newText);
         }
     }
