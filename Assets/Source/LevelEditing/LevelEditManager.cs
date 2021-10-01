@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnitMan.Source.LevelEditing;
 using UnitMan.Source.UI.Components.LevelEditor;
 using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
-namespace UnitMan.Source.UI
+namespace UnitMan.Source.LevelEditing
 {
     public class LevelEditManager
     {
