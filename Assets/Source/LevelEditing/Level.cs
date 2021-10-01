@@ -64,11 +64,14 @@ namespace UnitMan.Source.LevelEditing
                     pacManPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.PacManPosition),
                     
                 };
+            Debug.Log($"is ObjectPositions null? {firestoreLevel.ObjectPositions == null}");
+            if (firestoreLevel.ObjectPositions == null) return level;
             for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)
             {
                 level.objectPositions.Add(FirestoreVector2Int.ToVector2Int(firestoreLevel.ObjectPositions[i]));
                 level.objectTypes.Add(firestoreLevel.ObjectTypes[i]);
             }
+
 
             return level;
         }
