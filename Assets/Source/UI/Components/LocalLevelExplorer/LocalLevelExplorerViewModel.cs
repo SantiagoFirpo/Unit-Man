@@ -33,30 +33,33 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         private void RenderLevelsFromDisk(string[] localLevels)
         {
             Debug.Log(localLevels.Length);
-            for (int i = 0; i < localLevels.Length; i++)
+            for (int i = 0; i < levelCellViews.Length; i++)
             {
+                levelCellViews[i].SetActive(false);
                 Debug.Log(i);
-                if (i == levelCellViewModels.Length) return;
+                if (i >= localLevels.Length) continue;
                 levelCellViews[i].SetActive(true);
                 levelCellViewModels[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
             }
         }
 
-        public void NotifyLevelUpload(string levelName)
+        public void NotifyByToast(string message)
         {
-            notificationBinding.SetValue($"LEVEL {levelName} WAS UPLOADED");
+            notificationBinding.SetValue(message);
         }
 
-        public void NotifyLevelDeletion(string levelName)
+        public void RefreshedPressed()
         {
-            notificationBinding.SetValue($"LEVEL {levelName} WAS DELETED");
+            string[] localPaths = Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories);
+            RenderLevelsFromDisk(localPaths);
         }
         
 
         public override void OnRendered()
         {
             Debug.Log("Should render levels!");
-            RenderLevelsFromDisk(Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories));
+            string[] localPaths = Directory.GetFiles(FilePaths.LevelsPath, "*.json", SearchOption.AllDirectories);
+            RenderLevelsFromDisk(localPaths);
         }
     }
 }
