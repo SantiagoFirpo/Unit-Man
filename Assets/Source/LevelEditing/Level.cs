@@ -31,7 +31,7 @@ namespace UnitMan.Source.LevelEditing
 
         public Level(string name, string authorName, string authorId)
         {
-            this.name = name;
+            this.name = name == "" ? LevelEditorViewModel.DEFAULT_LEVEL_NAME : name;
             this.authorName = authorName;
             this.authorId = authorId;
             id = LevelEditorViewModel.GetUniqueId();
