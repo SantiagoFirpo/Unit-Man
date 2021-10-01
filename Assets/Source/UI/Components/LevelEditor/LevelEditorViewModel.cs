@@ -19,7 +19,6 @@ namespace UnitMan.Source.UI.Components.LevelEditor
     {
         public const string DEFAULT_LEVEL_NAME = "New Level";
 
-        private bool _isLevelDirty = true;
 
         [SerializeField]
         private OneWayBinding<BrushType> selectedBrushBinding;
@@ -94,13 +93,19 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private void Awake()
         {
             Level instanceLevel = CrossSceneLevelContainer.Instance.level;
-            currentWorkingLevel = instanceLevel ??
-                                  new Level(DEFAULT_LEVEL_NAME,
-                                      FirebaseAuthManager.GetDisplayName(),
-                                      FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
-            if (currentWorkingLevel == instanceLevel)
+            if (instanceLevel != null)
             {
+                currentWorkingLevel = instanceLevel;
+                Debug.Log("Loading Level...");
                 LoadCurrentLevelIntoEditor();
+                
+            }
+            else
+            {
+                Debug.Log("creating new level...");
+                currentWorkingLevel = new Level(DEFAULT_LEVEL_NAME,
+                    FirebaseAuthManager.GetDisplayName(),
+                    FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
             }
             identity = Quaternion.identity;
         }
@@ -169,7 +174,10 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             }
             else
             {
-                _isLevelDirty = false;
+                if (currentWorkingLevel.id == "")
+                {
+                    currentWorkingLevel.id = GetUniqueId();
+                }
                 SaveLevelToDisk();
             }
 
@@ -286,6 +294,11 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         public void OnRightClickChanged(bool newValue)
         {
             _isRightClicking = newValue;
+        }
+
+        public override void OnRendered()
+        {
+            throw new NotImplementedException();
         }
     }
 
