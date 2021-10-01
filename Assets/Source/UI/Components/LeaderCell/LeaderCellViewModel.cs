@@ -36,5 +36,9 @@ namespace UnitMan.Source.UI.Components.LeaderCell
         {
             isUserScoreBinding.Call();
         }
+
+        public override void OnRendered()
+        {
+        }
     }
 }
