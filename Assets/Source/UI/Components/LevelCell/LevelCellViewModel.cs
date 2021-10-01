@@ -11,7 +11,8 @@ namespace UnitMan.Source.UI.Components.LevelCell
 {
     public class LevelCellViewModel : ViewModel
     {
-        private Level _level;
+        [SerializeField]
+        private Level level;
         [SerializeField]
         private OneWayBinding<string> levelName = new OneWayBinding<string>();
 
@@ -21,9 +22,11 @@ namespace UnitMan.Source.UI.Components.LevelCell
         [SerializeField]
         private OneWayBinding<string> levelId = new OneWayBinding<string>();
 
+
         public void RenderWithLevelObject(Level levelObject)
         {
-            _level = levelObject;
+            // thisTransform.parent.gameObject.SetActive(true);
+            level = levelObject;
             levelName.SetValue(levelObject.name);
             authorName.SetValue(levelObject.authorName);
             levelId.SetValue(levelObject.id);
@@ -37,7 +40,7 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         private void SetLoadedLevelToContainer()
         {
-            CrossSceneLevelContainer.Instance.level = _level;
+            CrossSceneLevelContainer.Instance.level = level;
         }
 
         public void OnEditButtonPressed()
@@ -48,7 +51,7 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         public void OnUploadButtonPressed()
         {
-            LevelEditorViewModel.UploadLevelToFirestore(_level);
+            LevelEditorViewModel.UploadLevelToFirestore(level);
         }
 
         public void LeaderboardPressed()
@@ -60,6 +63,10 @@ namespace UnitMan.Source.UI.Components.LevelCell
         public void DeletePressed()
         {
             File.Delete(@$"{FilePaths.LevelsPath}/{levelId.GetValue()}");
+        }
+
+        public override void OnRendered()
+        {
         }
     }
 }
