@@ -22,6 +22,9 @@ namespace UnitMan.Source.UI.Components.LevelCell
         [SerializeField]
         private OneWayBinding<string> levelId = new OneWayBinding<string>();
 
+        [SerializeField]
+        private OneWayBinding<string> notificationBinding;
+
 
         public void RenderWithLevelObject(Level levelObject)
         {
@@ -52,6 +55,7 @@ namespace UnitMan.Source.UI.Components.LevelCell
         public void OnUploadButtonPressed()
         {
             LevelEditorViewModel.UploadLevelToFirestore(level);
+            notificationBinding.SetValue($"LEVEL {level.name} UPLOADED SUCCESSFULLY");
         }
 
         public void LeaderboardPressed()
@@ -62,7 +66,8 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         public void DeletePressed()
         {
-            File.Delete(@$"{FilePaths.LevelsPath}/{levelId.GetValue()}");
+            File.Delete($"{FilePaths.LevelsPath}/{levelId.GetValue()}.json");
+            notificationBinding.SetValue($"LEVEL {level.name} DELETED SUCCESSFULLY");
         }
 
         public override void OnRendered()
