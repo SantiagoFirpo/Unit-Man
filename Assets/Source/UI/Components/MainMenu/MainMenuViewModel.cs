@@ -73,18 +73,19 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         public void OnPlayButtonPressed()
         {
-            try
-            {
-                LoadLocalLevel(levelId);
-                SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-                Debug.Log("Failed to fetch locally, Downloading level from firestore");
-                //Display "loading..."
-                DownloadFirestoreLevelWithId(levelId);
-            }
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.OnlineLevelExplorer);
+            // try
+            // {
+            //     LoadLocalLevel(levelId);
+            //     SceneManager.LoadScene("Gameplay", LoadSceneMode.Single);
+            // }
+            // catch (Exception e)
+            // {
+            //     Debug.LogException(e);
+            //     Debug.Log("Failed to fetch locally, Downloading level from firestore");
+            //     //Display "loading..."
+            //     DownloadFirestoreLevelWithId(levelId);
+            // }
         }
 
         public void OnMyLevelsButtonPressed()
