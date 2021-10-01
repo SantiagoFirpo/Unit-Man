@@ -175,8 +175,9 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             brushPreviewTransform.position = mouseWorldPositionBuffer;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _inputMap = new Gameplay();
             _inputMap.Enable();
             _inputMap.UI.Point.performed += OnMouseMove;
