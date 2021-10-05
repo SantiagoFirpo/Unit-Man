@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelEditor
 {
@@ -14,22 +13,22 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         [Header("Bindings")]
 
         [SerializeField]
-        private Event uploadBinding;
+        private ReactiveEvent uploadBinding;
 
         [SerializeField]
-        private Event saveBinding;
+        private ReactiveEvent saveBinding;
 
         [SerializeField]
-        private Event loadBinding;
+        private ReactiveEvent loadBinding;
 
         [SerializeField]
-        private Event mainMenuBinding;
+        private ReactiveEvent mainMenuBinding;
 
         [SerializeField]
-        private Event copyIdBinding;
+        private ReactiveEvent copyIdBinding;
 
         [SerializeField]
-        private Event toggleHudBinding;
+        private ReactiveEvent toggleHudBinding;
 
         [SerializeField]
         private ReactiveProperty<BrushType> brushTypeBinding;

@@ -1,7 +1,6 @@
 using TMPro;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.Auth
 {
@@ -13,11 +12,11 @@ namespace UnitMan.Source.UI.Components.Auth
         
 
         [SerializeField]
-        private Event loginBinding = new Event();
+        private ReactiveEvent loginBinding = new ReactiveEvent();
         [SerializeField]
-        private Event registerBinding = new Event();
+        private ReactiveEvent registerBinding = new ReactiveEvent();
         [SerializeField]
-        private Event signOutBinding = new Event();
+        private ReactiveEvent signOutBinding = new ReactiveEvent();
 
         [SerializeField]
         private TMP_InputField emailField;

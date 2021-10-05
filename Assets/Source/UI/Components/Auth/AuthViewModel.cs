@@ -5,7 +5,6 @@ using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.Auth
 {
@@ -23,7 +22,7 @@ namespace UnitMan.Source.UI.Components.Auth
         private Timer _redirectDelayTimer;
         
         [SerializeField]
-        private Event clearFormsBinding = new Event();
+        private ReactiveEvent clearFormsBinding = new ReactiveEvent();
 
         private void Awake()
         {

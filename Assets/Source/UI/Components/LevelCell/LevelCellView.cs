@@ -1,6 +1,5 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelCell
 {
@@ -16,19 +15,19 @@ namespace UnitMan.Source.UI.Components.LevelCell
         private ReactiveProperty<string> levelNameBinding;
 
         [SerializeField]
-        private Event playBinding;
+        private ReactiveEvent playBinding;
 
         [SerializeField]
-        private Event editBinding;
+        private ReactiveEvent editBinding;
         
         [SerializeField]
-        private Event uploadBinding;
+        private ReactiveEvent uploadBinding;
 
         [SerializeField]
-        private Event leaderboardBinding;
+        private ReactiveEvent leaderboardBinding;
 
         [SerializeField]
-        private Event deleteBinding;
+        private ReactiveEvent deleteBinding;
 
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue($"LEVEL ID: {newValue}");

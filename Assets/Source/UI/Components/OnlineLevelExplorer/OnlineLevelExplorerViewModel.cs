@@ -14,19 +14,13 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
     public class OnlineLevelExplorerViewModel : ViewModel
     {
         [SerializeField]
-        private LevelCellViewModel[] levelCellViewModels = new LevelCellViewModel[7];
-
-        [SerializeField]
-        private GameObject[] levelCellViews = new GameObject[7];
-
-        [SerializeField]
         private ReactiveProperty<string> notificationBinding;
         
         private IEnumerable<Level> _levels;
         [SerializeField]
         private GameObject levelCell;
 
-        private List<GameObject> _activeLevelCells = new List<GameObject>();
+        private readonly List<GameObject> _activeLevelCells = new List<GameObject>();
 
         [SerializeField]
         private Transform contentTransform;
@@ -111,14 +105,10 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
             }
         }
 
-        private static FirestoreLevel SnapshotToFirestoreLevel(DocumentSnapshot level)
-        {
-            return level.ConvertTo<FirestoreLevel>();
-        }
-
 
         public override void OnRendered()
         {
+            Debug.Log("Online Level Explorer Rendered");
             FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
             firestore.Collection("/levels").Listen(ListenCallback);
             Refresh();

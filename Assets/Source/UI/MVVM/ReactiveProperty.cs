@@ -21,12 +21,4 @@ namespace UnitMan.Source.UI.MVVM
             return value;
         }
     }
-    [Serializable]
-    public class Event : UnityEvent
-    {
-        public void Call()
-        {
-            Invoke();
-        }
-    }
 }

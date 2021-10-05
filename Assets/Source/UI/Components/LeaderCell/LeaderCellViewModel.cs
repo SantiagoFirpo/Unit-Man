@@ -1,7 +1,6 @@
 ﻿using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LeaderCell
 {
@@ -16,10 +15,10 @@ namespace UnitMan.Source.UI.Components.LeaderCell
         private ReactiveProperty<int> scoreBinding;
 
         [SerializeField]
-        private Event isLastBinding = new Event();
+        private ReactiveEvent isLastBinding = new ReactiveEvent();
 
         [SerializeField]
-        private Event isUserScoreBinding = new Event();
+        private ReactiveEvent isUserScoreBinding = new ReactiveEvent();
 
         public void SetLocalLeaderState(LocalLeaderData leaderData)
         {

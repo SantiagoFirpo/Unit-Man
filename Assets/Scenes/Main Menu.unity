@@ -750,24 +750,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a023f446a5d643c0b01b9271bc0c13fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCellViewModels:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  levelCellViews:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   notificationBinding:
     m_PersistentCalls:
       m_Calls:
@@ -1963,15 +1945,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 20
-    m_Right: 0
+    m_Right: 20
     m_Top: 20
-    m_Bottom: 0
+    m_Bottom: 20
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 400, y: 150}
-  m_Spacing: {x: 0, y: 20}
-  m_Constraint: 1
+  m_Spacing: {x: 20, y: 20}
+  m_Constraint: 0
   m_ConstraintCount: 1
 --- !u!114 &2790156871416031650
 MonoBehaviour:

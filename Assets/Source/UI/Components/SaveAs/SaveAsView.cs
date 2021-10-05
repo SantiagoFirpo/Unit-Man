@@ -1,13 +1,12 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.SaveAs
 {
     public class SaveAsView : MonoBehaviour
     {
         [SerializeField]
-        private Event saveButtonBinding = new Event();
+        private ReactiveEvent saveButtonBinding = new ReactiveEvent();
 
         [SerializeField]
         private ReactiveProperty<string> levelNameBinding = new ReactiveProperty<string>();

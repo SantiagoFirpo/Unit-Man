@@ -12,7 +12,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
-using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelEditor
 {
@@ -75,11 +74,11 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private ReactiveProperty<bool> isUIActiveBinding;
 
         [SerializeField]
-        private Event clipboardPingBinding;
+        private ReactiveEvent clipboardPingBinding;
 
         private string _levelId;
         [SerializeField]
-        private Event levelUploadPing;
+        private ReactiveEvent levelUploadPing;
 
         private bool _isRightClicking;
         private bool _isLeftClicking;
