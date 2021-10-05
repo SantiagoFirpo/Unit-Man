@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.UI.Components.LevelCell;
@@ -19,6 +20,14 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         [SerializeField]
         private ReactiveProperty<string> notificationBinding;
 
+        [SerializeField]
+        private Transform contentTransform;
+
+        [SerializeField]
+        private GameObject levelCell;
+
+        private List<GameObject> _activeLevelCells = new List<GameObject>();
+
         public void OnMainMenuPressed()
         {
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
@@ -32,14 +41,27 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
 
         private void RenderLevelsFromDisk(string[] localLevels)
         {
+            DestroyAllCells(); //TODO: recycle level cells
             Debug.Log(localLevels.Length);
-            for (int i = 0; i < levelCellViews.Length; i++)
+            foreach (string localLevelPath in localLevels)
             {
-                levelCellViews[i].SetActive(false);
-                Debug.Log(i);
-                if (i >= localLevels.Length) continue;
-                levelCellViews[i].SetActive(true);
-                levelCellViewModels[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
+                GameObject levelCellGameObject = Instantiate(levelCell, Vector3.zero, Quaternion.identity, contentTransform);
+                levelCellGameObject.SetActive(true);
+                levelCellGameObject.GetComponentInChildren<LevelCellViewModel>().RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevelPath)));
+                _activeLevelCells.Add(levelCellGameObject);
+                // levelCellViews[i].SetActive(false);
+                // Debug.Log(i);
+                // if (i >= localLevels.Length) continue;
+                // levelCellViews[i].SetActive(true);
+                // levelCellViewModels[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
+            }
+        }
+        
+        private void DestroyAllCells()
+        {
+            foreach (GameObject activeLevelCell in _activeLevelCells)
+            {
+                Destroy(activeLevelCell);
             }
         }
 

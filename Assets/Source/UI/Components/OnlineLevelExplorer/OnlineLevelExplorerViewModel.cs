@@ -23,6 +23,13 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         private ReactiveProperty<string> notificationBinding;
         
         private IEnumerable<Level> _levels;
+        [SerializeField]
+        private GameObject levelCell;
+
+        private List<GameObject> _activeLevelCells = new List<GameObject>();
+
+        [SerializeField]
+        private Transform contentTransform;
 
         public void OnMainMenuPressed()
         {
@@ -52,15 +59,28 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         private void RenderLevels(IEnumerable<Level> newLevels)
         {
             Level[] levelArray = newLevels.ToArray();
-            Debug.Log(levelArray.Length);
-            for (int i = 0; i < levelCellViews.Length; i++)
+
+            foreach (Level level in levelArray)
             {
-                levelCellViews[i].SetActive(false);
-                Debug.Log(i);
-                if (i >= levelArray.Length) continue;
-                levelCellViews[i].SetActive(true);
-                levelCellViewModels[i].RenderWithLevelObject(levelArray[i]);
+                GameObject levelCellGameObject = Instantiate(levelCell, Vector3.zero, Quaternion.identity, contentTransform);
+                levelCellGameObject.SetActive(true);
+                levelCellGameObject.GetComponentInChildren<LevelCellViewModel>().RenderWithLevelObject(level);
+                _activeLevelCells.Add(levelCellGameObject);
+                // levelCellViews[i].SetActive(false);
+                // Debug.Log(i);
+                // if (i >= localLevels.Length) continue;
+                // levelCellViews[i].SetActive(true);
+                // levelCellViewModels[i].RenderWithLevelObject(Level.FromJson(File.ReadAllText(localLevels[i])));
             }
+            Debug.Log(levelArray.Length);
+            // for (int i = 0; i < levelCellViews.Length; i++)
+            // {
+            //     levelCellViews[i].SetActive(false);
+            //     Debug.Log(i);
+            //     if (i >= levelArray.Length) continue;
+            //     levelCellViews[i].SetActive(true);
+            //     levelCellViewModels[i].RenderWithLevelObject(levelArray[i]);
+            // }
         }
 
         public void NotifyByToast(string message)
@@ -70,6 +90,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
 
         public void Refresh()
         {
+            DestroyAllCells();
             FirebaseFirestore.DefaultInstance.Collection("/levels").GetSnapshotAsync().ContinueWithOnMainThread(
                 task =>
                 {
@@ -80,6 +101,14 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
                     
                     RenderLevels(task.Result.Select(LevelDocumentToLevelObject));
                 });
+        }
+
+        private void DestroyAllCells()
+        {
+            foreach (GameObject activeLevelCell in _activeLevelCells)
+            {
+                Destroy(activeLevelCell);
+            }
         }
 
         private static FirestoreLevel SnapshotToFirestoreLevel(DocumentSnapshot level)
