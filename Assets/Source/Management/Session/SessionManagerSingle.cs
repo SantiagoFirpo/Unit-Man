@@ -19,6 +19,8 @@ namespace UnitMan.Source.Management.Session
         private const float DEATH_ANIMATION_SECONDS = 1.5f;
         private Timer _startupTimer;
         private Timer _deathAnimationTimer;
+
+        private bool _isGamePaused = false;
         
         private const int POINT_PER_LIFE_REMAINING = 500;
         
@@ -64,8 +66,23 @@ namespace UnitMan.Source.Management.Session
             onPelletEatenObservable = new Observable();
             powerPelletObservable = new Observable();
         }
-        
-        
+
+        public void ToggleUserPause()
+        {
+            _isGamePaused = !_isGamePaused;
+            if (_isGamePaused)
+            {
+                AudioManagerSingle.Instance.StopAllTracks();
+                Freeze();
+            }
+            else
+            {
+                AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Siren, 1, true);
+                Unfreeze();
+            }
+        }
+
+
 
         private void DeathAnimationTimerOnOnEnd()
         {
