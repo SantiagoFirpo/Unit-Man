@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Firebase.Extensions;
 using Firebase.Firestore;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
@@ -28,15 +29,10 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
         }
 
-        private void Start()
-        {
-            FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
-            firestore.Collection("/levels").Listen(ListenCallback);
-        }
-        
         private void ListenCallback(QuerySnapshot dataSnapshot)
         {
             _levels = dataSnapshot.Documents.Select(LevelDocumentToLevelObject);
+            Debug.Log(_levels);
         }
 
         public static Level LevelDocumentToLevelObject(DocumentSnapshot documentSnapshot)
@@ -72,15 +68,31 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
             notificationBinding.SetValue(message);
         }
 
-        public void RefreshedPressed()
+        public void Refresh()
         {
-            RenderLevels(_levels);
+            FirebaseFirestore.DefaultInstance.Collection("/levels").GetSnapshotAsync().ContinueWithOnMainThread(
+                task =>
+                {
+                    if (task.Exception != null)
+                    {
+                        Debug.Log(task.Exception.Message);
+                    }
+                    
+                    RenderLevels(task.Result.Select(LevelDocumentToLevelObject));
+                });
         }
-        
+
+        private static FirestoreLevel SnapshotToFirestoreLevel(DocumentSnapshot level)
+        {
+            return level.ConvertTo<FirestoreLevel>();
+        }
+
 
         public override void OnRendered()
         {
-            RenderLevels(_levels);
+            FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
+            firestore.Collection("/levels").Listen(ListenCallback);
+            Refresh();
         }
     }
 }
