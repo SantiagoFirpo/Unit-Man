@@ -8,7 +8,7 @@ namespace UnitMan.Source.UI.Components.SaveAs
     {
         private string _levelName;
         [SerializeField]
-        private OneWayBinding<string> saveBinding;
+        private ReactiveProperty<string> saveBinding;
 
         public void OnSaveButtonPressed()
         {

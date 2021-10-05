@@ -14,10 +14,10 @@ namespace UnitMan.Source.Management.Session
         public bool won = false;
 
         [SerializeField]
-        private OneWayBinding<string> livesBinding;
+        private ReactiveProperty<string> livesBinding;
 
         [SerializeField]
-        private OneWayBinding<string> scoreBinding;
+        private ReactiveProperty<string> scoreBinding;
         
         [SerializeField]
         private TMP_Text scoreLabel;

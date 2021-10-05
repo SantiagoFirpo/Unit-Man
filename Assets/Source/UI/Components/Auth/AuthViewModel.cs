@@ -5,6 +5,7 @@ using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnitMan.Source.Utilities.TimeTracking;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.Auth
 {
@@ -16,13 +17,13 @@ namespace UnitMan.Source.UI.Components.Auth
         private string password;
 
         [SerializeField]
-        private OneWayBinding<string> authStatusMessageBinding = new OneWayBinding<string>();
+        private ReactiveProperty<string> authStatusMessageBinding = new ReactiveProperty<string>();
 
         private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
         private Timer _redirectDelayTimer;
         
         [SerializeField]
-        private OneWayBinding clearFormsBinding = new OneWayBinding();
+        private Event clearFormsBinding = new Event();
 
         private void Awake()
         {

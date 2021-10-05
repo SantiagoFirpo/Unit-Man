@@ -1,33 +1,34 @@
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelCell
 {
     public class LevelCellView : View
     {
         [SerializeField]
-        private OneWayBinding<string> levelIdBinding;
+        private ReactiveProperty<string> levelIdBinding;
 
         [SerializeField]
-        private OneWayBinding<string> authorNameBinding;
+        private ReactiveProperty<string> authorNameBinding;
 
         [SerializeField]
-        private OneWayBinding<string> levelNameBinding;
+        private ReactiveProperty<string> levelNameBinding;
 
         [SerializeField]
-        private OneWayBinding playBinding;
+        private Event playBinding;
 
         [SerializeField]
-        private OneWayBinding editBinding;
+        private Event editBinding;
         
         [SerializeField]
-        private OneWayBinding uploadBinding;
+        private Event uploadBinding;
 
         [SerializeField]
-        private OneWayBinding leaderboardBinding;
+        private Event leaderboardBinding;
 
         [SerializeField]
-        private OneWayBinding deleteBinding;
+        private Event deleteBinding;
 
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue($"LEVEL ID: {newValue}");

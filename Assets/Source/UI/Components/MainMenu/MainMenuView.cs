@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
@@ -9,29 +10,29 @@ namespace UnitMan.Source.UI.Components.MainMenu
         [Header("App Navigation Button Bindings")]
 
         [SerializeField]
-        private OneWayBinding quitButtonBinding;
+        private Event quitButtonBinding;
 
         // [SerializeField]
         // private Binding leaderboardButtonBinding;
 
         [SerializeField]
-        private OneWayBinding<string> authStatusMessage;
+        private ReactiveProperty<string> authStatusMessage;
         
         [SerializeField]
-        private OneWayBinding playButtonBinding;
+        private Event playButtonBinding;
 
         [SerializeField]
-        private OneWayBinding levelEditorButtonBinding;
+        private Event levelEditorButtonBinding;
 
         [Header("Custom Level Input Bindings")]
         [SerializeField]
-        private OneWayBinding<string> levelIdBinding;
+        private ReactiveProperty<string> levelIdBinding;
 
         [SerializeField]
-        private OneWayBinding signOutBinding;
+        private Event signOutBinding;
         
         [SerializeField]
-        private OneWayBinding myLevelsBinding = new OneWayBinding();
+        private Event myLevelsBinding = new Event();
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue(newValue);
 

@@ -9,7 +9,7 @@ namespace UnitMan.Source.UI.Routing
     public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : struct, Enum
     {
         [SerializeField]
-        protected OneWayBinding<TPageType> state = new OneWayBinding<TPageType>();
+        protected ReactiveProperty<TPageType> state = new ReactiveProperty<TPageType>();
 
         [SerializeField]
         protected Route<TPageType>[] viewsToRender;

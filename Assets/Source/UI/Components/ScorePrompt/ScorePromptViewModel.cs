@@ -8,7 +8,7 @@ namespace UnitMan.Source.UI.Components.ScorePrompt
     public class ScorePromptViewModel : ViewModel
     {
         [SerializeField]
-        private OneWayBinding<int> score;
+        private ReactiveProperty<int> score;
         private string _playerName;
 
         [SerializeField]

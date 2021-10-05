@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.ScorePrompt
 {
@@ -11,13 +12,13 @@ namespace UnitMan.Source.UI.Components.ScorePrompt
         private TMP_Text scoreLabel;
 
         [SerializeField]
-        private OneWayBinding<string> nameBinding;
+        private ReactiveProperty<string> nameBinding;
 
         [SerializeField]
-        private OneWayBinding yesButtonBinding = new OneWayBinding();
+        private Event yesButtonBinding = new Event();
 
         [SerializeField]
-        private OneWayBinding noButtonBinding = new OneWayBinding();
+        private Event noButtonBinding = new Event();
 
         public void OnScoreChanged(int newScore)
         {

@@ -23,7 +23,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
         private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
 
         [SerializeField]
-        private OneWayBinding<string> authStatus = new OneWayBinding<string>();
+        private ReactiveProperty<string> authStatus = new ReactiveProperty<string>();
 
         private void Awake()
         {

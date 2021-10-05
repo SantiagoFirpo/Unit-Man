@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelEditor
 {
@@ -21,7 +22,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
 
         [SerializeField]
-        private OneWayBinding<BrushType> selectedBrushBinding;
+        private ReactiveProperty<BrushType> selectedBrushBinding;
         [SerializeField]
         public Level currentWorkingLevel;
 
@@ -71,14 +72,14 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         public Transform ghostDoor;
 
         [SerializeField]
-        private OneWayBinding<bool> isUIActiveBinding;
+        private ReactiveProperty<bool> isUIActiveBinding;
 
         [SerializeField]
-        private OneWayBinding clipboardPingBinding;
+        private Event clipboardPingBinding;
 
         private string _levelId;
         [SerializeField]
-        private OneWayBinding levelUploadPing;
+        private Event levelUploadPing;
 
         private bool _isRightClicking;
         private bool _isLeftClicking;

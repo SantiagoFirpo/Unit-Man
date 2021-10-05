@@ -1,24 +1,25 @@
 ﻿using UnitMan.Source.Management.Session.LocalLeaderboard;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LeaderCell
 {
     public class LeaderCellViewModel : ViewModel
     {
         [SerializeField]
-        private OneWayBinding<uint> positionBinding;
+        private ReactiveProperty<uint> positionBinding;
         [SerializeField]
-        private OneWayBinding<string> playerDisplayNameBinding;
+        private ReactiveProperty<string> playerDisplayNameBinding;
         
         [SerializeField]
-        private OneWayBinding<int> scoreBinding;
+        private ReactiveProperty<int> scoreBinding;
 
         [SerializeField]
-        private OneWayBinding isLastBinding = new OneWayBinding();
+        private Event isLastBinding = new Event();
 
         [SerializeField]
-        private OneWayBinding isUserScoreBinding = new OneWayBinding();
+        private Event isUserScoreBinding = new Event();
 
         public void SetLocalLeaderState(LocalLeaderData leaderData)
         {

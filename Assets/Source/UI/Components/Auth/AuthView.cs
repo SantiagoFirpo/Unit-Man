@@ -1,22 +1,23 @@
 using TMPro;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.Auth
 {
     public class AuthView : View
     {
         [Header("Auth Bindings")]
-        public OneWayBinding<string> emailBinding = new OneWayBinding<string>();
-        public OneWayBinding<string> passwordBinding = new OneWayBinding<string>();
+        public ReactiveProperty<string> emailBinding = new ReactiveProperty<string>();
+        public ReactiveProperty<string> passwordBinding = new ReactiveProperty<string>();
         
 
         [SerializeField]
-        private OneWayBinding loginBinding = new OneWayBinding();
+        private Event loginBinding = new Event();
         [SerializeField]
-        private OneWayBinding registerBinding = new OneWayBinding();
+        private Event registerBinding = new Event();
         [SerializeField]
-        private OneWayBinding signOutBinding = new OneWayBinding();
+        private Event signOutBinding = new Event();
 
         [SerializeField]
         private TMP_InputField emailField;

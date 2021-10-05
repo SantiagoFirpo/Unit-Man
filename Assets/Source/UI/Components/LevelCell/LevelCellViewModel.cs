@@ -14,16 +14,16 @@ namespace UnitMan.Source.UI.Components.LevelCell
         [SerializeField]
         private Level level;
         [SerializeField]
-        private OneWayBinding<string> levelName = new OneWayBinding<string>();
+        private ReactiveProperty<string> levelName = new ReactiveProperty<string>();
 
         [SerializeField]
-        private OneWayBinding<string> authorName = new OneWayBinding<string>();
+        private ReactiveProperty<string> authorName = new ReactiveProperty<string>();
 
         [SerializeField]
-        private OneWayBinding<string> levelId = new OneWayBinding<string>();
+        private ReactiveProperty<string> levelId = new ReactiveProperty<string>();
 
         [SerializeField]
-        private OneWayBinding<string> notificationBinding;
+        private ReactiveProperty<string> notificationBinding;
 
 
         public void RenderWithLevelObject(Level levelObject)

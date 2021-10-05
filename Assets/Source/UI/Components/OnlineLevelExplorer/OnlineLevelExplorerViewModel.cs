@@ -20,7 +20,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         private GameObject[] levelCellViews = new GameObject[7];
 
         [SerializeField]
-        private OneWayBinding<string> notificationBinding;
+        private ReactiveProperty<string> notificationBinding;
         
         private IEnumerable<Level> _levels;
 

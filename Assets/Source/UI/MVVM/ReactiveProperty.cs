@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace UnitMan.Source.UI.MVVM
 {
     [Serializable]
-    public class OneWayBinding<T> : UnityEvent<T>
+    public class ReactiveProperty<T> : UnityEvent<T>
     {
         [SerializeField]
         private T value;
@@ -22,7 +22,7 @@ namespace UnitMan.Source.UI.MVVM
         }
     }
     [Serializable]
-    public class OneWayBinding : UnityEvent
+    public class Event : UnityEvent
     {
         public void Call()
         {

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
+using Event = UnitMan.Source.UI.MVVM.Event;
 
 namespace UnitMan.Source.UI.Components.LevelEditor
 {
@@ -13,43 +14,43 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         [Header("Bindings")]
 
         [SerializeField]
-        private OneWayBinding uploadBinding;
+        private Event uploadBinding;
 
         [SerializeField]
-        private OneWayBinding saveBinding;
+        private Event saveBinding;
 
         [SerializeField]
-        private OneWayBinding loadBinding;
+        private Event loadBinding;
 
         [SerializeField]
-        private OneWayBinding mainMenuBinding;
+        private Event mainMenuBinding;
 
         [SerializeField]
-        private OneWayBinding copyIdBinding;
+        private Event copyIdBinding;
 
         [SerializeField]
-        private OneWayBinding toggleHudBinding;
+        private Event toggleHudBinding;
 
         [SerializeField]
-        private OneWayBinding<BrushType> brushTypeBinding;
+        private ReactiveProperty<BrushType> brushTypeBinding;
         
         [SerializeField]
-        private OneWayBinding<string> levelIdBinding;
+        private ReactiveProperty<string> levelIdBinding;
         
         [SerializeField]
-        private OneWayBinding<bool> leftClickBinding;
+        private ReactiveProperty<bool> leftClickBinding;
 
         [SerializeField]
-        private OneWayBinding<bool> pointerOverUIBinding;
+        private ReactiveProperty<bool> pointerOverUIBinding;
 
         [SerializeField]
-        private OneWayBinding<bool> rightClickBinding;
+        private ReactiveProperty<bool> rightClickBinding;
 
         [SerializeField]
-        private OneWayBinding<Vector3Int> mouseTilesetPosition;
+        private ReactiveProperty<Vector3Int> mouseTilesetPosition;
 
         [SerializeField]
-        private OneWayBinding<Vector3> mouseWorldPosition;
+        private ReactiveProperty<Vector3> mouseWorldPosition;
         
         [Header("Icons")]
 
