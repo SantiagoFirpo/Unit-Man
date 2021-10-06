@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
@@ -21,6 +22,10 @@ namespace UnitMan.Source.Management.Session
         
         [SerializeField]
         private TMP_Text scoreLabel;
+
+        [SerializeField]
+        private ReactiveProperty<bool> virtualStickVisibility;
+
         public static SessionViewModel Instance
         {
             get;
@@ -32,6 +37,11 @@ namespace UnitMan.Source.Management.Session
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        // private void Start()
+        // {
+        //     virtualStickVisibility.SetValue(Application.isMobilePlatform);
+        // }
 
         public void LoseLife() {
             lives--;
@@ -51,7 +61,7 @@ namespace UnitMan.Source.Management.Session
         }
 
         private void UpdateLivesLabel() {
-            livesBinding.SetValue($"Lives: \n {lives}"); 
+            livesBinding.SetValue($"Lives: {lives}"); 
             // _scoreLabel.text = $"Score: {_score}";
         }
     }
