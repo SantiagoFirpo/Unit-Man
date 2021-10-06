@@ -25,6 +25,9 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         [SerializeField]
         private Transform contentTransform;
 
+        [SerializeField]
+        private ReactiveEvent onLevelLoadEvent;
+
         public void OnMainMenuPressed()
         {
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
@@ -75,6 +78,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
             //     levelCellViews[i].SetActive(true);
             //     levelCellViewModels[i].RenderWithLevelObject(levelArray[i]);
             // }
+            onLevelLoadEvent.Call();
         }
 
         public void NotifyByToast(string message)
