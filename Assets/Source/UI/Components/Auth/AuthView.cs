@@ -24,6 +24,9 @@ namespace UnitMan.Source.UI.Components.Auth
         [SerializeField]
         private TMP_InputField passwordField;
 
+        [SerializeField]
+        private ReactiveEvent quitEvent;
+
         public void OnEmailChanged(string email) => emailBinding.SetValue(email);
 
         public void OnPasswordChanged(string password) => passwordBinding.SetValue(password);
@@ -33,6 +36,8 @@ namespace UnitMan.Source.UI.Components.Auth
         public void OnRegisterButtonPressed() => registerBinding.Call();
 
         public void OnSignOutButtonPressed() => signOutBinding.Call();
+
+        public void QuitPressed() => quitEvent.Call();
 
 
         public void ClearForms()

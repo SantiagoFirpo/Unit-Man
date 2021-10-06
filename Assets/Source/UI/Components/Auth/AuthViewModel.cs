@@ -36,6 +36,11 @@ namespace UnitMan.Source.UI.Components.Auth
             _redirectDelayTimer.OnEnd += RedirectDelayTimerOnOnEnd;
         }
 
+        public void Quit()
+        {
+            Application.Quit();
+        }
+
         private static void RedirectDelayTimerOnOnEnd()
         {
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
