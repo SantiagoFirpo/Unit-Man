@@ -1,19 +1,18 @@
 using UnitMan.Source.UI.MVVM;
+using UnityEngine;
 
 namespace UnitMan.Source.UI.Components.Pause_Screen
 {
     public class PauseView : View
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [SerializeField]
+        private ReactiveEvent resumeEvent;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        [SerializeField]
+        private ReactiveEvent mainMenuEvent;
+
+        public void ResumePressed() => resumeEvent.Call();
+
+        public void MainMenuPressed() => mainMenuEvent.Call();
     }
 }

@@ -155,7 +155,7 @@ public class @Gameplay : IInputActionCollection, IDisposable
                     ""path"": ""<Joystick>/stick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Joystick"",
+                    ""groups"": ""Joystick;Touch"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
