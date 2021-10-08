@@ -357,9 +357,11 @@ MonoBehaviour:
   - view: {fileID: 8894800112429527294}
     viewModel: {fileID: 0}
     value: 1
+    hideOtherRoutes: 1
   - view: {fileID: 675255321}
     viewModel: {fileID: 0}
     value: 2
+    hideOtherRoutes: 1
   initialState: 1
 --- !u!4 &1374168329
 Transform:
@@ -485,10 +487,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4075621707313568155, guid: 24b8b22e4cd18874db5ebd05a93872ad, type: 3}
+      propertyPath: m_fontSize
+      value: 26.45
+      objectReference: {fileID: 0}
     - target: {fileID: 4509913858342399290, guid: 24b8b22e4cd18874db5ebd05a93872ad, type: 3}
       propertyPath: saveBinding.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1889609163}
+    - target: {fileID: 6056467515455430700, guid: 24b8b22e4cd18874db5ebd05a93872ad, type: 3}
+      propertyPath: m_fontSize
+      value: 40.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24b8b22e4cd18874db5ebd05a93872ad, type: 3}
 --- !u!1001 &8894800112429527293
