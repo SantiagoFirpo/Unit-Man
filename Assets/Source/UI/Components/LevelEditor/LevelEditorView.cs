@@ -31,25 +31,25 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private ReactiveEvent toggleHudBinding;
 
         [SerializeField]
-        private ReactiveProperty<BrushType> brushTypeBinding;
+        private Reactive<BrushType> brushTypeBinding;
         
         [SerializeField]
-        private ReactiveProperty<string> levelIdBinding;
+        private Reactive<string> levelIdBinding;
         
         [SerializeField]
-        private ReactiveProperty<bool> leftClickBinding;
+        private Reactive<bool> leftClickBinding;
 
         [SerializeField]
-        private ReactiveProperty<bool> pointerOverUIBinding;
+        private Reactive<bool> pointerOverUIBinding;
 
         [SerializeField]
-        private ReactiveProperty<bool> rightClickBinding;
+        private Reactive<bool> rightClickBinding;
 
         [SerializeField]
-        private ReactiveProperty<Vector3Int> mouseTilesetPosition;
+        private Reactive<Vector3Int> mouseTilesetPosition;
 
         [SerializeField]
-        private ReactiveProperty<Vector3> mouseWorldPosition;
+        private Reactive<Vector3> mouseWorldPosition;
         
         [Header("Icons")]
 

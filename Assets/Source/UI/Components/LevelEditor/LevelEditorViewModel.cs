@@ -21,7 +21,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
 
         [SerializeField]
-        private ReactiveProperty<BrushType> selectedBrushBinding;
+        private Reactive<BrushType> selectedBrushBinding;
         [SerializeField]
         public Level currentWorkingLevel;
 
@@ -71,7 +71,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         public Transform ghostDoor;
 
         [SerializeField]
-        private ReactiveProperty<bool> isUIActiveBinding;
+        private Reactive<bool> isUIActiveBinding;
 
         [SerializeField]
         private ReactiveEvent clipboardPingBinding;

@@ -6,13 +6,13 @@ namespace UnitMan.Source.UI.Components.LevelCell
     public class LevelCellView : View
     {
         [SerializeField]
-        private ReactiveProperty<string> levelIdBinding;
+        private Reactive<string> levelIdBinding;
 
         [SerializeField]
-        private ReactiveProperty<string> authorNameBinding;
+        private Reactive<string> authorNameBinding;
 
         [SerializeField]
-        private ReactiveProperty<string> levelNameBinding;
+        private Reactive<string> levelNameBinding;
 
         [SerializeField]
         private ReactiveEvent playBinding;

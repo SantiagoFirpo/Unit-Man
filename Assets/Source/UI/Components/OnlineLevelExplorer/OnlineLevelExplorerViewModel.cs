@@ -14,7 +14,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
     public class OnlineLevelExplorerViewModel : ViewModel
     {
         [SerializeField]
-        private ReactiveProperty<string> notificationBinding;
+        private Reactive<string> notificationBinding;
         
         private IEnumerable<Level> _levels;
         [SerializeField]

@@ -7,12 +7,12 @@ namespace UnitMan.Source.UI.Components.LeaderCell
     public class LeaderCellViewModel : ViewModel
     {
         [SerializeField]
-        private ReactiveProperty<uint> positionBinding;
+        private Reactive<uint> positionBinding;
         [SerializeField]
-        private ReactiveProperty<string> playerDisplayNameBinding;
+        private Reactive<string> playerDisplayNameBinding;
         
         [SerializeField]
-        private ReactiveProperty<int> scoreBinding;
+        private Reactive<int> scoreBinding;
 
         [SerializeField]
         private ReactiveEvent isLastBinding = new ReactiveEvent();

@@ -15,7 +15,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
         // private Binding leaderboardButtonBinding;
 
         [SerializeField]
-        private ReactiveProperty<string> authStatusMessage;
+        private Reactive<string> authStatusMessage;
         
         [SerializeField]
         private ReactiveEvent playButtonBinding;
@@ -25,7 +25,7 @@ namespace UnitMan.Source.UI.Components.MainMenu
 
         [Header("Custom Level Input Bindings")]
         [SerializeField]
-        private ReactiveProperty<string> levelIdBinding;
+        private Reactive<string> levelIdBinding;
 
         [SerializeField]
         private ReactiveEvent signOutBinding;

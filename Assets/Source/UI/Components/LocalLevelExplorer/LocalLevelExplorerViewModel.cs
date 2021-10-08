@@ -18,7 +18,7 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         private GameObject[] levelCellViews = new GameObject[7];
 
         [SerializeField]
-        private ReactiveProperty<string> notificationBinding;
+        private Reactive<string> notificationBinding;
 
         [SerializeField]
         private Transform contentTransform;
@@ -26,7 +26,7 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         [SerializeField]
         private GameObject levelCell;
 
-        private List<GameObject> _activeLevelCells = new List<GameObject>();
+        private readonly List<GameObject> _activeLevelCells = new List<GameObject>();
 
         public void OnMainMenuPressed()
         {
