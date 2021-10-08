@@ -13,7 +13,7 @@ namespace UnitMan.Source.UI.Components.Text
         {
             base.Awake();
             _text = GetComponent<TMP_Text>();
-            Debug.Log(_text != null);
+            // Debug.Log(_text != null);
         }
 
         public void OnTextChanged(string newText)
