@@ -1,8 +1,8 @@
-using System.IO;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.UI.Components.LevelEditor;
 using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -66,8 +66,9 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         public void DeletePressed()
         {
-            File.Delete($"{FilePaths.LevelsPath}/{levelId.GetValue()}.json");
-            notificationBinding.SetValue($"LEVEL {level.name} DELETED SUCCESSFULLY");
+            LevelIdToDeleteContainer.Instance.levelId = levelId.GetValue();
+            LevelIdToDeleteContainer.Instance.levelName = levelName.GetValue();
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.ConfirmLevelDelete);
         }
 
         public override void OnRendered()
