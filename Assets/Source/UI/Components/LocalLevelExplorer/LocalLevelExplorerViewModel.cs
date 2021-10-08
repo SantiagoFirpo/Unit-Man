@@ -42,7 +42,7 @@ namespace UnitMan.Source.UI.Components.LocalLevelExplorer
         private void RenderLevelsFromDisk(string[] localLevels)
         {
             DestroyAllCells(); //TODO: recycle level cells
-            Debug.Log(localLevels.Length);
+            // Debug.Log(localLevels.Length);
             foreach (string localLevelPath in localLevels)
             {
                 GameObject levelCellGameObject = Instantiate(levelCell, Vector3.zero, Quaternion.identity, contentTransform);

@@ -23,8 +23,8 @@ namespace UnitMan.Source.UI.Components.Text
 
         private void Render(string newText)
         {
-            Debug.Log(newText);
-            Debug.Log(_text != null);
+            // Debug.Log(newText);
+            // Debug.Log(_text != null);
             _text.SetText(newText);
         }
     }
