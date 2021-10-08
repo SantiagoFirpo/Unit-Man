@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
+using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
@@ -15,6 +17,9 @@ namespace UnitMan.Source.Management.Firebase.Auth
         private FirebaseApp _app;
 
         private FirebaseAuth _auth;
+
+        [SerializeField]
+        private Reactive<FirebaseUser> reactiveUser;
         
         public FirebaseUser User {get; private set;}
 
@@ -109,11 +114,13 @@ namespace UnitMan.Source.Management.Firebase.Auth
             bool signedIn = User != _auth.CurrentUser && _auth.CurrentUser != null;
             if (!signedIn && User != null) {
                 Debug.Log($"Signed out {User.UserId}");
+                MainMenuRouter.Instance.OnUserSignedOut();
             }
             User = _auth.CurrentUser;
-            if (signedIn) {
-                Debug.Log($"Signed in {User.UserId}");
-            }
+            reactiveUser.SetValue(User);
+            if (!signedIn) return;
+            Debug.Log($"Signed in {User.UserId}");
+            MainMenuRouter.Instance.OnUserLoggedIn();
         }
 
         public void TryRegisterUser(string email, string password)
