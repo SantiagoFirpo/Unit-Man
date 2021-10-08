@@ -7,8 +7,8 @@ namespace UnitMan.Source.UI.Components.Auth
     public class AuthView : View
     {
         [Header("Auth Bindings")]
-        public ReactiveProperty<string> emailBinding = new ReactiveProperty<string>();
-        public ReactiveProperty<string> passwordBinding = new ReactiveProperty<string>();
+        public Reactive<string> emailBinding = new Reactive<string>();
+        public Reactive<string> passwordBinding = new Reactive<string>();
         
 
         [SerializeField]

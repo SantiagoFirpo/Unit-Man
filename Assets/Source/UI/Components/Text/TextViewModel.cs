@@ -5,7 +5,7 @@ namespace UnitMan.Source.UI.Components.Text
     // [Serializable]
     public class TextViewModel : ViewModel
     {
-        public ReactiveProperty<string> textBinding;
+        public Reactive<string> textBinding;
 
         public void Set(string value)
         {

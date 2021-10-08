@@ -1,13 +1,12 @@
-using System;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
 
-namespace UnitMan
+namespace UnitMan.Source.UI.Components.VirtualJoystick
 {
     public class JoystickViewModel : ViewModel
     {
         [SerializeField]
-        private ReactiveProperty<bool> isMobile;
+        private Reactive<bool> isMobile;
 
         public override void OnRendered()
         {

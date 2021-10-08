@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace UnitMan.Source.UI.MVVM
 {
     [Serializable]
-    public class ReactiveProperty<T> : UnityEvent<T>
+    public class Reactive<T> : UnityEvent<T>
     {
         [SerializeField]
         private T value;

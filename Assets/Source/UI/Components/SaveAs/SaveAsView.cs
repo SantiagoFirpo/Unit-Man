@@ -9,7 +9,7 @@ namespace UnitMan.Source.UI.Components.SaveAs
         private ReactiveEvent saveButtonBinding = new ReactiveEvent();
 
         [SerializeField]
-        private ReactiveProperty<string> levelNameBinding = new ReactiveProperty<string>();
+        private Reactive<string> levelNameBinding = new Reactive<string>();
         public void OnSaveButton() => saveButtonBinding.Call();
 
         public void OnLevelNameChanged(string newValue) => levelNameBinding.SetValue(newValue);

@@ -17,7 +17,7 @@ namespace UnitMan.Source.UI.Components.Auth
         private string password;
 
         [SerializeField]
-        private ReactiveProperty<string> authStatusMessageBinding = new ReactiveProperty<string>();
+        private Reactive<string> authStatusMessageBinding = new Reactive<string>();
 
         private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
         private Timer _redirectDelayTimer;

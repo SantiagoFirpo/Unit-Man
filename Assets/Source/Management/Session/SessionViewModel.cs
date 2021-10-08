@@ -15,16 +15,16 @@ namespace UnitMan.Source.Management.Session
         public bool won = false;
 
         [SerializeField]
-        private ReactiveProperty<string> livesBinding;
+        private Reactive<string> livesBinding;
 
         [SerializeField]
-        private ReactiveProperty<string> scoreBinding;
+        private Reactive<string> scoreBinding;
         
         [SerializeField]
         private TMP_Text scoreLabel;
 
         [SerializeField]
-        private ReactiveProperty<bool> virtualStickVisibility;
+        private Reactive<bool> virtualStickVisibility;
 
         public static SessionViewModel Instance
         {

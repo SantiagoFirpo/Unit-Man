@@ -11,7 +11,7 @@ namespace UnitMan.Source.UI.Components.ScorePrompt
         private TMP_Text scoreLabel;
 
         [SerializeField]
-        private ReactiveProperty<string> nameBinding;
+        private Reactive<string> nameBinding;
 
         [SerializeField]
         private ReactiveEvent yesButtonBinding = new ReactiveEvent();
