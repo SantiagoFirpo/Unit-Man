@@ -14,7 +14,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
         public void SubmitScore(string playerName)
         {
-            FirebaseUser currentUser = FirebaseAuthManager.Instance.auth.CurrentUser;
+            FirebaseUser currentUser = FirebaseAuthManager.Instance.User;
             _firestoreLeaderData = new FirestoreLeaderData(playerName,
                                         SessionViewModel.Instance.score,
                                         SessionViewModel.Instance.won, currentUser.UserId);

@@ -105,7 +105,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
                 Debug.Log("creating new level...");
                 currentWorkingLevel = new Level(DEFAULT_LEVEL_NAME,
                     FirebaseAuthManager.GetDisplayName(),
-                    FirebaseAuthManager.Instance.auth.CurrentUser.UserId);
+                    FirebaseAuthManager.Instance.User.UserId);
             }
             identity = Quaternion.identity;
         }

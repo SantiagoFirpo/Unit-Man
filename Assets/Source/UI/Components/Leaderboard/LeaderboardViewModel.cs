@@ -37,7 +37,7 @@ namespace UnitMan.Source.UI.Components.Leaderboard
             if (leadersLength < 5) return;
             threeDotsUp.SetActive(true);  
             _lastLeader = leaderUICells[leaderUICells.Length - 1];
-            _isSignedIn = FirebaseAuthManager.Instance != null && FirebaseAuthManager.Instance.auth != null;
+            _isSignedIn = FirebaseAuthManager.Instance != null && FirebaseAuthManager.Instance.User != null;
             if (!_isSignedIn)
             {
                 _lastLeader.SetLocalLeaderState(leaders[leadersLength - 1]);
@@ -55,7 +55,7 @@ namespace UnitMan.Source.UI.Components.Leaderboard
         private bool FindUserEntry(LocalLeaderData obj)
         {
             if (!_isSignedIn) return false;
-            return obj.playerId == FirebaseAuthManager.Instance.auth.CurrentUser.UserId;
+            return obj.playerId == FirebaseAuthManager.Instance.User.UserId;
         }
 
         public override void OnRendered()

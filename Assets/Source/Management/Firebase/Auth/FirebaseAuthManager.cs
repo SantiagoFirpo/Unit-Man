@@ -14,7 +14,9 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private FirebaseApp _app;
 
-        public FirebaseAuth auth;
+        private FirebaseAuth _auth;
+        
+        public FirebaseUser User {get; private set;}
 
         public enum AuthStatus
         {
@@ -31,6 +33,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public Observable<AuthStatus> authStateChangedObservable;
 
         // Start is called before the first frame update
+        
+        
         private void Awake()
         {
             if (Instance != null)
@@ -52,7 +56,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public static string GetDisplayName()
         {
-            return Instance.auth.CurrentUser.Email.Split(char.Parse("@"))[0];
+            return Instance._auth.CurrentUser.Email.Split(char.Parse("@"))[0];
         }
 
         private void InitializeFirebase()
@@ -85,15 +89,31 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void InitializeAuth()
         {
-            auth = FirebaseAuth.GetAuth(_app);
+            
+            _auth = FirebaseAuth.GetAuth(_app);
+            _auth.StateChanged += OnAuthStateChanged;
+            OnAuthStateChanged(this, null);
             _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
         
         //BUG: user can't logout after gameplay because the AuthManager is flagged DontDestroyOnLoad
         public void SignOutUser()
         {
-            auth.SignOut();
+            _auth.SignOut();
             SetAuthStatus(AuthStatus.SignedOut);
+        }
+        
+        private void OnAuthStateChanged(object sender, EventArgs eventArgs)
+        {
+            if (_auth.CurrentUser == User) return;
+            bool signedIn = User != _auth.CurrentUser && _auth.CurrentUser != null;
+            if (!signedIn && User != null) {
+                Debug.Log($"Signed out {User.UserId}");
+            }
+            User = _auth.CurrentUser;
+            if (signedIn) {
+                Debug.Log($"Signed in {User.UserId}");
+            }
         }
 
         public void TryRegisterUser(string email, string password)
@@ -124,14 +144,14 @@ namespace UnitMan.Source.Management.Firebase.Auth
                 TryLoginUser(email, password);
             }
 
-            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
+            _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
             SetAuthStatus(AuthStatus.Registering);
         }
 
         public void TryLoginUser(string email, string password)
         {
             SetAuthStatus(AuthStatus.LoggingIn);
-            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
+            _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
             
         }
 
@@ -160,6 +180,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
         public void SetAuthStatus(AuthStatus authStatus)
         {
             authStateChangedObservable.EmitNotification(authStatus);
+        }
+        
+        private void OnDestroy() {
+            _auth.StateChanged -= OnAuthStateChanged;
+            _auth = null;
         }
     }
 }

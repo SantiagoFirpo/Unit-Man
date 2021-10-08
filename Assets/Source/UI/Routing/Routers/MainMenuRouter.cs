@@ -21,7 +21,7 @@ namespace UnitMan.Source.UI.Routing.Routers
         protected override void Start()
         {
             base.Start();
-            if (FirebaseAuthManager.Instance.auth?.CurrentUser == null) return;
+            if (FirebaseAuthManager.Instance.User is null) return;
             SetState(MainMenuRoute.Home);
         }
 

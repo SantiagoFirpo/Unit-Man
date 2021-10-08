@@ -1,4 +1,5 @@
 using System;
+using Firebase.Auth;
 using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.UI.Routing.Routers;
@@ -20,13 +21,13 @@ namespace UnitMan.Source.UI.Components.Auth
 
         private Observer<FirebaseAuthManager.AuthStatus> _authObserver;
         private Timer _redirectDelayTimer;
-        
+
         [SerializeField]
         private ReactiveEvent clearFormsBinding = new ReactiveEvent();
 
         private void Awake()
         {
-            _authObserver = new Observer<FirebaseAuthManager.AuthStatus>(OnAuthChanged);
+            _authObserver = new Observer<FirebaseAuthManager.AuthStatus>(OnLocalAuthChanged);
         }
         
         private void Start()
@@ -46,7 +47,7 @@ namespace UnitMan.Source.UI.Components.Auth
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.Home);
         }
 
-        private void OnAuthChanged(FirebaseAuthManager.AuthStatus authStatus)
+        private void OnLocalAuthChanged(FirebaseAuthManager.AuthStatus authStatus)
         {
             authStatusMessageBinding.SetValue(AuthStatusToMessage(authStatus));
             switch (authStatus)
@@ -59,15 +60,15 @@ namespace UnitMan.Source.UI.Components.Auth
                     break;
             }
         }
-        
+
         public void OnEmailChanged(string newEmail)
         {
-            this.email = newEmail;
+            email = newEmail;
         }
 
         public void OnPasswordChanged(string newPassword)
         {
-            this.password = newPassword;
+            password = newPassword;
         }
         
         public void OnLoginPressed()
