@@ -123,6 +123,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &200193303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 200193305}
+  - component: {fileID: 200193304}
+  m_Layer: 0
+  m_Name: Level Data container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &200193304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200193303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03b15d419faf4974b3fabb1965b41413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelId: 
+  levelName: 
+--- !u!4 &200193305
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200193303}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 362.37653, y: 150.667, z: -786.42206}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &411447166
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +325,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &549020366
 RectTransform:
@@ -1526,19 +1571,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7153084331986586443, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.77751887
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7153084331986586443, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.77649754
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7153084331986586443, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.20126142
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7153084331986586443, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.23911127
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7153084331986586443, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_SizeDelta.x
