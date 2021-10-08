@@ -1,6 +1,6 @@
 using UnitMan.Source.UI.MVVM;
 
-namespace UnitMan
+namespace UnitMan.Source.UI.Components.VirtualJoystick
 {
     public class JoystickView : View
     {
