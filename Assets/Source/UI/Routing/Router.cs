@@ -9,7 +9,7 @@ namespace UnitMan.Source.UI.Routing
     public abstract class Router<TPageType> : MonoBehaviour, IStateMachine<TPageType> where TPageType : struct, Enum
     {
         [SerializeField]
-        protected ReactiveProperty<TPageType> state = new ReactiveProperty<TPageType>();
+        protected Reactive<TPageType> state = new Reactive<TPageType>();
 
         [SerializeField]
         protected Route<TPageType>[] viewsToRender;
@@ -47,18 +47,20 @@ namespace UnitMan.Source.UI.Routing
         
         protected void RenderWithValue(TPageType pageValue)
         {
-            bool foundNewRoute = false;
+            Route<TPageType> targetRoute = null;
             foreach (Route<TPageType> route in viewsToRender)
             {
-                // if (route.GetValue().Equals(state)) return;
-                if (!foundNewRoute && route.GetValue().Equals(pageValue))
+                if (!route.GetValue().Equals(pageValue)) continue;
+                targetRoute = route;
+                route.Render();
+            }
+
+            if ((targetRoute is { hideOtherRoutes: false })) return;
+            {
+                foreach (Route<TPageType> route in viewsToRender)
                 {
-                    route.Render();
-                    foundNewRoute = true;
-                    continue;
+                    if (route != targetRoute) route.Hide();
                 }
-                route.Hide();
-                
             }
         }
     }

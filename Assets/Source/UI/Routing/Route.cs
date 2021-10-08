@@ -19,6 +19,8 @@ namespace UnitMan.Source.UI.Routing.Routers
         [SerializeField]
         private TEnumType value;
 
+        public bool hideOtherRoutes;
+
 
         public TEnumType GetValue() => value;
         public Route(TEnumType value)
