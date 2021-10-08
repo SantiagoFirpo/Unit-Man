@@ -1,5 +1,6 @@
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
+using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.Components.LevelEditor;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.UI.Routing.Routers;
@@ -24,6 +25,9 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         [SerializeField]
         private Reactive<string> notificationBinding;
+
+        [SerializeField]
+        private ReactiveEvent levelIsAuthoredByUserEvent;
 
 
         public void RenderWithLevelObject(Level levelObject)
@@ -73,6 +77,11 @@ namespace UnitMan.Source.UI.Components.LevelCell
 
         public override void OnRendered()
         {
+            Debug.Log(level.authorId == FirebaseAuthManager.Instance.User.UserId);
+            if (level.authorId == FirebaseAuthManager.Instance.User.UserId)
+            {
+                levelIsAuthoredByUserEvent.Call();
+            }
         }
     }
 }

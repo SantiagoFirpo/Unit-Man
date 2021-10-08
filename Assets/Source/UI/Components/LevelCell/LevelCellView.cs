@@ -29,6 +29,12 @@ namespace UnitMan.Source.UI.Components.LevelCell
         [SerializeField]
         private ReactiveEvent deleteBinding;
 
+        [SerializeField]
+        private GameObject deleteButton;
+
+        [SerializeField]
+        private GameObject uploadButton;
+
 
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue($"LEVEL ID: {newValue}");
 
@@ -45,5 +51,11 @@ namespace UnitMan.Source.UI.Components.LevelCell
         public void LeaderboardPressed() => leaderboardBinding.Call();
 
         public void DeletePressed() => deleteBinding.Call();
+
+        public void OnAuthoredByUser()
+        {
+            deleteButton.SetActive(true);
+            uploadButton.SetActive(true);
+        }
     }
 }

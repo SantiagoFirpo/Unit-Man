@@ -240,6 +240,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  deleteButton: {fileID: 8568278377103625346}
+  uploadButton: {fileID: 4915617832440190523}
 --- !u!222 &1600954313939597982
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -408,6 +410,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     value: 
+  levelIsAuthoredByUserEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7305462289508160467}
+        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.LevelCell.LevelCellView,
+          Assembly-CSharp
+        m_MethodName: OnAuthoredByUser
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1100094288222413322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -541,7 +559,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 6.2
+      value: 7.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -824,7 +842,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 13.65
+      value: 17.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -966,7 +984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 15.2
+      value: 19.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -1108,10 +1126,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 14
+      value: 17.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+--- !u!1 &4915617832440190523 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+  m_PrefabInstance: {fileID: 4754100729016843343}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4915617832440190524 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 418339106143414899, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -1492,10 +1515,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 11.4
+      value: 14.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+--- !u!1 &8568278377103625346 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 418339106143414900, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
+  m_PrefabInstance: {fileID: 8297494163591079670}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8568278377103625349 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 418339106143414899, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
