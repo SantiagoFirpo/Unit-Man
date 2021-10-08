@@ -17,6 +17,7 @@ namespace UnitMan.Source.UI.Components.ConfirmLevelDeleteDialogueBox
             base.YesPressed();
             File.Delete($"{FilePaths.LevelsPath}/{LevelIdToDeleteContainer.Instance.levelId}.json");
             notificationBinding.SetValue($"LEVEL {LevelIdToDeleteContainer.Instance.levelName} DELETED SUCCESSFULLY");
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.LocalLevelExplorer);
         }
 
         public override void NoPressed()
