@@ -27,7 +27,7 @@ namespace UnitMan.Source.UI.Routing.Routers
 
         public enum MainMenuRoute
         {
-            Undefined, Auth, Home, LocalLevelExplorer, OnlineLevelExplorer
+            Undefined, Auth, Home, LocalLevelExplorer, OnlineLevelExplorer, ConfirmLevelDelete
         }
     }
 }
