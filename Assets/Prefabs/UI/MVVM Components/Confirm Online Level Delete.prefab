@@ -46,10 +46,28 @@ PrefabInstance:
     - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: noEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2235952375546262886}
     - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: yesEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 2235952375546262886}
+    - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
+      propertyPath: noEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NoPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
+      propertyPath: yesEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: YesPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
+      propertyPath: noEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnitMan.Source.UI.Components.ConfirmLevelDeleteOnline.ConfirmLevelDeleteOnlineViewModel,
+        Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 778646656, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
+      propertyPath: yesEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnitMan.Source.UI.Components.ConfirmLevelDeleteOnline.ConfirmLevelDeleteOnlineViewModel,
+        Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 841078683047872955, guid: 72827b89e74711e40a3f091b120b4efd, type: 3}
       propertyPath: m_Name
