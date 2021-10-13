@@ -1,14 +1,12 @@
-﻿using UnityEngine;
+﻿using UnitMan.Source.LevelEditing;
+using UnityEngine;
 
 namespace UnitMan.Source.Utilities
 {
     public class LevelIdToDeleteContainer : MonoBehaviour
     {
         public static LevelIdToDeleteContainer Instance { get; private set; }
-
-        public string levelId;
-
-        public string levelName;
+        public Level level;
 
         private void Awake()
         {
