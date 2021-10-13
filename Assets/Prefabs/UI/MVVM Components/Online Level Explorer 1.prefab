@@ -363,6 +363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a023f446a5d643c0b01b9271bc0c13fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
   notificationBinding:
     m_PersistentCalls:
       m_Calls:
@@ -384,11 +387,10 @@ MonoBehaviour:
   onLevelLoadEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8043128725685795692}
-        m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.Text.TextViewModel,
-          Assembly-CSharp
-        m_MethodName: Set
-        m_Mode: 5
+      - m_Target: {fileID: 8049639957669710850}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1013,7 +1015,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1687813272718969517, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
       propertyPath: m_fontSize
-      value: 29.85
+      value: 37.95
       objectReference: {fileID: 0}
     - target: {fileID: 1687813272718969517, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
       propertyPath: m_enableAutoSizing
@@ -1033,22 +1035,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
+--- !u!1 &8049639957669710850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2450252013906140553, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
+  m_PrefabInstance: {fileID: 5599975297756565899}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5159975038483517190 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 733227094964657805, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
   m_PrefabInstance: {fileID: 5599975297756565899}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8043128725685795692 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2461768237248146151, guid: 30b9ff22c6bce704eb0235ef16a2fb36, type: 3}
-  m_PrefabInstance: {fileID: 5599975297756565899}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8667281614064928727
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1179,7 +1175,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 29.3
+      value: 37.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
@@ -1318,7 +1314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7057905309567672585, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}
       propertyPath: m_fontSize
-      value: 20.15
+      value: 24.85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 96bfbb3e22a0bbf49884317759b1357c, type: 3}

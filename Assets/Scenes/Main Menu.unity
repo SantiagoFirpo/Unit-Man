@@ -1789,62 +1789,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnSignOutButtonPressed
       objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.4492414
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.24025494
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.3093784
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 601224453558316101, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.696377
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.24025494
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5577567
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1918939942093201744, guid: 696517f929c295144a11862f56c267ee, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2287869498953411786, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_Name
       value: My Levels Button
@@ -1911,7 +1855,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7091628258666327653, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7091628258666327654, guid: 696517f929c295144a11862f56c267ee, type: 3}
       propertyPath: emailBinding.m_PersistentCalls.m_Calls.Array.data[0].m_Target
