@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using Firebase.Firestore;
+using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.Components.YesNoDialogueBox;
 using UnitMan.Source.UI.MVVM;
 using UnitMan.Source.UI.Routing.Routers;
@@ -14,9 +17,22 @@ namespace UnitMan.Source.UI.Components.ConfirmLevelDeleteDialogueBox
 
         public override void YesPressed()
         {
-            base.YesPressed();
-            File.Delete($"{FilePaths.LevelsPath}/{LevelIdToDeleteContainer.Instance.levelId}.json");
-            notificationBinding.SetValue($"LEVEL {LevelIdToDeleteContainer.Instance.levelName} DELETED SUCCESSFULLY");
+            if (LevelIdToDeleteContainer.Instance.level.authorId != FirebaseAuthManager.Instance.User.UserId)
+            {
+                try
+                {
+                    File.Delete($"{FilePaths.LevelsPath}/{LevelIdToDeleteContainer.Instance.level.id}.json");
+
+                }
+                catch (Exception e)
+                {
+                    
+                    Debug.LogException(e);
+                    throw;
+                }
+                
+            }
+            notificationBinding.SetValue($"LEVEL {LevelIdToDeleteContainer.Instance.level.name} DELETED SUCCESSFULLY");
             MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.LocalLevelExplorer);
         }
 
@@ -28,7 +44,7 @@ namespace UnitMan.Source.UI.Components.ConfirmLevelDeleteDialogueBox
         public override void OnRendered()
         {
             base.OnRendered();
-            message.SetValue($"ARE YOU SURE YOU WANT TO DELETE THE LEVEL {LevelIdToDeleteContainer.Instance.levelName}? THERE IS NO WAY OF RECOVERING IT AFTER THE DELETION");
+            message.SetValue($"ARE YOU SURE YOU WANT TO DELETE THE LEVEL {LevelIdToDeleteContainer.Instance.level.name}? THERE IS NO WAY OF RECOVERING IT AFTER THE DELETION");
         }
     }
 }
