@@ -1771,6 +1771,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
   textBinding:
     m_PersistentCalls:
       m_Calls:
@@ -9330,6 +9333,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d3e3639d851394499e4c757bd787c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
   isMobile:
     m_PersistentCalls:
       m_Calls:
@@ -11474,6 +11480,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8667be1b14564ab5adc41ea078ce861c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
   textBinding:
     m_PersistentCalls:
       m_Calls:
@@ -38580,6 +38589,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98663acba63ff74da3c40303fca7374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1495011933
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50728,6 +50740,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7501d9fd8f3f8c43bef7c9ec3eb31ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1929735052
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -51506,9 +51521,11 @@ MonoBehaviour:
   - view: {fileID: 783572670}
     viewModel: {fileID: 0}
     value: 1
+    hideOtherRoutes: 1
   - view: {fileID: 1204096464}
     viewModel: {fileID: 1491400759}
     value: 2
+    hideOtherRoutes: 1
   initialState: 1
 --- !u!4 &1953471557
 Transform:
