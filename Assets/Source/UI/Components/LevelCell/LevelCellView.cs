@@ -55,7 +55,7 @@ namespace UnitMan.Source.UI.Components.LevelCell
         public void OnAuthoredByUser()
         {
             deleteButton.SetActive(true);
-            uploadButton.SetActive(true);
+            // uploadButton.SetActive(true);
         }
     }
 }
