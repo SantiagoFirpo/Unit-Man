@@ -13,7 +13,7 @@ namespace UnitMan.Source.UI.Components.LevelCell
     public class LevelCellViewModel : ViewModel
     {
         [SerializeField]
-        private Level level;
+        protected Level level;
         [SerializeField]
         private Reactive<string> levelName = new Reactive<string>();
 
@@ -37,6 +37,9 @@ namespace UnitMan.Source.UI.Components.LevelCell
             levelName.SetValue(levelObject.name);
             authorName.SetValue(levelObject.authorName);
             levelId.SetValue(levelObject.id);
+
+            if (level.authorId != FirebaseAuthManager.Instance.User.UserId) return;
+            levelIsAuthoredByUserEvent.Call();
         }
 
         public void OnPlayButtonPressed()
@@ -68,11 +71,11 @@ namespace UnitMan.Source.UI.Components.LevelCell
             SceneManager.LoadScene("Scoreboard");
         }
 
-        public void DeletePressed()
+        public virtual void DeletePressed()
         {
-            LevelIdToDeleteContainer.Instance.levelId = levelId.GetValue();
-            LevelIdToDeleteContainer.Instance.levelName = levelName.GetValue();
-            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.ConfirmLevelDelete);
+            if (level.authorId != FirebaseAuthManager.Instance.User.UserId) return;
+            LevelIdToDeleteContainer.Instance.level = level;
+            MainMenuRouter.Instance.SetState(MainMenuRouter.MainMenuRoute.ConfirmLocalLevelDelete);
         }
 
         public override void OnRendered()
