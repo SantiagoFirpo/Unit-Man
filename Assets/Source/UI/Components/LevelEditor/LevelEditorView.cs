@@ -294,5 +294,10 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         {
             brushTypeBinding.SetValue(BrushType.GhostDoor);
         }
+
+        public void ScreenWrapPressed()
+        {
+            brushTypeBinding.SetValue(BrushType.ScreenWrap);
+        }
     }
 }

@@ -309,7 +309,8 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         Pinky,
         Inky,
         Clyde,
-        GhostHouse, GhostDoor
+        GhostHouse, GhostDoor,
+        ScreenWrap
     }
     
     [Serializable]
