@@ -33,6 +33,9 @@ namespace UnitMan.Source.UI.Components.MainMenu
         [SerializeField]
         private ReactiveEvent myLevelsBinding = new ReactiveEvent();
 
+        [SerializeField]
+        private ReactiveEvent deleteAccountEvent;
+
         public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue(newValue);
 
         public void OnAuthMessageChanged(string newValue) => authStatusMessage.SetValue(newValue);
@@ -46,6 +49,8 @@ namespace UnitMan.Source.UI.Components.MainMenu
         public void OnSignOutButtonPressed() => signOutBinding.Call();
         
         public void OnMyLevelsButtonPressed() => myLevelsBinding.Call();
+
+        public void DeleteButtonPressed() => deleteAccountEvent.Call();
 
 
         // public void OnLeaderboardButtonPressed() => leaderboardButtonBinding.Call();

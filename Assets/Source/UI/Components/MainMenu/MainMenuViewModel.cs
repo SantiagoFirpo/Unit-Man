@@ -87,6 +87,11 @@ namespace UnitMan.Source.UI.Components.MainMenu
             //     DownloadFirestoreLevelWithId(levelId);
             // }
         }
+        
+        public void DeleteAccount()
+        {
+            FirebaseAuthManager.Instance.DeleteUserAccount();
+        }
 
         public void OnMyLevelsButtonPressed()
         {

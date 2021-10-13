@@ -193,5 +193,21 @@ namespace UnitMan.Source.Management.Firebase.Auth
             _auth.StateChanged -= OnAuthStateChanged;
             _auth = null;
         }
+
+        public void DeleteUserAccount()
+        {
+            User?.DeleteAsync().ContinueWithOnMainThread(task => {
+                if (task.IsCanceled) {
+                    Debug.LogError("DeleteAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted) {
+                    Debug.LogError("DeleteAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("User deleted successfully.");
+            });
+        }
     }
 }
