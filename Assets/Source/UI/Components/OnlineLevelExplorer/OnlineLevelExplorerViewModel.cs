@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using UnitMan.Source.LevelEditing;
@@ -89,16 +90,17 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         public void Refresh()
         {
             DestroyAllCells();
-            FirebaseFirestore.DefaultInstance.Collection("/levels").GetSnapshotAsync().ContinueWithOnMainThread(
-                task =>
-                {
-                    if (task.Exception != null)
-                    {
-                        Debug.Log(task.Exception.Message);
-                    }
-                    
-                    RenderLevels(task.Result.Select(LevelDocumentToLevelObject));
-                });
+            FirebaseFirestore.DefaultInstance.Collection("/levels").GetSnapshotAsync().ContinueWithOnMainThread(RenderContinuation);
+        }
+
+        private void RenderContinuation(Task<QuerySnapshot> task)
+        {
+            if (task.Exception != null)
+            {
+                Debug.Log(task.Exception.Message);
+            }
+
+            RenderLevels(task.Result.Select(LevelDocumentToLevelObject));
         }
 
         private void DestroyAllCells()
