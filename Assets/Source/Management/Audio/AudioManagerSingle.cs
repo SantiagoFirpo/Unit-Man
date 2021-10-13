@@ -31,14 +31,14 @@ namespace UnitMan.Source.Management.Audio
             if (Instance != null) Destroy(gameObject);
 
             Instance = this;
-            _resetObserver = new Observer(ResetTracks);
+            _resetObserver = new Observer(StopAllTracks);
             
-            SessionManagerSingle.Instance.resetEmitter.Attach(_resetObserver);
+            SessionManagerSingle.Instance.resetObservable.Attach(_resetObserver);
             _tracks = GetComponents<AudioSource>();
             
 
         }
-        private void ResetTracks()
+        public void StopAllTracks()
         {
             foreach (AudioSource track in _tracks)
             {
@@ -48,7 +48,7 @@ namespace UnitMan.Source.Management.Audio
 
         private void OnDisable()
         {
-            SessionManagerSingle.Instance.resetEmitter.Detach(_resetObserver);
+            SessionManagerSingle.Instance.resetObservable.Detach(_resetObserver);
         }
 
         public void PlayClip(AudioEffectType effectType, int trackNumber, bool loop)

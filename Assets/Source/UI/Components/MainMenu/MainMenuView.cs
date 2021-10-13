@@ -1,58 +1,58 @@
 ﻿using TMPro;
-using UnitMan.Source.Management.Firebase.Auth;
 using UnitMan.Source.UI.MVVM;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace UnitMan.Source.UI.Components.MainMenu
 {
-    public class MainMenuView : View<MainMenuState>
+    public class MainMenuView : View
     {
-        [SerializeField]
-        private TMP_InputField emailField;
+        [Header("App Navigation Button Bindings")]
 
         [SerializeField]
-        private TMP_InputField passwordField;
+        private ReactiveEvent quitButtonBinding;
+
+        // [SerializeField]
+        // private Binding leaderboardButtonBinding;
 
         [SerializeField]
-        private TMP_Text authMessage;
-
-        [SerializeField]
-        private AuthEvent loginButtonEvent;
+        private Reactive<string> authStatusMessage;
         
         [SerializeField]
-        private AuthEvent registerButtonEvent;
+        private ReactiveEvent playButtonBinding;
 
         [SerializeField]
-        private UnityEvent signOutEvent;
+        private ReactiveEvent levelEditorButtonBinding;
 
-        public void OnLoginButtonPressed()
-        {
-            loginButtonEvent.Invoke(new AuthFormData(emailField.text, passwordField.text));
-        }
+        [Header("Custom Level Input Bindings")]
+        [SerializeField]
+        private Reactive<string> levelIdBinding;
 
-        public void OnRegisterButtonPressed()
-        {
-            registerButtonEvent.Invoke(new AuthFormData(emailField.text, passwordField.text));
-        }
+        [SerializeField]
+        private ReactiveEvent signOutBinding;
+        
+        [SerializeField]
+        private ReactiveEvent myLevelsBinding = new ReactiveEvent();
 
-        public void OnSignOutButtonPressed()
-        {
-            signOutEvent.Invoke();
-        }
+        [SerializeField]
+        private ReactiveEvent deleteAccountEvent;
 
-        private void SetAuthToSignedOut(MainMenuState state)
-        {
-            state._email = "";
-            state._password = "";
-            state._authStatus = FirebaseAuthManager.AuthStatus.SignOutRequested;
-        }
+        public void OnLevelIdChanged(string newValue) => levelIdBinding.SetValue(newValue);
 
-        protected override void Render(MainMenuState state)
-        {
-            authMessage.SetText(MainMenuController.AuthStatusToMessage(state._authStatus));
-            emailField.SetTextWithoutNotify(state._email);
-            passwordField.SetTextWithoutNotify(state._password);
-        }
+        public void OnAuthMessageChanged(string newValue) => authStatusMessage.SetValue(newValue);
+
+        public void OnLevelEditorButtonPressed() => levelEditorButtonBinding.Call();
+
+        public void OnQuitButtonPressed() => quitButtonBinding.Call();
+
+        public void OnPlayButtonPressed() => playButtonBinding.Call();
+        
+        public void OnSignOutButtonPressed() => signOutBinding.Call();
+        
+        public void OnMyLevelsButtonPressed() => myLevelsBinding.Call();
+
+        public void DeleteButtonPressed() => deleteAccountEvent.Call();
+
+
+        // public void OnLeaderboardButtonPressed() => leaderboardButtonBinding.Call();
     }
 }

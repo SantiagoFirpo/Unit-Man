@@ -1,22 +1,31 @@
 ﻿using TMPro;
 using UnitMan.Source.UI.MVVM;
-using UnityEngine;
+using UnityEngine;  
 
 namespace UnitMan.Source.UI.Components.Text
 {
     [RequireComponent(typeof(TMP_Text))]
-    public class TextView : View<string>
+    public class TextView : View
     {
         private TMP_Text _text;
 
-        private void Awake()
+        private void OnEnable()
         {
+            base.Awake();
             _text = GetComponent<TMP_Text>();
+            // Debug.Log(_text != null);
         }
 
-        protected override void Render(string state)
+        public void OnTextChanged(string newText)
         {
-            _text.SetText(state);
+            Render(newText);
+        }
+
+        private void Render(string newText)
+        {
+            // Debug.Log(newText);
+            // Debug.Log(_text != null);
+            _text.SetText(newText);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UnitMan.Source.LevelEditing.Online
@@ -6,6 +7,7 @@ namespace UnitMan.Source.LevelEditing.Online
     {
         public static CrossSceneLevelContainer Instance { get; private set; }
 
+        [NonSerialized]
         public Level level;
 
         // public string id;

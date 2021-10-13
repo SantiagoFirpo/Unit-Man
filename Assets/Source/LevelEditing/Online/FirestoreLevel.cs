@@ -1,11 +1,21 @@
 ﻿using Firebase.Firestore;
 using UnitMan.Source.UI;
+using UnitMan.Source.UI.Components.LevelEditor;
 
 namespace UnitMan.Source.LevelEditing.Online
 {
     [FirestoreData]
     public class FirestoreLevel
     {
+        [FirestoreProperty]
+        public string Name { get; set; }
+        
+        [FirestoreProperty]
+        public string AuthorName { get; set; }
+        
+        [FirestoreProperty]
+        public string AuthorId { get; set; }
+        
         [FirestoreProperty]
         public string Id { get; set; }
 
@@ -48,6 +58,9 @@ namespace UnitMan.Source.LevelEditing.Online
             FirestoreLevel firestoreLevel = new FirestoreLevel
             {
                 Id = level.id,
+                Name = level.name,
+                AuthorId = level.authorId,
+                AuthorName = level.authorName,
                 ObjectPositions = new FirestoreVector2Int[level.objectPositions.Count],
                 PelletCount = level.pelletCount,
                 TopLeftPosition = FirestoreVector2Int.FromVector2Int(level.topLeftPosition),

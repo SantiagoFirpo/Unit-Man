@@ -4,7 +4,8 @@ using System.Linq;
 using Firebase.Firestore;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Session.LocalLeaderboard;
-using UnitMan.Source.UI;
+using UnitMan.Source.UI.Components.Leaderboard;
+using UnitMan.Source.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -14,7 +15,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 	public class FirestoreListener : MonoBehaviour
 	{
 		[FormerlySerializedAs("_leaderboardUIController")] [SerializeField]
-		private LeaderboardUIController leaderboardUIController;
+		private LeaderboardViewModel leaderboardViewModel;
 
 		private string _leaderboardJson;
 
@@ -36,7 +37,7 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 
 			_localLeaderboard = JsonUtility.FromJson<Leaderboard>(_leaderboardJson);
 			
-			leaderboardUIController.InjectLeaderboard(_localLeaderboard);
+			leaderboardViewModel.InjectLeaderboard(_localLeaderboard);
 			Debug.Log(_leaderboardJson);
 			
 
@@ -46,13 +47,13 @@ namespace UnitMan.Source.Management.Firebase.FirestoreLeaderboard
 		}
 
 		public static void SaveStringIntoJson(string json, string fileName){
-			File.WriteAllText($"{Application.persistentDataPath}/{fileName}.json", json);
-			Debug.Log($"Saved {fileName}.json to {Application.persistentDataPath}");
+			File.WriteAllText($"{FilePaths.LevelsPath}/{fileName}.json", json);
+			Debug.Log($"Saved {fileName}.json to {Application.persistentDataPath}/levels");
 		}
 
 		public static string LoadStringFromJson(string fileName)
 		{
-			return File.ReadAllText($"{Application.persistentDataPath}/{fileName}.json");
+			return File.ReadAllText($"{FilePaths.LevelsPath}/{fileName}.json");
 		}
 
 		private static int ScoreSorter(FirestoreLeaderData firestoreLeader)

@@ -18,7 +18,7 @@ namespace UnitMan.Source.Entities
             if (!other.CompareTag("Player")) return;
             _gameObject.SetActive(false);
             UpdateSessionState();
-            SessionDataModel.Instance.IncrementScore(scoreValue);
+            SessionViewModel.Instance.IncrementScore(scoreValue);
             // if (!AudioManager.Instance.IsTrackPlaying(0)) {
                 AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Munch, 0, false);
             // }
@@ -27,9 +27,9 @@ namespace UnitMan.Source.Entities
         }
 
         protected virtual void UpdateSessionState() {
-            SessionDataModel.Instance.pelletsEaten++;
+            SessionViewModel.Instance.pelletsEaten++;
             SessionManagerSingle.CheckIfGameIsWon();
-            SessionManagerSingle.Instance.onPelletEatenEmitter.EmitNotification();
+            SessionManagerSingle.Instance.onPelletEatenObservable.EmitNotification();
         }
     }
 }

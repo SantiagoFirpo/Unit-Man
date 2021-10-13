@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Extensions;
+using UnitMan.Source.UI.MVVM;
+using UnitMan.Source.UI.Routing.Routers;
 using UnitMan.Source.Utilities.ObserverSystem;
 using UnityEngine;
 
@@ -14,12 +16,17 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private FirebaseApp _app;
 
-        public FirebaseAuth auth;
+        private FirebaseAuth _auth;
+
+        [SerializeField]
+        private Reactive<FirebaseUser> reactiveUser;
+        
+        public FirebaseUser User {get; private set;}
 
         public enum AuthStatus
         {
             WaitingForUser,
-            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignOut,
+            RegisterCanceled, RegisterError, RegisterSuccessful, LoginCanceled, LoginError, LoginSuccessful, SignedOut,
             Empty,
             LoggingIn,
             Registering,
@@ -28,10 +35,11 @@ namespace UnitMan.Source.Management.Firebase.Auth
             SignOutRequested
         }
 
-        private AuthStatus _authStatus;
-        public Emitter<AuthStatus> authStateChangedEmitter;
+        public Observable<AuthStatus> authStateChangedObservable;
 
         // Start is called before the first frame update
+        
+        
         private void Awake()
         {
             if (Instance != null)
@@ -43,12 +51,17 @@ namespace UnitMan.Source.Management.Firebase.Auth
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                authStateChangedEmitter = new Emitter<AuthStatus>();
+                authStateChangedObservable = new Observable<AuthStatus>();
 
             }
 
 
 
+        }
+
+        public static string GetDisplayName()
+        {
+            return Instance._auth.CurrentUser.Email.Split(char.Parse("@"))[0];
         }
 
         private void InitializeFirebase()
@@ -81,15 +94,33 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         private void InitializeAuth()
         {
-            auth = FirebaseAuth.GetAuth(_app);
+            
+            _auth = FirebaseAuth.GetAuth(_app);
+            _auth.StateChanged += OnAuthStateChanged;
+            OnAuthStateChanged(this, null);
             _app.Options.DatabaseUrl = new Uri("https://unit-man-default-rtdb.firebaseio.com/");
         }
         
         //BUG: user can't logout after gameplay because the AuthManager is flagged DontDestroyOnLoad
         public void SignOutUser()
         {
-            auth.SignOut();
-            SetAuthStatus(AuthStatus.SignOut);
+            _auth.SignOut();
+            SetAuthStatus(AuthStatus.SignedOut);
+        }
+        
+        private void OnAuthStateChanged(object sender, EventArgs eventArgs)
+        {
+            if (_auth.CurrentUser == User) return;
+            bool signedIn = User != _auth.CurrentUser && _auth.CurrentUser != null;
+            if (!signedIn && User != null) {
+                Debug.Log($"Signed out {User.UserId}");
+                MainMenuRouter.Instance.OnUserSignedOut();
+            }
+            User = _auth.CurrentUser;
+            reactiveUser.SetValue(User);
+            if (!signedIn) return;
+            Debug.Log($"Signed in {User.UserId}");
+            MainMenuRouter.Instance.OnUserLoggedIn();
         }
 
         public void TryRegisterUser(string email, string password)
@@ -115,19 +146,19 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
                 // Firebase user has been created.
                 FirebaseUser newUser = task.Result;
-                Debug.Log($"Firebase user created successfully: {newUser.DisplayName} ({newUser.UserId})");
+                Debug.Log($"Firebase user created successfully: {GetDisplayName()} ({newUser.UserId})");
                 SetAuthStatus(AuthStatus.RegisterSuccessful);
                 TryLoginUser(email, password);
             }
 
-            auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
+            _auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(RegisterTask);
             SetAuthStatus(AuthStatus.Registering);
         }
 
         public void TryLoginUser(string email, string password)
         {
             SetAuthStatus(AuthStatus.LoggingIn);
-            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
+            _auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(LoginTask);
             
         }
 
@@ -155,8 +186,28 @@ namespace UnitMan.Source.Management.Firebase.Auth
 
         public void SetAuthStatus(AuthStatus authStatus)
         {
-            _authStatus = authStatus;
-            authStateChangedEmitter.EmitNotification(authStatus);
+            authStateChangedObservable.EmitNotification(authStatus);
+        }
+        
+        private void OnDisable() {
+            _auth.StateChanged -= OnAuthStateChanged;
+            _auth = null;
+        }
+
+        public void DeleteUserAccount()
+        {
+            User?.DeleteAsync().ContinueWithOnMainThread(task => {
+                if (task.IsCanceled) {
+                    Debug.LogError("DeleteAsync was canceled.");
+                    return;
+                }
+                if (task.IsFaulted) {
+                    Debug.LogError("DeleteAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Debug.Log("User deleted successfully.");
+            });
         }
     }
 }

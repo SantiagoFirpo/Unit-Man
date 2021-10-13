@@ -18,7 +18,7 @@ namespace UnitMan.Source.Entities
 
         protected override void UpdateSessionState()
         {
-            SessionManagerSingle.Instance.powerPelletEmitter.EmitNotification();
+            SessionManagerSingle.Instance.powerPelletObservable.EmitNotification();
             AudioManagerSingle.Instance.PlayClip(AudioManagerSingle.AudioEffectType.Fleeing, 1, true);
             _playerController.invincibleTimer.Start();
         }

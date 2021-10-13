@@ -3,11 +3,17 @@
 namespace UnitMan.Source.UI.Components.Text
 {
     // [Serializable]
-    public class TextViewModel : ViewModel<string>
+    public class TextViewModel : ViewModel
     {
-        protected override void InitializeState()
+        public Reactive<string> textBinding;
+
+        public void Set(string value)
         {
-            OverwriteState("");
+            textBinding.SetValue(value);
+        }
+
+        public override void OnRendered()
+        {
         }
     }
 }

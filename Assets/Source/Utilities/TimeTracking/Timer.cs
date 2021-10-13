@@ -41,7 +41,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
         }
         else
         {
-            TimerManager.Instance.timeEmitter.Attach(_timeObserver);
+            TimerManager.Instance.timeObservable.Attach(_timeObserver);
             Setup();
         }
         
@@ -69,7 +69,7 @@ namespace UnitMan.Source.Utilities.TimeTracking {
     }
 
     ~Timer() {
-        TimerManager.Instance.timeEmitter.Detach(_timeObserver);
+        TimerManager.Instance.timeObservable.Detach(_timeObserver);
      }
 }
 }
