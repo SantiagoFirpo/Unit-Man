@@ -113,7 +113,6 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         public override void OnRendered()
         {
             Debug.Log("Online Level Explorer Rendered");
-            FirebaseFirestore firestore = FirebaseFirestore.DefaultInstance;
             // firestore.Collection("/levels").Listen(ListenCallback);
             Refresh();
         }
