@@ -18,12 +18,13 @@ namespace UnitMan.Source.LevelEditing
 
         public Vector2Int ghostDoorPosition = new Vector2Int(0, 4);
         //TODO: change to Y-value and X-value lists
-        public List<Vector2Int[]> screenWrapPositions = new List<Vector2Int[]>();
         public Vector2Int topRightPosition = Vector2Int.zero;
         public Vector2Int topLeftPosition = Vector2Int.zero;
         public Vector2Int bottomRightPosition = Vector2Int.zero;
         public Vector2Int bottomLeftPosition = Vector2Int.zero;
         public int pelletCount;
+        
+        public List<Vector2Int> screenWrapPositions = new List<Vector2Int>();
 
         public List<Vector2Int> objectPositions = new List<Vector2Int>();
         public List<LevelObjectType> objectTypes = new List<LevelObjectType>();
