@@ -84,6 +84,8 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private bool _isLeftClicking;
         private bool _isPointerOverGameObject;
         private readonly LevelEditManager _levelEditManager;
+        [SerializeField]
+        public GameObject screenWrapMarkerPrefab;
 
         public LevelEditorViewModel()
         {
@@ -185,7 +187,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
         private void SaveLevelToDisk()
         {
-            _levelEditManager.ComputeScatterTargets();
+            _levelEditManager.levelLoadManager.ComputeScatterTargets();
             CopyIdToClipboard();
             string json = JsonUtility.ToJson(currentWorkingLevel, false);
             Debug.Log(json);
@@ -232,7 +234,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
         private void LoadCurrentLevelIntoEditor()
         {
-            _levelEditManager.PopulateEditorFromLevelObject(currentWorkingLevel);
+            _levelEditManager.levelLoadManager.PopulateEditorFromLevelObject(currentWorkingLevel);
         }
 
         public void Upload()
@@ -320,6 +322,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         Blinky,
         Pinky,
         Inky,
-        Clyde
+        Clyde,
+        ScreenWrap
     }
 }
