@@ -124,7 +124,7 @@ MonoBehaviour:
       - m_Target: {fileID: 8894800111937355194}
         m_TargetAssemblyTypeName: UnitMan.Source.UI.Components.LevelEditor.LevelEditorView,
           Assembly-CSharp
-        m_MethodName: OnGhostDoorPressed
+        m_MethodName: ScreenWrapPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2889,6 +2889,7 @@ MonoBehaviour:
   uiCanvas: {fileID: 8894800111430831079}
   wallTilemap: {fileID: 7970915059381005590}
   toast: {fileID: 7543930898368964340}
+  screenWrapIcon: {fileID: 7855468821377597439, guid: 84d740ef79aeec0438de96a6c20640d3, type: 3}
 --- !u!1 &8894800112048682984
 GameObject:
   m_ObjectHideFlags: 0
@@ -5109,6 +5110,7 @@ MonoBehaviour:
     bottomRightPosition: {x: 0, y: 0}
     bottomLeftPosition: {x: 0, y: 0}
     pelletCount: 0
+    screenWrapPositions: []
     objectPositions: []
     objectTypes: 
   wallTilemap: {fileID: 7970915059381005590}
@@ -5173,6 +5175,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  screenWrapMarkerPrefab: {fileID: 1208791135804869657, guid: b9390ec7122562c409e92220e7c4853e, type: 3}
 --- !u!1 &8894800113029898155
 GameObject:
   m_ObjectHideFlags: 0

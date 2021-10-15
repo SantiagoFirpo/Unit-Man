@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.UI.Components.LevelEditor;
+using UnitMan.Source.Utilities.Pathfinding;
 using UnityEngine;
 
 namespace UnitMan.Source.LevelEditing
@@ -38,16 +39,28 @@ namespace UnitMan.Source.LevelEditing
             id = LevelEditorViewModel.GetUniqueId();
         }
 
-        public void AddLevelObject(LevelObjectType objectType, Vector2Int position)
+        public void AddLevelObject(LevelObject @object, Vector2Int position)
         {
-            objectTypes.Add(objectType);
+            objectTypes.Add(@object);
             objectPositions.Add(position);
         }
         
         public void RemoveLevelObject(Vector2Int position)
         {
-            objectTypes.RemoveAt(objectPositions.IndexOf(position));
-            objectPositions.Remove(position);
+            int indexOf = objectPositions.IndexOf(position);
+            if (indexOf < 0) return;
+            objectTypes.RemoveAt(indexOf);
+            objectPositions.RemoveAt(indexOf);
+        }
+        
+        public Vector3 RemoveScreenWrapPair(Vector2Int position)
+        {
+            int positionIndex = screenWrapPositions.IndexOf(position);
+            int otherPositionIndex = positionIndex + (positionIndex % 2 == 0 ? 0 : -1);
+            if (positionIndex < 0 || otherPositionIndex < 0) return new Vector3(9999f, 9999f, 9999f);
+            screenWrapPositions.RemoveAt(positionIndex);
+            screenWrapPositions.RemoveAt(otherPositionIndex);
+            return VectorUtil.ToVector3(screenWrapPositions[otherPositionIndex]);
         }
 
         public static Level FromFirestoreLevel(FirestoreLevel firestoreLevel)

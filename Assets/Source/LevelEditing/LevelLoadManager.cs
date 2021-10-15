@@ -29,11 +29,11 @@ namespace UnitMan.Source.LevelEditing
             for (int index = 0; index < level.screenWrapPositions.Count; index += 2)
             {
                 Vector2Int screenWrapPosition = level.screenWrapPositions[index];
-                GameObject screenWrap = _levelEditManager.AddLocalLevelObject(LevelObjectType.ScreenWrap, VectorUtil.ToVector3(screenWrapPosition));
+                GameObject screenWrap = _levelEditManager.AddLocalLevelObject(LevelObject.ScreenWrap, VectorUtil.ToVector3(screenWrapPosition));
                 if (index % 2 != 0) continue;
                 WrapController wrapController = screenWrap.GetComponent<WrapController>();
                 wrapController.SetDestination(
-                    _levelEditManager.AddLocalLevelObject(LevelObjectType.ScreenWrap,
+                    _levelEditManager.AddLocalLevelObject(LevelObject.ScreenWrap,
                         VectorUtil.ToVector3(level.screenWrapPositions[index + 1])).GetComponent<WrapController>());
                 wrapController.SyncWithDestination();
             }
@@ -45,7 +45,7 @@ namespace UnitMan.Source.LevelEditing
             for (int i = 0; i < objectPositionsCount; i++)
             {
                 Vector3Int positionV3Int = VectorUtil.ToVector3Int(level.objectPositions[i]);
-                // if (level.objectTypes[i] == LevelObjectType.Wall)
+                // if (level.objectTypes[i] == LevelObject.Wall)
                 // {
                 //     wallTilemap.SetTile(positionV3Int, wallRuleTile);
                 // }
