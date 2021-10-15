@@ -31,7 +31,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private ReactiveEvent toggleHudBinding;
 
         [SerializeField]
-        private Reactive<BrushType> brushTypeBinding;
+        private Reactive<BrushMode> brushTypeBinding;
         
         [SerializeField]
         private Reactive<string> levelIdBinding;
@@ -99,6 +99,9 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         private ToastViewModel toast;
 
         private bool _wasPointerOverUI;
+        [SerializeField]
+        private Sprite screenWrapIcon;
+
         private void Start()
         {
             _mainCamera = Camera.main;
@@ -117,6 +120,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         
         private void OnLeftClicked(InputAction.CallbackContext context)
         {
+            Debug.Log("Left");
             leftClickBinding.SetValue(true);
         }
         
@@ -140,21 +144,22 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             levelIdBinding.SetValue(newLevelId);
         }
         
-        private Sprite BrushTypeToIcon(BrushType brushType)
+        private Sprite BrushTypeToIcon(BrushMode brushMode)
         {
-            return brushType switch
+            return brushMode switch
             {
-                BrushType.Wall => wallIcon,
-                BrushType.Pellet => pelletIcon,
-                BrushType.PowerPellet => powerPelletIcon,
-                BrushType.PacMan => pacManIcon,
-                BrushType.Blinky => blinkyIcon,
-                BrushType.Pinky => pinkyIcon,
-                BrushType.Inky => inkyIcon,
-                BrushType.Clyde => clydeIcon,
-                BrushType.GhostHouse => houseIcon,
-                BrushType.GhostDoor => doorIcon,
-                _ => throw new ArgumentOutOfRangeException(nameof(brushType), brushType, null)
+                BrushMode.Wall => wallIcon,
+                BrushMode.Pellet => pelletIcon,
+                BrushMode.PowerPellet => powerPelletIcon,
+                BrushMode.PacMan => pacManIcon,
+                BrushMode.Blinky => blinkyIcon,
+                BrushMode.Pinky => pinkyIcon,
+                BrushMode.Inky => inkyIcon,
+                BrushMode.Clyde => clydeIcon,
+                BrushMode.GhostHouse => houseIcon,
+                BrushMode.GhostDoor => doorIcon,
+                BrushMode.ScreenWrap => screenWrapIcon,
+                _ => throw new ArgumentOutOfRangeException(nameof(brushMode), brushMode, null)
             };
         }
 
@@ -205,7 +210,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         }
         
 
-        public void OnBrushChanged(BrushType newValue)
+        public void OnBrushChanged(BrushMode newValue)
         {
             brushPreviewSprite.sprite = BrushTypeToIcon(newValue);
         }
@@ -247,57 +252,57 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
         public void OnWallPressed()
         {
-            brushTypeBinding.SetValue(BrushType.Wall);
+            brushTypeBinding.SetValue(BrushMode.Wall);
         }
 
         public void OnPelletPressed()
         {
-            brushTypeBinding.SetValue(BrushType.Pellet);
+            brushTypeBinding.SetValue(BrushMode.Pellet);
         }
 
         public void OnPowerPelletPressed()
         {
-            brushTypeBinding.SetValue(BrushType.PowerPellet);
+            brushTypeBinding.SetValue(BrushMode.PowerPellet);
         }
 
         public void OnBlinkyPressed()
         {
-            brushTypeBinding.SetValue(BrushType.Blinky);
+            brushTypeBinding.SetValue(BrushMode.Blinky);
         }
 
         public void OnPinkyPressed()
         {
-            brushTypeBinding.SetValue(BrushType.Pinky);
+            brushTypeBinding.SetValue(BrushMode.Pinky);
         }
 
         public void OnInkyPressed()
         {
-            brushTypeBinding.SetValue(BrushType.Inky);
+            brushTypeBinding.SetValue(BrushMode.Inky);
         }
 
         public void OnClydePressed()
         {
-            brushTypeBinding.SetValue(BrushType.Clyde);
+            brushTypeBinding.SetValue(BrushMode.Clyde);
         }
 
         public void OnPacManPressed()
         {
-            brushTypeBinding.SetValue(BrushType.PacMan);
+            brushTypeBinding.SetValue(BrushMode.PacMan);
         }
 
         public void OnGhostHousePressed()
         {
-            brushTypeBinding.SetValue(BrushType.GhostHouse);
+            brushTypeBinding.SetValue(BrushMode.GhostHouse);
         }
 
         public void OnGhostDoorPressed()
         {
-            brushTypeBinding.SetValue(BrushType.GhostDoor);
+            brushTypeBinding.SetValue(BrushMode.GhostDoor);
         }
 
         public void ScreenWrapPressed()
         {
-            brushTypeBinding.SetValue(BrushType.ScreenWrap);
+            brushTypeBinding.SetValue(BrushMode.ScreenWrap);
         }
     }
 }

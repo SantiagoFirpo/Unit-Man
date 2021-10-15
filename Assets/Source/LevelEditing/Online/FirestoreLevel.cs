@@ -23,7 +23,7 @@ namespace UnitMan.Source.LevelEditing.Online
         public FirestoreVector2Int[] ObjectPositions { get; set; }
         
         [FirestoreProperty]
-        public LevelObjectType[] ObjectTypes { get; set; }
+        public LevelObject[] ObjectTypes { get; set; }
         
         [FirestoreProperty]
         public int PelletCount { get; set; }
@@ -71,7 +71,7 @@ namespace UnitMan.Source.LevelEditing.Online
                 GhostHouse = FirestoreVector2Int.FromVector2Int(level.ghostHousePosition),
                 PacManPosition = FirestoreVector2Int.FromVector2Int(level.pacManPosition)
             };
-            firestoreLevel.ObjectTypes = new LevelObjectType[firestoreLevel.ObjectPositions.Length];
+            firestoreLevel.ObjectTypes = new LevelObject[firestoreLevel.ObjectPositions.Length];
             for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)
             {
                 firestoreLevel.ObjectPositions[i] = FirestoreVector2Int.FromVector2Int(level.objectPositions[i]);

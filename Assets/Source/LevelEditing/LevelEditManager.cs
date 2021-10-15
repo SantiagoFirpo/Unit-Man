@@ -19,46 +19,52 @@ namespace UnitMan.Source.LevelEditing
 
         public readonly LevelEditorViewModel levelEditorViewModel;
 
-        public void PlaceLevelObjectAndUpdateMaze(BrushType brush, Vector3 position)
+        public void PlaceLevelObjectAndUpdateMaze(BrushMode brush, Vector3 position)
         {
             Vector2Int positionV2Int = VectorUtil.ToVector2Int(position);
             if (!levelEditorViewModel.IsPositionValid(positionV2Int)) return;
             switch (brush)
             {
-                case BrushType.Wall:
+                case BrushMode.Wall:
                 {
                     levelEditorViewModel.wallTilemap.SetTile(levelEditorViewModel.mouseTilesetPosition, levelEditorViewModel.wallRuleTile);
-                    levelEditorViewModel.currentWorkingLevel.AddLevelObject(LevelObjectType.Wall, positionV2Int);
+                    levelEditorViewModel.currentWorkingLevel.AddLevelObject(LevelObject.Wall, positionV2Int);
                     break;
                 }
-                case BrushType.PacMan:
+                case BrushMode.PacMan:
                 {
                     levelEditorViewModel.currentWorkingLevel.pacManPosition = positionV2Int;
                     levelEditorViewModel.pacManTransform.position = position;
                     break;
                 }
-                case BrushType.GhostHouse:
+                case BrushMode.GhostHouse:
                 {
                     levelEditorViewModel.currentWorkingLevel.ghostHousePosition = positionV2Int;
                     levelEditorViewModel.ghostHouseTransform.position = position;
                     break;
                 }
-                case BrushType.GhostDoor:
+                case BrushMode.GhostDoor:
                 {
                     levelEditorViewModel.currentWorkingLevel.ghostDoorPosition = positionV2Int;
                     levelEditorViewModel.ghostDoor.position = position;
                     break;
                 }
+                case BrushMode.ScreenWrap:
+                {
+                    levelEditorViewModel.currentWorkingLevel.screenWrapPositions.Add(positionV2Int);
+                    levelEditorViewModel.localObjects.Add(position, CreateGameObject(LevelObject.ScreenWrap, position));
+                    break;
+                }
                 default:
                 {
-                    if (brush == BrushType.Pellet)
+                    if (brush == BrushMode.Pellet)
                     {
                         levelEditorViewModel.currentWorkingLevel.pelletCount++;
                     }
 
-                    LevelObjectType brushToLevelObjectType = LevelEditorViewModel.BrushToLevelObjectType(brush);
-                    levelEditorViewModel.currentWorkingLevel.AddLevelObject(brushToLevelObjectType, positionV2Int);
-                    levelEditorViewModel.localObjects.Add(position, CreateGameObject(brushToLevelObjectType, position));
+                    LevelObject brushToLevelObject = LevelEditorViewModel.BrushToLevelObjectType(brush);
+                    levelEditorViewModel.currentWorkingLevel.AddLevelObject(brushToLevelObject, positionV2Int);
+                    levelEditorViewModel.localObjects.Add(position, CreateGameObject(brushToLevelObject, position));
                     break;
                 }
             }
@@ -66,52 +72,55 @@ namespace UnitMan.Source.LevelEditing
             
         }
 
-        public GameObject AddLocalLevelObject(LevelObjectType objectType, Vector3 position)
+        public GameObject AddLocalLevelObject(LevelObject @object, Vector3 position)
         {
             GameObject gameObject = null;
-            switch (objectType)
+            switch (@object)
             {
-                case LevelObjectType.Wall:
+                case LevelObject.Wall:
                     levelEditorViewModel.wallTilemap.SetTile(VectorUtil.ToVector3Int(position), levelEditorViewModel.wallRuleTile);
                     break;
                 default:
-                    gameObject = CreateGameObject(objectType, position);
+                    gameObject = CreateGameObject(@object, position);
                     levelEditorViewModel.localObjects.Add(position, gameObject);
                     break;
             }
             return gameObject;
         }
 
-        public GameObject CreateGameObject(LevelObjectType objectType, Vector3 position)
+        public GameObject CreateGameObject(LevelObject @object, Vector3 position)
         {
-            return objectType == LevelObjectType.Wall ? null :
-                Object.Instantiate(LevelObjectTypeToPrefab(objectType), position, levelEditorViewModel.identity);
+            return @object == LevelObject.Wall ? null :
+                Object.Instantiate(LevelObjectTypeToPrefab(@object), position, levelEditorViewModel.identity);
         }
 
-        private GameObject LevelObjectTypeToPrefab(LevelObjectType objectType)
+        private GameObject LevelObjectTypeToPrefab(LevelObject @object)
         {
-            return objectType switch
+            return @object switch
             {
-                LevelObjectType.Blinky => levelEditorViewModel.blinkyMarkerPrefab,
-                LevelObjectType.Pinky => levelEditorViewModel.pinkyMarkerPrefab,
-                LevelObjectType.Inky => levelEditorViewModel.inkyMarkerPrefab,
-                LevelObjectType.Clyde => levelEditorViewModel.clydeMarkerPrefab,
-                LevelObjectType.Pellet => levelEditorViewModel.pelletMarkerPrefab,
-                LevelObjectType.PowerPellet => levelEditorViewModel.powerMarkerPrefab,
-                LevelObjectType.Wall => null,
-                LevelObjectType.ScreenWrap => levelEditorViewModel.screenWrapMarkerPrefab,
-                _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
+                LevelObject.Blinky => levelEditorViewModel.blinkyMarkerPrefab,
+                LevelObject.Pinky => levelEditorViewModel.pinkyMarkerPrefab,
+                LevelObject.Inky => levelEditorViewModel.inkyMarkerPrefab,
+                LevelObject.Clyde => levelEditorViewModel.clydeMarkerPrefab,
+                LevelObject.Pellet => levelEditorViewModel.pelletMarkerPrefab,
+                LevelObject.PowerPellet => levelEditorViewModel.powerMarkerPrefab,
+                LevelObject.Wall => null,
+                LevelObject.ScreenWrap => levelEditorViewModel.screenWrapMarkerPrefab,
+                _ => throw new ArgumentOutOfRangeException(nameof(@object), @object, null)
             };
         }
 
         public void EraseObject(Vector3 position)
         {
             levelEditorViewModel.currentWorkingLevel.RemoveLevelObject(VectorUtil.ToVector2Int(position));
+            Vector3 removeScreenWrapPair = levelEditorViewModel.currentWorkingLevel.RemoveScreenWrapPair(VectorUtil.ToVector2Int(position));
+            levelEditorViewModel.localObjects.Remove(removeScreenWrapPair);
             bool isWall = levelEditorViewModel.wallTilemap.GetTile(VectorUtil.ToVector3Int(position)) != null;
             if (isWall)
             {
                 levelEditorViewModel.wallTilemap.SetTile(levelEditorViewModel.mouseTilesetPosition, null);
             }
+            
             else
             {
                 Object.Destroy(levelEditorViewModel.localObjects[position]);

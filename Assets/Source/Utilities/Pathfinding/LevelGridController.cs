@@ -116,15 +116,15 @@ namespace UnitMan.Source.Utilities.Pathfinding
             Quaternion identity = Quaternion.identity;
             for (int i = 0; i < level.objectPositions.Count; i++)
             {
-                if (level.objectTypes[i] == LevelObjectType.Wall) continue;
+                if (level.objectTypes[i] == LevelObject.Wall) continue;
                 Instantiate(level.objectTypes[i] switch
                 {
-                    LevelObjectType.Pellet => pelletPrefab,
-                    LevelObjectType.PowerPellet => powerPelletPrefab,
-                    LevelObjectType.Blinky => blinkyPrefab,
-                    LevelObjectType.Pinky => pinkyPrefab,
-                    LevelObjectType.Inky => inkyPrefab,
-                    LevelObjectType.Clyde => clydePrefab,
+                    LevelObject.Pellet => pelletPrefab,
+                    LevelObject.PowerPellet => powerPelletPrefab,
+                    LevelObject.Blinky => blinkyPrefab,
+                    LevelObject.Pinky => pinkyPrefab,
+                    LevelObject.Inky => inkyPrefab,
+                    LevelObject.Clyde => clydePrefab,
                     _ => throw new ArgumentOutOfRangeException()
                 }, VectorUtil.ToVector3(level.objectPositions[i]), identity);
             }
@@ -155,7 +155,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         {
             for (int i = 0; i < levelObject.objectPositions.Count; i++)
             {
-                if (levelObject.objectTypes[i] != LevelObjectType.Wall) continue;
+                if (levelObject.objectTypes[i] != LevelObject.Wall) continue;
                 wallTilemap.SetTile(VectorUtil.ToVector3Int(levelObject.objectPositions[i]), wallRuleTile);
             }
             

@@ -21,7 +21,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
 
 
         [SerializeField]
-        private Reactive<BrushType> selectedBrushBinding;
+        private Reactive<BrushMode> selectedBrushBinding;
         [SerializeField]
         public Level currentWorkingLevel;
 
@@ -122,9 +122,9 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             _levelId = newValue;
         }
         
-        public void OnBrushSelected(BrushType brushType)
+        public void OnBrushSelected(BrushMode brushMode)
         {
-            selectedBrushBinding.SetValue(brushType);
+            selectedBrushBinding.SetValue(brushMode);
         }
 
         public void OnLevelSaved(string levelName)
@@ -144,24 +144,26 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             return currentWorkingLevel.pacManPosition != positionV2Int &&
                     currentWorkingLevel.ghostDoorPosition != positionV2Int &&
                     currentWorkingLevel.ghostHousePosition != positionV2Int &&
+                    !currentWorkingLevel.screenWrapPositions.Contains(positionV2Int) &&
                     !currentWorkingLevel.objectPositions.Contains(positionV2Int) &&
                     wallTilemap.GetTile(tilesetPosition) != wallRuleTile;
         }
 
-        public static LevelObjectType BrushToLevelObjectType(BrushType brushType)
+        public static LevelObject BrushToLevelObjectType(BrushMode brushMode)
         {
-            return brushType switch
+            return brushMode switch
             {
-                BrushType.Blinky => LevelObjectType.Blinky,
-                BrushType.Pinky => LevelObjectType.Pinky,
-                BrushType.Inky => LevelObjectType.Inky,
-                BrushType.Clyde => LevelObjectType.Clyde,
-                BrushType.Pellet => LevelObjectType.Pellet,
-                BrushType.PowerPellet => LevelObjectType.PowerPellet,
-                BrushType.Wall => LevelObjectType.Wall,
-                BrushType.PacMan => throw new ArgumentException(
+                BrushMode.Blinky => LevelObject.Blinky,
+                BrushMode.Pinky => LevelObject.Pinky,
+                BrushMode.Inky => LevelObject.Inky,
+                BrushMode.Clyde => LevelObject.Clyde,
+                BrushMode.Pellet => LevelObject.Pellet,
+                BrushMode.PowerPellet => LevelObject.PowerPellet,
+                BrushMode.Wall => LevelObject.Wall,
+                BrushMode.ScreenWrap => LevelObject.ScreenWrap,
+                BrushMode.PacMan => throw new ArgumentException(
                                                         "This PacMan brush cannot be converted to a LevelObject type!"),
-                BrushType.GhostHouse => throw new ArgumentException(
+                BrushMode.GhostHouse => throw new ArgumentException(
                                                             "This GhostHouse brush cannot be converted to a LevelObject type!"),
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -275,9 +277,11 @@ namespace UnitMan.Source.UI.Components.LevelEditor
             else if (_isRightClicking)
             {
                 if (!currentWorkingLevel.objectPositions.Contains(
+                    VectorUtil.ToVector2Int(_mouseWorldPosition)) &&
+                    !currentWorkingLevel.screenWrapPositions.Contains(
                     VectorUtil.ToVector2Int(_mouseWorldPosition)))
                     return;
-                if (selectedBrushBinding.GetValue() == BrushType.Pellet)
+                if (selectedBrushBinding.GetValue() == BrushMode.Pellet)
                 {
                     currentWorkingLevel.pelletCount--;
                 }
@@ -304,7 +308,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
         }
     }
 
-    public enum BrushType
+    public enum BrushMode
     {
         Wall, Pellet, PowerPellet, PacMan,
         Blinky,
@@ -316,7 +320,7 @@ namespace UnitMan.Source.UI.Components.LevelEditor
     }
     
     [Serializable]
-    public enum LevelObjectType
+    public enum LevelObject
     {
         Wall, Pellet, PowerPellet,
         Blinky,

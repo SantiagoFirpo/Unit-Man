@@ -27,7 +27,7 @@ namespace UnitMan.Source.LevelEditing
         public List<Vector2Int> screenWrapPositions = new List<Vector2Int>();
 
         public List<Vector2Int> objectPositions = new List<Vector2Int>();
-        public List<LevelObjectType> objectTypes = new List<LevelObjectType>();
+        public List<LevelObject> objectTypes = new List<LevelObject>();
 
 
         public Level(string name, string authorName, string authorId)
