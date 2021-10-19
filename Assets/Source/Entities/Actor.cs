@@ -20,6 +20,9 @@ namespace UnitMan.Source.Entities {
         protected GameObject thisGameObject;
 
         protected Vector3 StartPosition {get; private set;}
+        
+        private bool _isCenteredAtWrap;
+
 
         [HideInInspector]
         public Vector2 motion = Vector2.zero;
@@ -33,12 +36,8 @@ namespace UnitMan.Source.Entities {
         [SerializeField] protected bool[] possibleTurns = {false, false, false, false};
         
         protected Animator animator;
-        
-        private Vector3 _rightWarpPosition;
-        
-        private Vector3 _leftWrapPosition;
-        
-        
+
+
         public Vector2Int gridPosition;
         private bool _isWrapping;
 
@@ -70,12 +69,7 @@ namespace UnitMan.Source.Entities {
     }
 
     protected virtual void ResolveDependencies() {
-            
-            
-            _rightWarpPosition = SessionManagerSingle.Instance.rightWrap.position;
-            _leftWrapPosition = SessionManagerSingle.Instance.leftWrap.position;
-            
-            SubscribeForEvents();
+        SubscribeForEvents();
             
     }
 
@@ -200,7 +194,12 @@ namespace UnitMan.Source.Entities {
         
         protected bool IsCenteredAt(Vector2Int position)
         {
-            return VectorUtil.VectorApproximately(position, _thisTransform.position, 0.1f);
+            return VectorUtil.VectorApproximately(position, _thisTransform.position, 0.1f); //OLD: 0.1f
+        }
+        
+        protected bool IsCenteredAt(Vector2Int position, float toleranceInclusive)
+        {
+            return VectorUtil.VectorApproximately(position, _thisTransform.position, toleranceInclusive); //OLD: 0.1f
         }
 
         private bool IsCenteredAt(Vector3 position)
@@ -211,27 +210,37 @@ namespace UnitMan.Source.Entities {
         protected virtual void FixedUpdate() {
             UpdateGridPosition();
             LevelGridController.Instance.CheckPossibleTurns(gridPosition, possibleTurns);
-
             
-            if (IsCenteredAt(_rightWarpPosition)
-                && !_isWrapping)
-            {
-                _thisTransform.position = _leftWrapPosition;
-                _isWrapping = true;
-            }
-            
-            else if (IsCenteredAt(_leftWrapPosition)
-                     && !_isWrapping)
-            {
-                _thisTransform.position = _rightWarpPosition;
-                _isWrapping = true;
-            }
+            ComputeScreenWraps();
+        }
 
-            else //if (PathGrid.TaxiCabDistanceVector3(thisTransform.position, leftWrap.position) > 1f
-                //         && PathGrid.TaxiCabDistanceVector3(thisTransform.position, rightWrap.position) > 1f)
+        private void ComputeScreenWraps()
+        {
+            foreach (Vector2Int position in LevelGridController.Instance.level.screenWrapPositions)
             {
-                _isWrapping = false;
+                // Debug.Log(i);
+                _isCenteredAtWrap = IsCenteredAt(position, 0.11f);
+
+                if (_isCenteredAtWrap)
+                {
+                    if (_isWrapping) return;
+                    Vector2Int? destination = LevelGridController.Instance.FindWrapDestinationFromPosition(position);
+                    Wrap(destination);
+                    return;
+                }
+
+                if (!IsInTileCenter)
+                {
+                    _isWrapping = false;
+                }
             }
+        }
+
+        private void Wrap(Vector2Int? destination)
+        {
+            if (!destination.HasValue) return;
+            _isWrapping = true;
+            _thisTransform.position = VectorUtil.ToVector3(destination.Value);
         }
 
         protected abstract void UpdateAnimation();
