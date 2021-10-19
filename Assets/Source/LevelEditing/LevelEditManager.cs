@@ -72,16 +72,16 @@ namespace UnitMan.Source.LevelEditing
             
         }
 
-        public GameObject AddLocalLevelObject(LevelObject @object, Vector3 position)
+        public GameObject AddLocalLevelObject(LevelObject levelObject, Vector3 position)
         {
             GameObject gameObject = null;
-            switch (@object)
+            switch (levelObject)
             {
                 case LevelObject.Wall:
                     levelEditorViewModel.wallTilemap.SetTile(VectorUtil.ToVector3Int(position), levelEditorViewModel.wallRuleTile);
                     break;
                 default:
-                    gameObject = CreateGameObject(@object, position);
+                    gameObject = CreateGameObject(levelObject, position);
                     levelEditorViewModel.localObjects.Add(position, gameObject);
                     break;
             }
@@ -114,18 +114,30 @@ namespace UnitMan.Source.LevelEditing
         {
             levelEditorViewModel.currentWorkingLevel.RemoveLevelObject(VectorUtil.ToVector2Int(position));
             Vector3 removeScreenWrapPair = levelEditorViewModel.currentWorkingLevel.RemoveScreenWrapPair(VectorUtil.ToVector2Int(position));
-            levelEditorViewModel.localObjects.Remove(removeScreenWrapPair);
+            DeleteObject(position);
+            DeleteObject(removeScreenWrapPair);
             bool isWall = levelEditorViewModel.wallTilemap.GetTile(VectorUtil.ToVector3Int(position)) != null;
             if (isWall)
             {
-                levelEditorViewModel.wallTilemap.SetTile(levelEditorViewModel.mouseTilesetPosition, null);
+                DeleteTile(levelEditorViewModel.mouseTilesetPosition);
             }
             
             else
             {
-                Object.Destroy(levelEditorViewModel.localObjects[position]);
-                levelEditorViewModel.localObjects.Remove(position);
+                DeleteObject(position);
             }
+        }
+
+        private void DeleteTile(Vector3Int position)
+        {
+            levelEditorViewModel.wallTilemap.SetTile(position, null);
+        }
+
+        private void DeleteObject(Vector3 position)
+        {
+            if (!levelEditorViewModel.localObjects.ContainsKey(position)) return;
+            Object.Destroy(levelEditorViewModel.localObjects[position]);
+            levelEditorViewModel.localObjects.Remove(position);
         }
     }
 }
