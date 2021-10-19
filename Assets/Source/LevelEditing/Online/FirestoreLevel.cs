@@ -1,6 +1,8 @@
-﻿using Firebase.Firestore;
+﻿using System.Collections.Generic;
+using Firebase.Firestore;
 using UnitMan.Source.UI;
 using UnitMan.Source.UI.Components.LevelEditor;
+using UnityEngine;
 
 namespace UnitMan.Source.LevelEditing.Online
 {
@@ -48,6 +50,9 @@ namespace UnitMan.Source.LevelEditing.Online
         
         [FirestoreProperty]
         public FirestoreVector2Int PacManPosition { get; set; }
+
+        [FirestoreProperty]
+        public List<Vector2Int> wrapPositions { get; set; }
         
         public FirestoreLevel()
         {
@@ -69,7 +74,8 @@ namespace UnitMan.Source.LevelEditing.Online
                 BottomRightPosition = FirestoreVector2Int.FromVector2Int(level.bottomRightPosition),
                 GhostDoorPosition = FirestoreVector2Int.FromVector2Int(level.ghostDoorPosition),
                 GhostHouse = FirestoreVector2Int.FromVector2Int(level.ghostHousePosition),
-                PacManPosition = FirestoreVector2Int.FromVector2Int(level.pacManPosition)
+                PacManPosition = FirestoreVector2Int.FromVector2Int(level.pacManPosition),
+                wrapPositions = level.screenWrapPositions
             };
             firestoreLevel.ObjectTypes = new LevelObject[firestoreLevel.ObjectPositions.Length];
             for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)

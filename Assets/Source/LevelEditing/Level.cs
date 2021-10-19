@@ -77,6 +77,7 @@ namespace UnitMan.Source.LevelEditing
                     ghostDoorPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostDoorPosition),
                     ghostHousePosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostHouse),
                     pacManPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.PacManPosition),
+                    screenWrapPositions = firestoreLevel.wrapPositions
                     
                 };
             // Debug.Log($"is ObjectPositions null? {firestoreLevel.ObjectPositions == null}");
