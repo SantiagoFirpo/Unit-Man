@@ -4,7 +4,6 @@ using UnitMan.Source.Entities;
 using UnitMan.Source.LevelEditing;
 using UnitMan.Source.LevelEditing.Online;
 using UnitMan.Source.Management.Session;
-using UnitMan.Source.UI;
 using UnitMan.Source.UI.Components.LevelEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -38,7 +37,7 @@ namespace UnitMan.Source.Utilities.Pathfinding
         // private TileBase walkableTile;
 
 
-        private bool[][] _grid;
+        private TileType[][] _grid;
         // public MazeData mazeData;
         public Level level;
         [SerializeField]
@@ -67,11 +66,17 @@ namespace UnitMan.Source.Utilities.Pathfinding
         
         private Vector2Int _gridOrigin;
 
+
+        public enum TileType
+        {
+            Wall, Path
+        }
+        
         private bool GetGridPosition(Vector2Int vector) {
             // Debug.Log($"{x}, {y}");
             return wallTilemap.GetTile(wallTilemap.WorldToCell(VectorUtil.ToVector3Int(vector))) == null;
         }
-        private void SetGridPosition(Vector2Int worldPosition, bool value)
+        private void SetGridPosition(Vector2Int worldPosition, TileType value)
         {
             Debug.Log(
                 $"World position: {worldPosition}, {value}, array value: ({-worldPosition.y + _gridOrigin.y - 1}, {worldPosition.x - _gridOrigin.x})");
@@ -102,6 +107,17 @@ namespace UnitMan.Source.Utilities.Pathfinding
             InitializeGrid();
             PopulateLevel();
             AddUniqueObjects();
+        }
+
+        public Vector2Int? FindWrapDestinationFromPosition(Vector2Int start)
+        {
+            int index = level.screenWrapPositions.IndexOf(start);
+            if (index == -1)
+            {
+                return null;
+            }
+
+            return index % 2 == 0 ? level.screenWrapPositions[index + 1] : level.screenWrapPositions[index - 1];
         }
 
         private void AddUniqueObjects()
@@ -136,17 +152,17 @@ namespace UnitMan.Source.Utilities.Pathfinding
             BuildTilemapFromLevelObject(level);
             wallTilemap.CompressBounds();
             BoundsInt cellBounds = wallTilemap.cellBounds;
-            _grid = new bool[cellBounds.size.y][];
+            _grid = new TileType[cellBounds.size.y][];
             
             // int mazeDataMapWidth = cellBounds.size.x;
             for (int i = 0; i < _grid.Length; i++)
             {
-                _grid[i] = new bool[cellBounds.size.x];
+                _grid[i] = new TileType[cellBounds.size.x];
             }
             
             foreach (Vector2Int position in GetAllTilePositions(wallTilemap)) {
                 // grid.Add(position, true);
-                SetGridPosition(position, true);
+                SetGridPosition(position, TileType.Wall);
             }
             
         }
