@@ -202,7 +202,7 @@ namespace UnitMan.Source.Management.Firebase.Auth
                     return;
                 }
                 if (task.IsFaulted) {
-                    Debug.LogError("DeleteAsync encountered an error: " + task.Exception);
+                    Debug.LogError($"DeleteAsync encountered an error: {task.Exception}");
                     return;
                 }
 
