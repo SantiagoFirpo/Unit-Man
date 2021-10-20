@@ -77,9 +77,11 @@ namespace UnitMan.Source.LevelEditing
                     ghostDoorPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostDoorPosition),
                     ghostHousePosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.GhostHouse),
                     pacManPosition = FirestoreVector2Int.ToVector2Int(firestoreLevel.PacManPosition),
-                    screenWrapPositions = firestoreLevel.wrapPositions
-                    
                 };
+            foreach (FirestoreVector2Int firestoreLevelWrapPosition in firestoreLevel.WrapPositions)
+            {
+                level.screenWrapPositions.Add(firestoreLevelWrapPosition.ToVector2Int());
+            }
             // Debug.Log($"is ObjectPositions null? {firestoreLevel.ObjectPositions == null}");
             if (firestoreLevel.ObjectPositions == null) return level;
             for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)

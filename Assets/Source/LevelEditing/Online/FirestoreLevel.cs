@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Firebase.Firestore;
 using UnitMan.Source.UI;
 using UnitMan.Source.UI.Components.LevelEditor;
@@ -52,7 +53,7 @@ namespace UnitMan.Source.LevelEditing.Online
         public FirestoreVector2Int PacManPosition { get; set; }
 
         [FirestoreProperty]
-        public List<Vector2Int> wrapPositions { get; set; }
+        public List<FirestoreVector2Int> WrapPositions { get; set; }
         
         public FirestoreLevel()
         {
@@ -75,8 +76,11 @@ namespace UnitMan.Source.LevelEditing.Online
                 GhostDoorPosition = FirestoreVector2Int.FromVector2Int(level.ghostDoorPosition),
                 GhostHouse = FirestoreVector2Int.FromVector2Int(level.ghostHousePosition),
                 PacManPosition = FirestoreVector2Int.FromVector2Int(level.pacManPosition),
-                wrapPositions = level.screenWrapPositions
             };
+            foreach (Vector2Int screenWrapPosition in level.screenWrapPositions)
+            {
+                firestoreLevel.WrapPositions.Add(FirestoreVector2Int.FromVector2Int(screenWrapPosition));
+            }
             firestoreLevel.ObjectTypes = new LevelObject[firestoreLevel.ObjectPositions.Length];
             for (int i = 0; i < firestoreLevel.ObjectPositions.Length; i++)
             {

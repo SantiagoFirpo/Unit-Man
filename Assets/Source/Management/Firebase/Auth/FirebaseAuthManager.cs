@@ -189,7 +189,8 @@ namespace UnitMan.Source.Management.Firebase.Auth
             authStateChangedObservable.EmitNotification(authStatus);
         }
         
-        private void OnDisable() {
+        private void OnDisable()
+        {
             _auth.StateChanged -= OnAuthStateChanged;
             _auth = null;
         }

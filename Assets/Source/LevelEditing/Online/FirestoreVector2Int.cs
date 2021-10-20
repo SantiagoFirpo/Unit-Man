@@ -26,5 +26,10 @@ namespace UnitMan.Source.LevelEditing.Online
         {
             return new Vector2Int(firestoreVector2Int.X, firestoreVector2Int.Y);
         }
+        
+        public Vector2Int ToVector2Int()
+        {
+            return new Vector2Int(this.X, this.Y);
+        }
     }
 }
