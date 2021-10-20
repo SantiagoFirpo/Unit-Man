@@ -16,6 +16,7 @@ namespace UnitMan.Source.Management.Time {
                 Destroy(gameObject);
             }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
             
         }
     }
