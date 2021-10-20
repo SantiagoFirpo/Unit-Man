@@ -77,6 +77,7 @@ namespace UnitMan.Source.LevelEditing.Online
                 GhostHouse = FirestoreVector2Int.FromVector2Int(level.ghostHousePosition),
                 PacManPosition = FirestoreVector2Int.FromVector2Int(level.pacManPosition),
             };
+            firestoreLevel.WrapPositions = new List<FirestoreVector2Int>();
             foreach (Vector2Int screenWrapPosition in level.screenWrapPositions)
             {
                 firestoreLevel.WrapPositions.Add(FirestoreVector2Int.FromVector2Int(screenWrapPosition));
