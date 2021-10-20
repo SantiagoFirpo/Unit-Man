@@ -43,6 +43,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
         public static Level LevelDocumentToLevelObject(DocumentSnapshot documentSnapshot)
         {
             FirestoreLevel firestoreLevel = documentSnapshot.ConvertTo<FirestoreLevel>();
+            firestoreLevel.WrapPositions ??= new List<FirestoreVector2Int>();
             Level levelBeforeJson = Level.FromFirestoreLevel(firestoreLevel);
             string levelJson = JsonUtility.ToJson(levelBeforeJson);
             return JsonUtility.FromJson<Level>(levelJson);
@@ -56,6 +57,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
 
         private void RenderLevels(IEnumerable<Level> newLevels)
         {
+            Debug.Log(newLevels.Count());
             Level[] levelArray = newLevels.ToArray();
 
             foreach (Level level in levelArray)
@@ -80,6 +82,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
             //     levelCellViewModels[i].RenderWithLevelObject(levelArray[i]);
             // }
             onLevelLoadEvent.Call();
+            Debug.Log("Rendered levels");
         }
 
         public void NotifyByToast(string message)
@@ -100,6 +103,7 @@ namespace UnitMan.Source.UI.Components.OnlineLevelExplorer
                 Debug.Log(task.Exception.Message);
             }
 
+            Debug.Log("will render levels");
             RenderLevels(task.Result.Select(LevelDocumentToLevelObject));
         }
 

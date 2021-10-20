@@ -15,9 +15,11 @@ namespace UnitMan.Source.Management.Time {
             {
                 Destroy(gameObject);
             }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            
+            else
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
         }
     }
 }
